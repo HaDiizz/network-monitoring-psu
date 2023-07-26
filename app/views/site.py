@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, flash
 from .. import forms
 from flask_login import login_user, login_required, logout_user, current_user
 from .. import models
@@ -42,19 +42,33 @@ def logout():
 
 @module.route('/report', methods=["GET", "POST"])
 def report():
+    form = forms.report.ReportForm()
+    if form.validate_on_submit():
+        title = form.title.data
+        detail = form.detail.data
+        lat = form.lat.data
+        lng = form.lng.data
+        if any(field == "" for field in [title, detail, lat, lng]):
+            flash("กรุณากรอกข้อมูล/ปักหมุดสถานที่ในแมพ", "error")
+            return render_template("report.html", title="รายงานปัญหา", form=form)
+        report = models.Report(
+            title=title,
+            detail=detail,
+            lat=float(lat),
+            lng=float(lng),
+            reported_by=current_user
+        )
+        report.save()
+        flash("บันทึกสำเร็จ", "success")
+        form.title.data = ""
+        form.detail.data = ""
+        form.lat.data = ""
+        form.lng.data = ""
+
     if current_user.is_authenticated:
         if current_user.role == 'admin':
             return redirect('/admin/overview')
     else:
         return redirect('/login')
-    form = forms.report.ReportForm()
-    if form.validate_on_submit():
-        topic = form.topic.data
-        detail = form.detail.data
-        lat = form.lat.data
-        lng = form.lng.data
-        print("topic", topic)
-        print("detail", detail)
-        print("lat", lat)
-        print("lng", lng)
+
     return render_template("report.html", title="รายงานปัญหา", form=form)

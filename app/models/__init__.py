@@ -2,7 +2,8 @@ import os
 import mongoengine as me
 
 from .users import User
-# from .address import Address
+from .address import Address
+from .reports import Report
 # from .hosts import Host
 # from .services import Service
 

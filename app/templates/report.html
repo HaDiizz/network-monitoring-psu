@@ -1,6 +1,25 @@
 {% extends "./layouts/base.html" %} {% block content %}
 
 <h1 class="text-4xl font-bold pb-5">รายงานปัญหา</h1>
+{% with messages = get_flashed_messages(with_categories=true) %} {% if messages
+%} {% for category, message in messages %}
+<div id="alert-message" class="alert alert-{{ category }} mb-4">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    class="stroke-current shrink-0 h-6 w-6"
+    fill="none"
+    viewBox="0 0 24 24"
+  >
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+    />
+  </svg>
+  <span>{{ message }}</span>
+</div>
+{% endfor %} {% endif %} {% endwith %}
 
 <div class="flex flex-col lg:flex-row md:flex-row gap-5" id="layoutContainer">
   <div
@@ -9,7 +28,7 @@
   >
     <div class="map-container pb-5">
       <div class="btn-full cursor-pointer" onclick="handleExpand()">
-        <i class='bx bx-expand' ></i>
+        <i class="bx bx-expand"></i>
       </div>
       <div id="map"></div>
     </div>
@@ -22,10 +41,10 @@
       <form method="post">
         {{ form.csrf_token }}
         <div class="form-control w-full pb-3">
-          <label for="{{ form.topic.id }}" class="label">
-            <span class="label-text">{{ form.topic.label }}</span>
+          <label for="{{ form.title.id }}" class="label">
+            <span class="label-text">{{ form.title.label }}</span>
           </label>
-          {{ form.topic(class="input input-bordered w-full",
+          {{ form.title(class="input input-bordered w-full",
           placeholder="หัวข้อ") }}
         </div>
         <div class="form-control w-full pb-5">
@@ -50,7 +69,13 @@
     </div>
   </div>
 </div>
+<script>
+  function fadeOutElement() {
+    $("#alert-message").fadeOut(1000);
+  }
 
+  setTimeout(fadeOutElement, 5000);
+</script>
 <script>
   document.addEventListener("input", function (e) {
     if (
