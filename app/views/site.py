@@ -1,27 +1,60 @@
-from flask import Blueprint
+from flask import Blueprint, render_template, redirect, url_for
+from .. import forms
+from flask_login import login_user, login_required, logout_user, current_user
+from .. import models
+import mongoengine as me
 
-site_blueprint = Blueprint('site', __name__)
+module = Blueprint('site', __name__)
 
-@site_blueprint.route('/')
+@module.app_context_processor
+def account_context():
+    return {'account': current_user}
+
+@module.route('/')
 def index():
-    return "home"
+    if current_user.is_authenticated:
+        if current_user.role == 'admin':
+            return redirect('/admin/overview')
+    return render_template("index.html", title="หน้าหลัก")
 
-@site_blueprint.route('/login')
+@module.route('/login', methods=["GET", "POST"])
 def login():
-    return "login"
+    if current_user.is_authenticated:
+        if current_user.role == 'admin':
+            return redirect('/admin/overview')
+        else:
+            return redirect('/')
+    form = forms.login.LoginForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+        user = models.User.objects(me.Q(username=username) & me.Q(password=password)).first()
+        if user:
+            login_user(user, remember=True)
+            return redirect('/')
+    return render_template("login.html", title="เข้าสู่ระบบ", form=form)
 
-@site_blueprint.route('/logout')
+@module.route('/logout')
+@login_required
 def logout():
-    return "logout"
+    logout_user()
+    return redirect(url_for('site.index'))
 
-@site_blueprint.route('/forgotPassword')
-def forgotPassword():
-    return "forgotPassword"
-
-@site_blueprint.route('/resetPassword')
-def resetPassword():
-    return "resetPassword"
-
-@site_blueprint.route('/report')
+@module.route('/report', methods=["GET", "POST"])
 def report():
-    return "report"
+    if current_user.is_authenticated:
+        if current_user.role == 'admin':
+            return redirect('/admin/overview')
+    else:
+        return redirect('/login')
+    form = forms.report.ReportForm()
+    if form.validate_on_submit():
+        topic = form.topic.data
+        detail = form.detail.data
+        lat = form.lat.data
+        lng = form.lng.data
+        print("topic", topic)
+        print("detail", detail)
+        print("lat", lat)
+        print("lng", lng)
+    return render_template("report.html", title="รายงานปัญหา", form=form)

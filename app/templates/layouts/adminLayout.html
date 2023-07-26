@@ -1,0 +1,124 @@
+<header class="header dark:bg-base-100">
+  <div class="header_container">
+    <div class="header_img flex gap-5" style="align-items: center">
+      <div>
+        <span class="hover:text-white"
+          ><input class="checkbox" type="checkbox" id="toggle" />
+          <label class="toggle toggle-mode" for="toggle">
+            <ion-icon class="icon icon--light" name="sunny-outline"></ion-icon>
+            <ion-icon class="icon icon--dark" name="moon-outline"></ion-icon>
+            <span class="ball"></span> </label
+        ></span>
+      </div>
+      <div class="dropdown dropdown-end" id="ddl-account-admin">
+        <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+          <div class="w-10 rounded-full">
+            <img src="{{ url_for('static', filename='/images/avatar.png') }}" />
+          </div>
+        </label>
+        <ul
+          tabindex="0"
+          class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow dark:bg-base-100 rounded-box w-52"
+        >
+          <li><a id="btn-logout-admin" class="text-red-500 hover:text-white hover:bg-red-500" href="/logout">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+    <a href="/admin/overview" class="header_logo dark:text-white"
+      >Network Monitoring System</a
+    >
+
+    <div class="header_toggle">
+      <label class="btn btn-circle swap swap-rotate" id="header-toggle">
+        <input type="checkbox" id="toggle-swap" />
+
+        <svg
+          class="swap-off fill-current"
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 512 512"
+        >
+          <path
+            d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z"
+          />
+        </svg>
+
+        <svg
+          class="swap-on fill-current"
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 512 512"
+        >
+          <polygon
+            points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49"
+          />
+        </svg>
+      </label>
+    </div>
+  </div>
+</header>
+
+<div class="nav dark:bg-base-200" id="navbar">
+  <nav class="nav_container">
+    <div>
+      <a href="/admin/overview" class="nav_link pb-10"
+        ><img
+          src="{{ url_for('static', filename='/images/psu.png') }}"
+          alt="logo"
+          width="50"
+          height="50"
+          class="nav_icon"
+          id="logo"
+        />
+        <span class="nav_logo-name pl-3">DASHBOARD</span></a
+      >
+
+      <div class="nav_list pt-8">
+        <div class="nav_items">
+          <h3 class="nav_subtitle">Pages</h3>
+
+          <a id="home-link" href="/admin/overview" class="nav_link active">
+            <ion-icon name="home" class="nav_icon"></ion-icon>
+            <span class="nav_name">Home</span>
+          </a>
+
+          <div id="ddl-host-service" class="nav_dropdown">
+            <a class="nav_link">
+              <ion-icon name="bar-chart" class="nav_icon"></ion-icon>
+              <span class="nav_name">Hosts & Services</span>
+              <ion-icon name="chevron-down" class="nav_icon nav_dropdown-icon"></ion-icon>
+            </a>
+
+            <div class="nav_dropdown-collapse dark:bg-base-200">
+              <div class="nav_dropdown-content">
+                <a id="host-link" href="/admin/hosts" class="nav_dropdown-item pb-4">Hosts</a>
+                <a id="service-link" href="/admin/services" class="nav_dropdown-item">Services</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav_items">
+          <h3 class="nav_subtitle">Management</h3>
+          <a id="permission-link" href="/admin/permission" class="nav_link">
+            <ion-icon name="people" class="nav_icon"></ion-icon>
+            <span class="nav_name">Permission</span>
+          </a>
+          <a id="report-link" href="/admin/reports" class="nav_link">
+            <ion-icon name="bug" class="nav_icon"></ion-icon>
+            <span class="nav_name">Report</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <a id="logout-sidebar-link" href="/logout" class="nav_link nav_logout">
+      <i class="bx bx-log-out nav_icon"></i>
+      <span class="nav_name">Log Out</span>
+    </a>
+  </nav>
+</div>
+
+<script src="{{ url_for('static', filename='js/navigation.js') }}"></script>

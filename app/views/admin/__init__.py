@@ -1,11 +1,13 @@
-from flask import Blueprint
+from flask import Blueprint, render_template
+from ... import acl
 
-admin_blueprint = Blueprint("admin", __name__, url_prefix="/admin")
+admin_module = Blueprint("admin", __name__, url_prefix="/admin")
 
-from app.views.admin.dashboard import *
+from app.views.admin.service import *
+from app.views.admin.host import *
 from app.views.admin.management import *
-from app.views.admin.setting import *
 
-@admin_blueprint.route("/")
+@admin_module.route("/overview")
+@acl.roles_required("admin")
 def index():
-    return "admin index"
+    return render_template("/admin/index.html", title="Overview")

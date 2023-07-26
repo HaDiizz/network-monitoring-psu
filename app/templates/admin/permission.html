@@ -1,0 +1,48 @@
+{% extends "./layouts/base.html" %} {% block content %}
+<div class="admin-container">
+  <h1 class="text-4xl font-bold pb-8">User Permission</h1>
+  <div class="overflow-x-auto pt-10">
+    <table id="user-table" class="display nowrap" style="width: 100%">
+      <thead>
+        <tr>
+          <th>ชื่อ</th>
+          <th>นามสกุล</th>
+          <th>อีเมล</th>
+          <th>ตำแหน่ง</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Nattapol</td>
+          <td>Singhad</td>
+          <td>admin@email.com</td>
+          <td><div class="badge badge-error pb-1">ผู้ดูแลระบบ</div></td>
+          <td>
+            <input type="checkbox" class="toggle toggle-accent" checked />
+          </td>
+        </tr>
+        <tr>
+          <td>Title</td>
+          <td>asas</td>
+          <td>admin@email.com</td>
+          <td><div class="badge badge-success pb-1">ผู้ใช้</div></td>
+          <td>
+            <input type="checkbox" class="toggle toggle-accent" />
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>ชื่อ</th>
+          <th>นามสกุล</th>
+          <th>อีเมล</th>
+          <th>ตำแหน่ง</th>
+          <th>Action</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/userPermissionTable.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "./layouts/base.html" %} {% block content %}
+
+<h1 class="text-4xl font-bold pb-5">รายงานปัญหา</h1>
+
+<div class="flex flex-col lg:flex-row md:flex-row gap-5" id="layoutContainer">
+  <div
+    class="w-full md:w-7/12 sm:w-12/12 pt-5 bg-light-primary dark:bg-dark-primary pr-2 pl-2 rounded-md"
+    id="mapContainer"
+  >
+    <div class="map-container pb-5">
+      <div class="btn-full cursor-pointer" onclick="handleExpand()">
+        <i class='bx bx-expand' ></i>
+      </div>
+      <div id="map"></div>
+    </div>
+  </div>
+  <div
+    class="w-full md:w-5/12 sm:w-12/12 bg-light-primary rounded-md dark:bg-dark-primary"
+    id="elementContainer"
+  >
+    <div class="p-3">
+      <form method="post">
+        {{ form.csrf_token }}
+        <div class="form-control w-full pb-3">
+          <label for="{{ form.topic.id }}" class="label">
+            <span class="label-text">{{ form.topic.label }}</span>
+          </label>
+          {{ form.topic(class="input input-bordered w-full",
+          placeholder="หัวข้อ") }}
+        </div>
+        <div class="form-control w-full pb-5">
+          <label for="{{ form.detail.id }}" class="label">
+            <span class="label-text">{{ form.detail.label }}</span>
+          </label>
+          {{ form.detail(class="textarea textarea-bordered w-full",
+          placeholder="รายละเอียด (ปัญหา, สถานที่, ตึก, ชั้น)", style="height:
+          200px; resize: none; overflow-y: auto;") }}
+        </div>
+        <div class="form-control w-full pb-3">
+          {{ form.lat(class="input input-bordered w-full",
+          placeholder="Latitude") }}
+        </div>
+        <div class="form-control w-full pb-3">
+          {{ form.lng(class="input input-bordered w-full",
+          placeholder="Longitude") }}
+        </div>
+        {{ form.submit(class="btn bg-primary hover:bg-secondary dark:bg-neutral
+        text-white") }}
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("input", function (e) {
+    if (
+      e.target.tagName.toLowerCase() === "textarea" &&
+      e.target.classList.contains("auto-expand")
+    ) {
+      e.target.style.height = "auto";
+      e.target.style.height = Math.min(e.target.scrollHeight, 300) + "px";
+    }
+  });
+</script>
+<script src="{{ url_for('static', filename='utils/handleExpandMap.js') }}"></script>
+<script src="{{ url_for('static', filename='js/reportMap.js') }}"></script>
+
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends "./layouts/base.html" %} {% block content %}
+<div class="admin-container">
+  <div class="tabs">
+    <a class="tab tab-lifted tab-active" data-tab="host">Host</a>
+    <a class="tab tab-lifted" data-tab="service">Service</a>
+  </div>
+  <div id="host" class="tab-content current">
+    <div class="cards">
+      <div class="card-single dark:bg-base-200 shadow-xl">
+        <div>
+          <h1 class="text-4xl">1,635</h1>
+          <span>Total Hosts</span>
+        </div>
+      </div>
+      <div class="card-single dark:bg-base-200 shadow-xl">
+        <div>
+          <h1 class="text-4xl">1,600</h1>
+          <span>UP</span>
+        </div>
+      </div>
+      <div class="card-single dark:bg-base-200 shadow-xl">
+        <div>
+          <h1 class="text-4xl">31</h1>
+          <span>DOWN</span>
+        </div>
+      </div>
+      <div class="card-single dark:bg-base-200 shadow-xl">
+        <div>
+          <h1 class="text-4xl">4</h1>
+          <span>Maintain</span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="flex flex-col lg:flex-row md:flex-row gap-5"
+      id="layoutContainer"
+    >
+      <div
+        class="w-full md:w-7/12 sm:w-12/12 pt-5 bg-light-primary dark:bg-dark-primary pr-2 pl-2 rounded-md"
+        id="mapContainer"
+      >
+        <div class="map-container pb-5">
+          <div class="btn-full cursor-pointer" onclick="handleExpand()">
+            <i class='bx bx-expand' ></i>
+          </div>
+          <div id="map"></div>
+        </div>
+      </div>
+      <div
+        class="w-full md:w-5/12 sm:w-12/12 bg-light-primary rounded-md dark:bg-dark-primary"
+        id="elementContainer"
+      >
+        <div class="container table-responsive p-3">
+          <table id="host-table" class="display" style="width: 100%">
+            <thead>
+              <tr>
+                <th>AP Name</th>
+                <th>Status</th>
+                <th>Total User</th>
+                <th>Availability</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="service" class="tab-content">
+    <div class="cards">
+      <div class="card-single dark:bg-base-200 shadow-xl">
+        <div>
+          <h1 class="text-4xl">20</h1>
+          <span>Total Services</span>
+        </div>
+      </div>
+      <div class="card-single dark:bg-base-200 shadow-xl">
+        <div>
+          <h1 class="text-4xl">17</h1>
+          <span>UP</span>
+        </div>
+      </div>
+      <div class="card-single dark:bg-base-200 shadow-xl">
+        <div>
+          <h1 class="text-4xl">2</h1>
+          <span>DOWN</span>
+        </div>
+      </div>
+      <div class="card-single dark:bg-base-200 shadow-xl">
+        <div>
+          <h1 class="text-4xl">1</h1>
+          <span>Maintain</span>
+        </div>
+      </div>
+    </div>
+    <div
+    class="flex flex-col lg:flex-row md:flex-row gap-5"
+  >
+    <div
+      class="w-full bg-light-primary rounded-md dark:bg-dark-primary"
+    >
+      <div class="container table-responsive p-3">
+        <table id="service-table" class="display" style="width: 100%">
+          <thead>
+            <tr>
+              <th>Service Name</th>
+              <th>URL</th>
+              <th>Status</th>
+              <th>Availability</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='utils/handleExpandMap.js') }}"></script>
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+<script src="{{ url_for('static', filename='js/hostTable.js') }}"></script>
+<script src="{{ url_for('static', filename='js/serviceTable.js') }}"></script>
+<script>
+  $(document).ready(function () {
+    $(".tabs a").click(function () {
+      var tab_id = $(this).attr("data-tab");
+
+      $(".tabs a").removeClass("tab-active");
+      $(".tab-content").removeClass("current");
+
+      $(this).addClass("tab-active");
+      $("#" + tab_id).addClass("current");
+    });
+  });
+</script>
+{% endblock %}

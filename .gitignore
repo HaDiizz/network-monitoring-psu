@@ -1,1 +1,11 @@
 pyvenv
+.env
+.vscode
+__pycache__
+/app/static/node_modules
+/app/static/package-lock.json
+/app/__pycache__
+/app/views/__pycache__
+/app/views/admin/__pycache__
+/app/forms/__pycache__
+/app/models/__pycache__

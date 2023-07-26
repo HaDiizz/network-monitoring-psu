@@ -1,0 +1,54 @@
+{% extends "./layouts/base.html" %} {% block content %}
+<div class="admin-container">
+  <h1 class="text-4xl font-bold pb-8">Report Management</h1>
+  <div class="flex flex-col gap-5">
+    <div
+      class="w-full pt-5 bg-light-primary dark:bg-dark-primary pr-2 pl-2 rounded-md"
+    >
+      <div class="map-container pb-5">
+        <div id="map"></div>
+      </div>
+    </div>
+    <div class="w-full bg-light-primary rounded-md dark:bg-dark-primary">
+      <div class="p-3">
+        <div class="card w-full dark:bg-base-100 shadow-lg">
+          <div class="card-body">
+            <h2 class="card-title">เรื่อง</h2>
+            <p>เชื่อม WiFi ได้ แต่ไม่สามารถใช้งานได้</p>
+          </div>
+        </div>
+      </div>
+      <div class="p-3">
+        <div class="card w-full dark:bg-base-100 shadow-lg">
+          <div class="card-body">
+            <h2 class="card-title">รายละเอียด</h2>
+            <p>ไม่สามารถใช้งาน WiFi ได้ ตึกคุณหญิงหลง ชั้น 3</p>
+          </div>
+        </div>
+      </div>
+      <div class="form-control p-3">
+        <label class="label">
+          <span class="label-text">Status</span>
+        </label>
+        <select class="select select-bordered w-full max-w-xs" id="ddl-status">
+          <option selected value="pending">PENDING</option>
+          <option value="checking">CHECKING</option>
+          <option value="approved">APPROVED</option>
+          <option value="rejected">REJECTED</option>
+        </select>
+      </div>
+      <div class="form-control pb-4 pl-3 pt-2">
+        <div class="w-full max-w-xs">
+          <a
+            href="{{ url_for('admin.reportDetail', id=1) }}"
+            class="btn bg-primary hover:bg-secondary dark:bg-neutral text-white"
+          >
+            Update
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/reportDetailMap.js') }}"></script>
+{% endblock %}

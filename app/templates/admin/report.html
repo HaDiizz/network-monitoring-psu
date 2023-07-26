@@ -1,0 +1,139 @@
+{% extends "./layouts/base.html" %} {% block content %}
+<div class="admin-container">
+  <h1 class="text-4xl font-bold pb-8">Report Management</h1>
+  <div class="filter-section pb-10">
+    <div
+      class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-1 gap-5"
+    >
+      <div class="form-control items-center">
+        <div class="w-full max-w-xs">
+          <label class="label">
+            <span class="label-text">Status</span>
+          </label>
+          <select
+            class="select select-bordered w-full max-w-xs"
+            id="ddl-status"
+          >
+            <option selected value="all">ALL</option>
+            <option value="pending">PENDING</option>
+            <option value="checking">CHECKING</option>
+            <option value="approved">APPROVED</option>
+            <option value="rejected">REJECTED</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-control items-center">
+        <div class="w-full max-w-xs">
+          <label class="label">
+            <span class="label-text">Start Date</span>
+          </label>
+          <input
+            id="start-date-input"
+            class="input input-bordered w-full max-w-xs"
+            type="date"
+            name="start-date"
+          />
+        </div>
+      </div>
+      <div class="form-control items-center">
+        <div class="w-full max-w-xs">
+          <label class="label">
+            <span class="label-text">End Date</span>
+          </label>
+          <input
+            id="end-date-input"
+            class="input input-bordered w-full max-w-xs"
+            type="date"
+            name="end-date"
+          />
+        </div>
+      </div>
+      <div class="form-control items-center">
+        <div class="w-full max-w-xs">
+          <button
+            class="btn bg-primary hover:bg-secondary dark:bg-neutral text-white"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="stats stats-vertical lg:stats-horizontal shadow w-full">
+    <div class="stat">
+      <div class="stat-title">Total</div>
+      <div class="stat-value text-indigo-500">2</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-title">Pending</div>
+      <div class="stat-value text-warning">1</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Checking</div>
+      <div class="stat-value text-sky-500">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Approved</div>
+      <div class="stat-value text-success">1</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-title">Rejected</div>
+      <div class="stat-value text-error">0</div>
+    </div>
+  </div>
+  <div class="overflow-x-auto pt-10">
+    <table id="report-table" class="display nowrap" style="width: 100%">
+      <thead>
+        <tr>
+          <th>วันที่</th>
+          <th>เรื่อง</th>
+          <th>รายละเอียด</th>
+          <th>สถานะ</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>01/01/2023 - 13:00 PM</td>
+          <td>เชื่อม WiFi ได้ แต่ไม่สามารถใช้งานได้</td>
+          <td>ไม่สามารถใช้งาน WiFi ได้ ตึกคุณหญิงหลง ชั้น 3</td>
+          <td><div class="badge badge-warning pb-1">PENDING</div></td>
+          <td>
+            <div class="text-center cursor-pointer">
+              <a href="/admin/reports/1" id="btn-report-detail">
+                <ion-icon name="eye-outline" style="font-size: 25px"></ion-icon>
+              </a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>02/01/2023 - 15:20 PM</td>
+          <td>WiFi ช้า</td>
+          <td>WiFi ช้ามากทั้งๆที่ WiFi ขึ้น 5 ขีดเต็ม ใต้ภาควิศวะคอม</td>
+          <td><div class="badge badge-success pb-1">APPROVED</div></td>
+          <td>
+            <div class="text-center cursor-pointer">
+              <a href="/admin/reports/1" id="btn-report-detail">
+                <ion-icon name="eye-outline" style="font-size: 25px"></ion-icon>
+              </a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>วันที่</th>
+          <th>เรื่อง</th>
+          <th>รายละเอียด</th>
+          <th>สถานะ</th>
+          <th>Action</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/reportTable.js') }}"></script>
+{% endblock %}
