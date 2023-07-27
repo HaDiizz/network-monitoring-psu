@@ -1,50 +1,81 @@
 {% extends "./layouts/base.html" %} {% block content %}
 <div class="admin-container">
   <h1 class="text-4xl font-bold pb-8">Report Management</h1>
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if messages
+    %} {% for category, message in messages %}
+    <div id="alert-message" class="alert alert-{{ category }} mb-4">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="stroke-current shrink-0 h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+      <span>{{ message }}</span>
+    </div>
+    {% endfor %} {% endif %} {% endwith %}
   <div class="flex flex-col gap-5">
     <div
       class="w-full pt-5 bg-light-primary dark:bg-dark-primary pr-2 pl-2 rounded-md"
     >
       <div class="map-container pb-5">
-        <div id="map"></div>
+        <div id="map" data-lat="{{ report.lat }}" data-lng="{{ report.lng }}"></div>
       </div>
     </div>
+    <form action="{{ url_for('admin.reportDetail', report_id=report.id) }}" method="POST">
+      <div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-1 pb-3">
+        <div class="form-control p-3">
+          <label class="label">
+            <span class="label-text">Status</span>
+          </label>
+          <select class="select select-bordered w-full" id="ddl-status" name="status">
+            {% for status in status_list %}
+            <option {% if status == report.status %}selected{% endif %} value="{{ status }}">{{ status }}</option>
+        {% endfor %}
+          </select>
+        </div>
+        <div class="form-control pl-3 pt-8 justify-center">
+          <div class="w-full max-w-xs">
+            <button
+            type="submit"
+              class="btn bg-primary hover:bg-secondary dark:bg-neutral text-white"
+            >
+              Update
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
     <div class="w-full bg-light-primary rounded-md dark:bg-dark-primary">
       <div class="p-3">
         <div class="card w-full dark:bg-base-100 shadow-lg">
           <div class="card-body">
-            <h2 class="card-title">เรื่อง</h2>
-            <p>เชื่อม WiFi ได้ แต่ไม่สามารถใช้งานได้</p>
+            <h2 class="card-title pb-5">เรื่อง</h2>
+            <p>{{ report.title }}</p>
           </div>
         </div>
       </div>
       <div class="p-3">
         <div class="card w-full dark:bg-base-100 shadow-lg">
           <div class="card-body">
-            <h2 class="card-title">รายละเอียด</h2>
-            <p>ไม่สามารถใช้งาน WiFi ได้ ตึกคุณหญิงหลง ชั้น 3</p>
+            <h2 class="card-title pb-5">รายละเอียด</h2>
+            <p>{{ report.detail }}</p>
           </div>
         </div>
       </div>
-      <div class="form-control p-3">
-        <label class="label">
-          <span class="label-text">Status</span>
-        </label>
-        <select class="select select-bordered w-full max-w-xs" id="ddl-status">
-          <option selected value="pending">PENDING</option>
-          <option value="checking">CHECKING</option>
-          <option value="approved">APPROVED</option>
-          <option value="rejected">REJECTED</option>
-        </select>
-      </div>
-      <div class="form-control pb-4 pl-3 pt-2">
-        <div class="w-full max-w-xs">
-          <a
-            href="{{ url_for('admin.reportDetail', id=1) }}"
-            class="btn bg-primary hover:bg-secondary dark:bg-neutral text-white"
-          >
-            Update
-          </a>
+      <div class="p-3">
+        <div class="card w-full dark:bg-base-100 shadow-lg">
+          <div class="card-body">
+            <h2 class="card-title pb-5">ผู้รายงาน</h2>
+            <p>ชื่อ : {{ report.reported_by.first_name }} {{ report.reported_by.last_name }}</p>
+            <p>อีเมล : {{ report.reported_by.email }}</p>
+          </div>
         </div>
       </div>
     </div>

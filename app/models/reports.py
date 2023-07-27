@@ -11,3 +11,7 @@ class Report(me.Document):
     status = me.StringField(required=True, default="PENDING")
     created_date = me.DateTimeField(required=True, default=datetime.datetime.now)
     updated_date = me.DateTimeField(required=True, default=datetime.datetime.now, auto_now=True)
+    
+    def save(self, *args, **kwargs):
+        self.updated_date = datetime.datetime.now
+        return super(Report, self).save(*args, **kwargs)

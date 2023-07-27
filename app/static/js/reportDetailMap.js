@@ -1,3 +1,8 @@
+var mapDiv = document.getElementById("map");
+var report = {
+  lat: mapDiv.dataset.lat,
+  lng: mapDiv.dataset.lng,
+};
 var osmLayer = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution:
     '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -17,7 +22,7 @@ var Stadia_AlidadeSmooth = L.tileLayer(
 
 var map = L.map("map", {
   layers: [Stadia_AlidadeSmooth],
-}).setView([7.008927, 100.497545], 15);
+}).setView([report.lat, report.lng], 15);
 
 var layerControl = L.control
   .layers({
@@ -36,6 +41,6 @@ var redIcon = L.icon({
   popupAnchor: [1, -34],
 });
 
-marker = L.marker([7.008927, 100.497545], {
+marker = L.marker([report.lat, report.lng], {
   icon: redIcon,
 }).addTo(map);

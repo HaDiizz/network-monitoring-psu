@@ -1570,12 +1570,36 @@ html {
     var(--togglehandleborder);
 }
 
+.alert-success {
+  border-color: hsl(var(--su) / 0.2);
+  --tw-text-opacity: 1;
+  color: hsl(var(--suc) / var(--tw-text-opacity));
+  --alert-bg: hsl(var(--su));
+  --alert-bg-mix: hsl(var(--b1));
+}
+
+.alert-error {
+  border-color: hsl(var(--er) / 0.2);
+  --tw-text-opacity: 1;
+  color: hsl(var(--erc) / var(--tw-text-opacity));
+  --alert-bg: hsl(var(--er));
+  --alert-bg-mix: hsl(var(--b1));
+}
+
 .avatar-group :where(.avatar) {
   overflow: hidden;
   border-radius: 9999px;
   border-width: 4px;
   --tw-border-opacity: 1;
   border-color: hsl(var(--b1) / var(--tw-border-opacity));
+}
+
+.badge-info {
+  border-color: transparent;
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--in) / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: hsl(var(--inc) / var(--tw-text-opacity));
 }
 
 .badge-success {
@@ -1600,6 +1624,11 @@ html {
   background-color: hsl(var(--er) / var(--tw-bg-opacity));
   --tw-text-opacity: 1;
   color: hsl(var(--erc) / var(--tw-text-opacity));
+}
+
+.badge-outline.badge-info {
+  --tw-text-opacity: 1;
+  color: hsl(var(--in) / var(--tw-text-opacity));
 }
 
 .badge-outline.badge-success {
@@ -2858,6 +2887,14 @@ html {
   padding-right: 0.25rem;
 }
 
+.pb-0 {
+  padding-bottom: 0px;
+}
+
+.pb-0\.5 {
+  padding-bottom: 0.125rem;
+}
+
 .pb-1 {
   padding-bottom: 0.25rem;
 }
@@ -2900,10 +2937,6 @@ html {
 
 .pt-10 {
   padding-top: 2.5rem;
-}
-
-.pt-2 {
-  padding-top: 0.5rem;
 }
 
 .pt-5 {

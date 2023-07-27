@@ -1,93 +1,74 @@
 {% extends "./layouts/base.html" %} {% block content %}
 <div class="admin-container">
   <h1 class="text-4xl font-bold pb-8">Report Management</h1>
-  <div class="filter-section pb-10">
-    <div
-      class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-1 gap-5"
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %} {% for category, message in messages %}
+  <div id="alert-message" class="alert alert-{{ category }} mb-4">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="stroke-current shrink-0 h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
     >
-      <div class="form-control items-center">
-        <div class="w-full max-w-xs">
-          <label class="label">
-            <span class="label-text">Status</span>
-          </label>
-          <select
-            class="select select-bordered w-full max-w-xs"
-            id="ddl-status"
-          >
-            <option selected value="all">ALL</option>
-            <option value="pending">PENDING</option>
-            <option value="checking">CHECKING</option>
-            <option value="approved">APPROVED</option>
-            <option value="rejected">REJECTED</option>
-          </select>
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
+    </svg>
+    <span>{{ message }}</span>
+  </div>
+  {% endfor %} {% endif %} {% endwith %}
+  <div class="filter-section pb-10">
+    <form method="post">
+      {{ form.csrf_token }}
+      <div
+        class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-1 gap-5"
+      >
+        <div class="form-control items-center">
+          <div class="w-full max-w-xs">
+            <label class="label">
+              <span class="label-text">{{ form.status.label }}</span>
+            </label>
+            {{ form.status }}
+          </div>
+        </div>
+        <div class="form-control justify-center items-center pt-8">
+          <div class="w-full max-w-xs">{{ form.search() }}</div>
         </div>
       </div>
-      <div class="form-control items-center">
-        <div class="w-full max-w-xs">
-          <label class="label">
-            <span class="label-text">Start Date</span>
-          </label>
-          <input
-            id="start-date-input"
-            class="input input-bordered w-full max-w-xs"
-            type="date"
-            name="start-date"
-          />
-        </div>
-      </div>
-      <div class="form-control items-center">
-        <div class="w-full max-w-xs">
-          <label class="label">
-            <span class="label-text">End Date</span>
-          </label>
-          <input
-            id="end-date-input"
-            class="input input-bordered w-full max-w-xs"
-            type="date"
-            name="end-date"
-          />
-        </div>
-      </div>
-      <div class="form-control items-center">
-        <div class="w-full max-w-xs">
-          <button
-            class="btn bg-primary hover:bg-secondary dark:bg-neutral text-white"
-          >
-            Search
-          </button>
-        </div>
-      </div>
-    </div>
+    </form>
   </div>
   <div class="stats stats-vertical lg:stats-horizontal shadow w-full">
     <div class="stat">
       <div class="stat-title">Total</div>
-      <div class="stat-value text-indigo-500">2</div>
+      <div class="stat-value text-indigo-500">{{ status_counts["TOTAL"] }}</div>
     </div>
 
     <div class="stat">
       <div class="stat-title">Pending</div>
-      <div class="stat-value text-warning">1</div>
+      <div class="stat-value text-warning">{{ status_counts["PENDING"] }}</div>
     </div>
     <div class="stat">
       <div class="stat-title">Checking</div>
-      <div class="stat-value text-sky-500">0</div>
+      <div class="stat-value text-sky-500">{{ status_counts["CHECKING"] }}</div>
     </div>
     <div class="stat">
       <div class="stat-title">Approved</div>
-      <div class="stat-value text-success">1</div>
+      <div class="stat-value text-success">{{ status_counts["APPROVED"] }}</div>
     </div>
 
     <div class="stat">
       <div class="stat-title">Rejected</div>
-      <div class="stat-value text-error">0</div>
+      <div class="stat-value text-error">{{ status_counts["REJECTED"] }}</div>
     </div>
   </div>
   <div class="overflow-x-auto pt-10">
     <table id="report-table" class="display nowrap" style="width: 100%">
       <thead>
         <tr>
-          <th>วันที่</th>
+          <th>วันที่รายงาน</th>
           <th>เรื่อง</th>
           <th>รายละเอียด</th>
           <th>สถานะ</th>
@@ -95,36 +76,39 @@
         </tr>
       </thead>
       <tbody>
+        {% for report in reports %}
         <tr>
-          <td>01/01/2023 - 13:00 PM</td>
-          <td>เชื่อม WiFi ได้ แต่ไม่สามารถใช้งานได้</td>
-          <td>ไม่สามารถใช้งาน WiFi ได้ ตึกคุณหญิงหลง ชั้น 3</td>
-          <td><div class="badge badge-warning pb-1">PENDING</div></td>
+          <td>{{ report.created_date.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+          <td>{{ report.title }}</td>
+          <td>
+            <div class="truncate-text" data-content="{{ report.detail }}">
+              {{ report.detail }}
+            </div>
+          </td>
+          <td>
+            {% if report.status == 'PENDING' %}
+            <div class="badge badge-warning pb-0.5">{{ report.status }}</div>
+            {% elif report.status == 'CHECKING' %}
+            <div class="badge badge-info pb-0.5">{{ report.status }}</div>
+            {% elif report.status == 'APPROVED' %}
+            <div class="badge badge-success pb-0.5">{{ report.status }}</div>
+            {% elif report.status == 'REJECTED' %}
+            <div class="badge badge-error pb-0.5">{{ report.status }}</div>
+            {% endif %}
+          </td>
           <td>
             <div class="text-center cursor-pointer">
-              <a href="/admin/reports/1" id="btn-report-detail">
+              <a href="/admin/reports/{{ report.id }}" id="btn-report-detail">
                 <ion-icon name="eye-outline" style="font-size: 25px"></ion-icon>
               </a>
             </div>
           </td>
         </tr>
-        <tr>
-          <td>02/01/2023 - 15:20 PM</td>
-          <td>WiFi ช้า</td>
-          <td>WiFi ช้ามากทั้งๆที่ WiFi ขึ้น 5 ขีดเต็ม ใต้ภาควิศวะคอม</td>
-          <td><div class="badge badge-success pb-1">APPROVED</div></td>
-          <td>
-            <div class="text-center cursor-pointer">
-              <a href="/admin/reports/1" id="btn-report-detail">
-                <ion-icon name="eye-outline" style="font-size: 25px"></ion-icon>
-              </a>
-            </div>
-          </td>
-        </tr>
+        {% endfor %}
       </tbody>
       <tfoot>
         <tr>
-          <th>วันที่</th>
+          <th>วันที่รายงาน</th>
           <th>เรื่อง</th>
           <th>รายละเอียด</th>
           <th>สถานะ</th>
@@ -134,6 +118,15 @@
     </table>
   </div>
 </div>
-
 <script src="{{ url_for('static', filename='js/reportTable.js') }}"></script>
+<script>
+  document.querySelectorAll(".truncate-text").forEach((element) => {
+    const content = element.dataset.content;
+    const maxLength = 50;
+
+    if (content.length > maxLength) {
+      element.textContent = content.slice(0, maxLength) + "...";
+    }
+  });
+</script>
 {% endblock %}

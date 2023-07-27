@@ -44,38 +44,22 @@
           <label for="{{ form.title.id }}" class="label">
             <span class="label-text">{{ form.title.label }}</span>
           </label>
-          {{ form.title(class="input input-bordered w-full",
-          placeholder="หัวข้อ") }}
+          {{ form.title() }}
         </div>
         <div class="form-control w-full pb-5">
           <label for="{{ form.detail.id }}" class="label">
             <span class="label-text">{{ form.detail.label }}</span>
           </label>
-          {{ form.detail(class="textarea textarea-bordered w-full",
-          placeholder="รายละเอียด (ปัญหา, สถานที่, ตึก, ชั้น)", style="height:
-          200px; resize: none; overflow-y: auto;") }}
+          {{ form.detail(style="height: 200px; resize: none; overflow-y: auto;")
+          }}
         </div>
-        <div class="form-control w-full pb-3">
-          {{ form.lat(class="input input-bordered w-full",
-          placeholder="Latitude") }}
-        </div>
-        <div class="form-control w-full pb-3">
-          {{ form.lng(class="input input-bordered w-full",
-          placeholder="Longitude") }}
-        </div>
-        {{ form.submit(class="btn bg-primary hover:bg-secondary dark:bg-neutral
-        text-white") }}
+        <div class="form-control w-full pb-3">{{ form.lat() }}</div>
+        <div class="form-control w-full pb-3">{{ form.lng() }}</div>
+        {{ form.submit() }}
       </form>
     </div>
   </div>
 </div>
-<script>
-  function fadeOutElement() {
-    $("#alert-message").fadeOut(1000);
-  }
-
-  setTimeout(fadeOutElement, 5000);
-</script>
 <script>
   document.addEventListener("input", function (e) {
     if (
