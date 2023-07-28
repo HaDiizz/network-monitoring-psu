@@ -1,14 +1,32 @@
-from flask import render_template, redirect, request, url_for, flash
+from flask import render_template, redirect, request, url_for, flash, abort
+from flask_login import current_user
+from bson import ObjectId
 from app.views.admin import admin_module
 from ... import acl
 from ... import models
 from ... import forms
 from ...utils import status_list
 
-@admin_module.route("/permission")
+
+@admin_module.route("/permission", methods=["GET", "POST"])
 @acl.roles_required("admin")
 def permission():
-    return render_template("/admin/permission.html", title="Permission")
+    try:
+        users = models.User.objects.exclude('password')
+        if request.method == 'POST':
+            user_id = ObjectId(request.form.get('user_id'))
+            is_admin = request.form.get('is_admin')
+            if user_id == current_user.id:
+                abort(403)
+            new_role = 'admin' if is_admin == "true" else 'user'
+            user = models.User.objects.with_id(user_id)
+            user.role = new_role
+            user.save()
+        return render_template("/admin/permission.html", title="Permission", users=users)
+    except Exception as e:
+        flash("ขออภัย มีข้อผิดพลาดเกิดขึ้น", "error")
+        return redirect("/admin/overview")
+
 
 @admin_module.route("/reports", methods=["GET", "POST"])
 @acl.roles_required("admin")
@@ -36,6 +54,7 @@ def report():
         reports = reports.filter(**query_filter)
     return render_template("/admin/report.html", title="Report", reports=reports, form=form, status_counts=status_counts)
 
+
 @admin_module.route("/reports/<string:report_id>", methods=["GET", "POST"])
 @acl.roles_required("admin")
 def reportDetail(report_id):
@@ -45,7 +64,8 @@ def reportDetail(report_id):
             new_status = request.form.get('status')
             report.status = new_status
             report.save()
-            flash("เปลี่ยนสถานะเป็น '{new_status}' สำเร็จ".format(new_status=new_status), "success")
+            flash("เปลี่ยนสถานะเป็น '{new_status}' สำเร็จ".format(
+                new_status=new_status), "success")
             return redirect(url_for("admin.reportDetail", report_id=report_id))
         return render_template("/admin/reportDetail.html", title="Report Detail", report=report, status_list=status_list())
     except Exception as e:

@@ -1,5 +1,24 @@
 {% extends "./layouts/base.html" %} {% block content %}
 <div class="admin-container">
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %} {% for category, message in messages %}
+  <div id="alert-message" class="alert alert-{{ category }} mb-4">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="stroke-current shrink-0 h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
+    </svg>
+    <span>{{ message }}</span>
+  </div>
+  {% endfor %} {% endif %} {% endwith %}
   <div class="tabs">
     <a class="tab tab-lifted tab-active" data-tab="host">Host</a>
     <a class="tab tab-lifted" data-tab="service">Service</a>
@@ -41,7 +60,7 @@
       >
         <div class="map-container pb-5">
           <div class="btn-full cursor-pointer" onclick="handleExpand()">
-            <i class='bx bx-expand' ></i>
+            <i class="bx bx-expand"></i>
           </div>
           <div id="map"></div>
         </div>
@@ -100,34 +119,30 @@
         </div>
       </div>
     </div>
-    <div
-    class="flex flex-col lg:flex-row md:flex-row gap-5"
-  >
-    <div
-      class="w-full bg-light-primary rounded-md dark:bg-dark-primary"
-    >
-      <div class="container table-responsive p-3">
-        <table id="service-table" class="display" style="width: 100%">
-          <thead>
-            <tr>
-              <th>Service Name</th>
-              <th>URL</th>
-              <th>Status</th>
-              <th>Availability</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="flex flex-col lg:flex-row md:flex-row gap-5">
+      <div class="w-full bg-light-primary rounded-md dark:bg-dark-primary">
+        <div class="container table-responsive p-3">
+          <table id="service-table" class="display" style="width: 100%">
+            <thead>
+              <tr>
+                <th>Service Name</th>
+                <th>URL</th>
+                <th>Status</th>
+                <th>Availability</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  </div>
   </div>
 </div>
 

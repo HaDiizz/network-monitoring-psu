@@ -13,24 +13,24 @@
         </tr>
       </thead>
       <tbody>
+        {% for user in users %}
         <tr>
-          <td>Nattapol</td>
-          <td>Singhad</td>
-          <td>admin@email.com</td>
+          <td>{{ user.first_name }}</td>
+          <td>{{ user.last_name }}</td>
+          <td>{{ user.email }}</td>
+          {% if user.role == 'admin' %}
           <td><div class="badge badge-error pb-1">ผู้ดูแลระบบ</div></td>
-          <td>
-            <input type="checkbox" class="toggle toggle-accent" checked />
-          </td>
-        </tr>
-        <tr>
-          <td>Title</td>
-          <td>asas</td>
-          <td>admin@email.com</td>
+          {% else %}
           <td><div class="badge badge-success pb-1">ผู้ใช้</div></td>
+          {% endif %}
           <td>
-            <input type="checkbox" class="toggle toggle-accent" />
+            {% if current_user.id != user.id %} <input id="user-role-{{ user.id
+            }}" data-user-id="{{ user.id }}" type="checkbox" class="toggle
+            toggle-accent role-toggle" {% if user.role == 'admin' %}checked{%
+            endif %} /> {% endif %}
           </td>
         </tr>
+        {% endfor %}
       </tbody>
       <tfoot>
         <tr>
