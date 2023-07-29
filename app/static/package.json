@@ -9,5 +9,13 @@
   "devDependencies": {
     "daisyui": "^3.2.1",
     "tailwindcss": "^3.3.3"
+  },
+  "dependencies": {
+    "boxicons": "^2.1.4",
+    "datatables.net-dt": "^1.13.5",
+    "ionicons": "^7.1.2",
+    "jquery": "^3.7.0",
+    "leaflet": "^1.9.4",
+    "leaflet.locatecontrol": "^0.79.0"
   }
 }

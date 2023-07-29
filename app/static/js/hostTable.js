@@ -1,7 +1,7 @@
 $(document).ready(function () {
   var table = $("#host-table").DataTable({
     dom: "Bfrtip",
-    buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
+    buttons: ["copy", "csv", "excel", "print", "colvis"],
   });
 
   $("div.dataTables_filter").append(

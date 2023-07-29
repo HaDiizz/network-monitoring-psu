@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
   <head>
+    <script src="{{ url_for('static', filename='js/modeRender.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modeSystem.js') }}"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
@@ -9,11 +11,11 @@
     />
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"
+      href="{{ url_for('static', filename='src/dataTable/print_datatables.min.css') }}"
     />
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='src/leaflet/leaflet.css') }}"
+      href="{{ url_for('static', filename='src/dataTable/dataTables.bootstrap.min.css') }}"
     />
     <link
       rel="stylesheet"
@@ -25,41 +27,34 @@
     />
     <link
       rel="stylesheet"
-      href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap.min.css"
+      href="{{ url_for('static', filename='node_modules/boxicons/css/boxicons.min.css') }}"
     />
     <link
       rel="stylesheet"
-      href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css"
+      href="{{ url_for('static', filename='node_modules/leaflet/dist/leaflet.css') }}"
     />
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='src/L.Control.Locate.min.css') }}"
+      href="{{ url_for('static', filename='node_modules/datatables.net-dt/css/jquery.dataTables.min.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='node_modules/leaflet.locatecontrol/dist/L.Control.Locate.min.css') }}"
     />
 
+    <script src="{{ url_for('static', filename='node_modules/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='node_modules/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='src/dataTable/buttons_datatables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='node_modules/leaflet/dist/leaflet.js') }}"></script>
+    <script src="{{ url_for('static', filename='node_modules/leaflet.locatecontrol/dist/L.Control.Locate.min.js') }}"></script>
     <script
-      type="text/javascript"
-      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
+      nomodule=""
+      src="{{ url_for('static', filename='node_modules/ionicons/dist/ionicons/ionicons.js') }}"
     ></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.js"></script>
-    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
-    <script src="{{ url_for('static', filename='src/leaflet/leaflet.js') }}"></script>
-    <script src="{{ url_for('static', filename='src/L.Control.Locate.min.js') }}"></script>
     <script
       type="module"
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+      src="{{ url_for('static', filename='node_modules/ionicons/dist/ionicons/ionicons.esm.js') }}"
     ></script>
-    <script
-      nomodule
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
-    ></script>
-
-    <link
-      href="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.5/b-2.4.1/b-colvis-2.4.1/b-html5-2.4.1/b-print-2.4.1/r-2.5.0/datatables.min.css"
-      rel="stylesheet"
-    />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-1.13.5/b-2.4.1/b-colvis-2.4.1/b-html5-2.4.1/b-print-2.4.1/r-2.5.0/datatables.min.js"></script>
 
     {% if title %}
     <title>PSU - {{ title }}</title>
@@ -73,36 +68,6 @@
     <main class="container" style="margin-top: 2rem">
       {% block content %} {% endblock %}
     </main>
-    <script>
-      window.onload = function () {
-        const toggle = document.querySelector("#toggle");
-        if (localStorage.darkMode === "true" || localStorage.darkMode === 1) {
-          document.documentElement.setAttribute("data-theme", "dark");
-          document.getElementById("toggle").checked = true;
-        } else {
-          document.documentElement.setAttribute("data-theme", "light");
-          document.getElementById("toggle").checked = false;
-        }
-
-        toggle.addEventListener("change", () => {
-          document.documentElement.classList.toggle("dark");
-          document.documentElement.classList.toggle("light");
-          localStorage.darkMode = toggle.checked ? "true" : "false";
-          document.documentElement.setAttribute(
-            "data-theme",
-            toggle.checked ? "dark" : "light"
-          );
-
-          if (toggle.checked) {
-            document.documentElement.classList.remove("light");
-            document.documentElement.classList.add("dark");
-          } else {
-            document.documentElement.classList.remove("dark");
-            document.documentElement.classList.add("light");
-          }
-        });
-      };
-    </script>
     <script>
       function fadeOutElement() {
         $("#alert-message").fadeOut(1000);
