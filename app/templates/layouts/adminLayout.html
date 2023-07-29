@@ -5,8 +5,8 @@
         <span class="hover:text-white"
           ><input class="checkbox" type="checkbox" id="toggle" />
           <label class="toggle toggle-mode" for="toggle">
-            <ion-icon class="icon icon--light" name="sunny-outline"></ion-icon>
-            <ion-icon class="icon icon--dark" name="moon-outline"></ion-icon>
+            <i class="bx bx-sun icon icon--light"></i>
+            <i class="bx bx-moon icon icon--dark"></i>
             <span class="ball"></span> </label
         ></span>
       </div>
@@ -20,11 +20,18 @@
           tabindex="0"
           class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow dark:bg-base-100 rounded-box w-52"
         >
-          <li><a id="btn-logout-admin" class="text-red-500 hover:text-white hover:bg-red-500" href="/logout">Logout</a></li>
+          <li>
+            <a
+              id="btn-logout-admin"
+              class="text-red-500 hover:text-white hover:bg-red-500"
+              href="/logout"
+              >Logout</a
+            >
+          </li>
         </ul>
       </div>
     </div>
-    <a href="/admin/overview" class="header_logo dark:text-white"
+    <a href="{{ url_for('admin.index') }}" class="header_logo dark:text-white"
       >Network Monitoring System</a
     >
 
@@ -63,7 +70,7 @@
 <div class="nav dark:bg-base-200" id="navbar">
   <nav class="nav_container">
     <div>
-      <a href="/admin/overview" class="nav_link pb-10"
+      <a href="{{ url_for('admin.index') }}" class="nav_link pb-10"
         ><img
           src="{{ url_for('static', filename='/images/psu.png') }}"
           alt="logo"
@@ -79,22 +86,36 @@
         <div class="nav_items">
           <h3 class="nav_subtitle">Pages</h3>
 
-          <a id="home-link" href="/admin/overview" class="nav_link active">
-            <ion-icon name="home" class="nav_icon"></ion-icon>
+          <a
+            id="home-link"
+            href="{{ url_for('admin.index') }}"
+            class="nav_link active"
+          >
+            <i class="bx bx-home nav_icon"></i>
             <span class="nav_name">Home</span>
           </a>
 
           <div id="ddl-host-service" class="nav_dropdown">
             <a class="nav_link">
-              <ion-icon name="bar-chart" class="nav_icon"></ion-icon>
+              <i class="bx bx-line-chart nav_icon"></i>
               <span class="nav_name">Hosts & Services</span>
-              <ion-icon name="chevron-down" class="nav_icon nav_dropdown-icon"></ion-icon>
+              <i class="bx bx-chevron-down nav_icon nav_dropdown-icon"></i>
             </a>
 
             <div class="nav_dropdown-collapse dark:bg-base-200">
               <div class="nav_dropdown-content">
-                <a id="host-link" href="/admin/hosts" class="nav_dropdown-item pb-4">Hosts</a>
-                <a id="service-link" href="/admin/services" class="nav_dropdown-item">Services</a>
+                <a
+                  id="host-link"
+                  href="{{ url_for('admin.host') }}"
+                  class="nav_dropdown-item pb-4"
+                  >Hosts</a
+                >
+                <a
+                  id="service-link"
+                  href="{{ url_for('admin.service') }}"
+                  class="nav_dropdown-item"
+                  >Services</a
+                >
               </div>
             </div>
           </div>
@@ -102,19 +123,31 @@
 
         <div class="nav_items">
           <h3 class="nav_subtitle">Management</h3>
-          <a id="permission-link" href="/admin/permission" class="nav_link">
-            <ion-icon name="people" class="nav_icon"></ion-icon>
+          <a
+            id="permission-link"
+            href="{{ url_for('admin.permission') }}"
+            class="nav_link"
+          >
+            <i class="bx bx-group nav_icon"></i>
             <span class="nav_name">Permission</span>
           </a>
-          <a id="report-link" href="/admin/reports" class="nav_link">
-            <ion-icon name="bug" class="nav_icon"></ion-icon>
+          <a
+            id="report-link"
+            href="{{ url_for('admin.report') }}"
+            class="nav_link"
+          >
+            <i class="bx bx-bug nav_icon"></i>
             <span class="nav_name">Report</span>
           </a>
         </div>
       </div>
     </div>
 
-    <a id="logout-sidebar-link" href="/logout" class="nav_link nav_logout">
+    <a
+      id="logout-sidebar-link"
+      href="{{ url_for('site.logout') }}"
+      class="nav_link nav_logout"
+    >
       <i class="bx bx-log-out nav_icon"></i>
       <span class="nav_name">Log Out</span>
     </a>
