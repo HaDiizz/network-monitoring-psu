@@ -25,12 +25,23 @@ var Stadia_AlidadeSmooth = L.tileLayer(
   }
 );
 
+defaultMap = L.tileLayer("http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}", {
+  maxZoom: 18,
+  subdomains: ["mt0", "mt1", "mt2", "mt3"],
+});
+hybridMap = L.tileLayer("http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}", {
+  maxZoom: 18,
+  subdomains: ["mt0", "mt1", "mt2", "mt3"],
+});
+
 var map = L.map("map", {
   layers: [Stadia_AlidadeSmooth],
 }).setView([report.lat, report.lng], 18);
 
 var layerControl = L.control
   .layers({
+    DefaultMap: defaultMap,
+    HybridMap: hybridMap,
     OpenStreetMap: osmLayer,
     SatelliteMap: Esri_WorldImagery,
     LightMap: Stadia_AlidadeSmooth,

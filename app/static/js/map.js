@@ -28,8 +28,19 @@ var map = L.map("map", {
   layers: [Stadia_AlidadeSmooth],
 }).setView([7.008927, 100.497545], 16);
 
+defaultMap = L.tileLayer("http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}", {
+  maxZoom: 18,
+  subdomains: ["mt0", "mt1", "mt2", "mt3"],
+});
+hybridMap = L.tileLayer("http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}", {
+  maxZoom: 18,
+  subdomains: ["mt0", "mt1", "mt2", "mt3"],
+});
+
 var layerControl = L.control
   .layers({
+    DefaultMap: defaultMap,
+    HybridMap: hybridMap,
     OpenStreetMap: osmLayer,
     SatelliteMap: Esri_WorldImagery,
     LightMap: Stadia_AlidadeSmooth,
