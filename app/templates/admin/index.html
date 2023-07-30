@@ -70,6 +70,26 @@
         id="elementContainer"
       >
         <div class="container table-responsive p-3">
+          <div class="form-control w-full pb-4">
+            <label class="label">
+              <span class="label-text">สถานที่</span>
+            </label>
+            <select
+              id="ddl-address"
+              class="select select-bordered"
+              onchange="handleSelectChange()"
+            >
+              <option value="7.00922|100.49732" selected disabled>
+                เลือกสถานที่ที่ต้องการ
+              </option>
+
+              {% for address in address_list %}
+              <option value="{{ address.lat }}|{{ address.lng }}">
+                {{ address.name }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
           <table id="host-table" class="display" style="width: 100%">
             <thead>
               <tr>
@@ -146,8 +166,17 @@
   </div>
 </div>
 
-<script src="{{ url_for('static', filename='utils/handleExpandMap.js') }}"></script>
 <script src="{{ url_for('static', filename='js/map.js') }}"></script>
+<script>
+  function handleSelectChange() {
+    var selectedValue = document.getElementById("ddl-address").value;
+    var [lat, lng] = selectedValue.split("|");
+    lat = parseFloat(lat);
+    lng = parseFloat(lng);
+    updateMapView(lat, lng);
+  }
+</script>
+<script src="{{ url_for('static', filename='utils/handleExpandMap.js') }}"></script>
 <script src="{{ url_for('static', filename='js/hostTable.js') }}"></script>
 <script src="{{ url_for('static', filename='js/serviceTable.js') }}"></script>
 <script>

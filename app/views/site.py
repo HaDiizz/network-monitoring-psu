@@ -3,6 +3,7 @@ from .. import forms
 from flask_login import login_user, login_required, logout_user, current_user
 from .. import models
 import mongoengine as me
+from ..utils import address_list
 
 module = Blueprint('site', __name__)
 
@@ -15,7 +16,7 @@ def index():
     if current_user.is_authenticated:
         if current_user.role == 'admin':
             return redirect('/admin/overview')
-    return render_template("index.html", title="หน้าหลัก")
+    return render_template("index.html", title="หน้าหลัก", address_list=address_list())
 
 @module.route('/login', methods=["GET", "POST"])
 def login():

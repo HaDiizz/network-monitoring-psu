@@ -1,3 +1,6 @@
+from . import models
+
+
 def status_list():
     return [
         'PENDING',
@@ -5,3 +8,7 @@ def status_list():
         'APPROVED',
         'REJECTED',
     ]
+
+
+def address_list():
+    return models.Address.objects()

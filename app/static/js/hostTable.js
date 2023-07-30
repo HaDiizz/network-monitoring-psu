@@ -9,12 +9,7 @@ $(document).ready(function () {
       '<button id="btn-filter-up" type="button" class="btn join-item filter-btn" data-status="UP"><i class="bx bxs-caret-up-circle text-green-500" style="font-size: 18px"></i><span class="pl-2"> UP</span></button>' +
       '<button id="btn-filter-down" type="button" class="btn join-item filter-btn" data-status="DOWN"><i class="bx bxs-caret-down-circle text-red-500" style="font-size: 18px"></i><span class="pl-2"> DOWN</span></button>' +
       '<button id="btn-filter-clear" type="button" class="btn join-item clear-btn">CLR</button>' +
-      "</div>" +
-      '<p class="p-2 text-neutral-500">สถานที่</p>' +
-      '<select id="ddl-address" class="select select-ghost select-sm w-full max-w-xs" name="status">' +
-      '<option selected value="eng">คณะวิศวกรรมศาสตร์</option>' +
-      '<option value="diis">ศูนย์คอมพิวเตอร์</option>' +
-      "</select>"
+      "</div>"
   );
   var statusColIndex = table
     .columns()
