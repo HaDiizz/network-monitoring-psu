@@ -15,6 +15,18 @@ def location():
     return render_template("/admin/location.html", title="Location", locations=locations)
 
 
+@admin_module.route("/locations/delete/<string:location_id>")
+@acl.roles_required("admin")
+def delete_location(location_id):
+    location = models.Location.objects.with_id(location_id)
+    if not location:
+        flash('ไม่พบข้อมูลที่ต้องการ', 'error')
+        return redirect(url_for('admin.location'))
+    location.delete()
+    flash('ลบข้อมูลสำเร็จ', 'success')
+    return redirect(url_for('admin.location'))
+
+
 @admin_module.route("/locations/create", methods=["GET", "POST"])
 @acl.roles_required("admin")
 def create_location():
