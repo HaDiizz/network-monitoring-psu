@@ -22,14 +22,14 @@
           <span class="label-text">สถานที่</span>
         </label>
         <select
-          id="ddl-address"
+          id="ddl-location"
           class="select select-bordered"
           onchange="handleSelectChange()"
         >
           <option value="7.00922|100.49732" selected disabled>เลือกสถานที่ที่ต้องการ</option>
-          {% for address in address_list %}
-          <option value="{{ address.lat }}|{{ address.lng }}">
-            {{ address.name }}
+          {% for location in location_list %}
+          <option value="{{ location.lat }}|{{ location.lng }}">
+            {{ location.name }}
           </option>
           {% endfor %}
         </select>
@@ -59,7 +59,7 @@
 <script src="{{ url_for('static', filename='js/map.js') }}"></script>
 <script>
   function handleSelectChange() {
-    var selectedValue = document.getElementById("ddl-address").value;
+    var selectedValue = document.getElementById("ddl-location").value;
     var [lat, lng] = selectedValue.split("|");
     lat = parseFloat(lat);
     lng = parseFloat(lng);

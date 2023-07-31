@@ -10,5 +10,5 @@ def status_list():
     ]
 
 
-def address_list():
-    return models.Address.objects()
+def location_list():
+    return models.Location.objects().order_by("name")

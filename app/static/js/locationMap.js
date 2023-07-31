@@ -1,5 +1,3 @@
-var geolocationWatcher = null;
-
 var osmLayer = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 18,
   attribution:
@@ -32,7 +30,7 @@ hybridMap = L.tileLayer("http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}", {
 });
 
 var map = L.map("map", {
-  layers: [Stadia_AlidadeSmooth],
+  layers: [defaultMap],
 }).setView([7.008927, 100.497545], 18);
 
 var layerControl = L.control
@@ -56,49 +54,36 @@ L.control
 
 var marker, circle, zoomed;
 
-var redIcon = L.icon({
-  iconUrl: "../static/images/red-mark.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-});
-
-function success(pos) {
-  const lat = pos.coords.latitude;
-  const lng = pos.coords.longitude;
-  const accuracy = pos.coords.accuracy;
-
-  if (marker) {
-    map.removeLayer(marker);
-    map.removeLayer(circle);
-  }
-
-  marker = L.marker([lat, lng], {
-    icon: redIcon,
-    title: "ตำแหน่งปัจจุบัน",
-  }).addTo(map);
-  circle = L.circle([lat, lng], { radius: accuracy }).addTo(map);
-
-  map.setView([lat, lng], 15);
-
-  document.getElementById("lat").value = lat;
-  document.getElementById("lng").value = lng;
-
-  if (!zoomed) {
-    zoomed = map.fitBounds(circle.getBounds());
-  }
-}
-
-function error() {
-  alert(
-    "Cannot get current location. You can manually mark a location on the map."
-  );
-  map.on("click", handleMapClick);
-}
-
-geolocationWatcher = navigator.geolocation.watchPosition(success, error);
-
 map.on("click", handleMapClick);
+
+function updateMarkerAndCircle() {
+  const lat = parseFloat(document.getElementById("lat").value);
+  const lng = parseFloat(document.getElementById("lng").value);
+
+  if (!isNaN(lat) && !isNaN(lng)) {
+    if (marker) {
+      map.removeLayer(marker);
+      map.removeLayer(circle);
+    }
+
+    marker = L.marker([lat, lng], {
+      icon: redIcon,
+      title: "ตำแหน่งที่คุณเลือก",
+    }).addTo(map);
+    circle = L.circle([lat, lng], { radius: 10 }).addTo(map);
+
+    map.setView([lat, lng], 18);
+  }
+}
+
+document
+  .getElementById("lat")
+  .addEventListener("change", updateMarkerAndCircle);
+document
+  .getElementById("lng")
+  .addEventListener("change", updateMarkerAndCircle);
+
+updateMarkerAndCircle();
 
 function handleMapClick(e) {
   const lat = e.latlng.lat;

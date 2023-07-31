@@ -21,7 +21,7 @@ var Stadia_AlidadeSmooth = L.tileLayer(
   {
     maxZoom: 18,
     accessToken:
-      "kBXuPeAzSz2kY07LD5nLdVPZDTmSpy7x6F0HdWqExLWUgJlqS7L1wWeyRM2lB1dm",
+      "LIMUfFvUA0DaZQbkYyYbzSLNFizJ91WY5UzFCxJkDWbC4gETyZcmqwD2OvnXdj6X",
   }
 );
 

@@ -1,6 +1,13 @@
 {% extends "./layouts/base.html" %} {% block content %}
 <div class="admin-container">
-  <h1 class="text-4xl font-bold pb-8">Report Management</h1>
+  <h1 class="text-4xl font-bold pb-8">Report Detail</h1>
+  <div class="text-sm breadcrumbs pb-5">
+    <ul>
+      <li><a href="/admin/overview">Home</a></li> 
+      <li><a href="/admin/reports">Reports</a></li> 
+      <li>Report Detail</li>
+    </ul>
+  </div>
   {% with messages = get_flashed_messages(with_categories=true) %} {% if messages
     %} {% for category, message in messages %}
     <div id="alert-message" class="alert alert-{{ category }} mb-4">

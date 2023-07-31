@@ -3,7 +3,7 @@ from .. import forms
 from flask_login import login_user, login_required, logout_user, current_user
 from .. import models
 import mongoengine as me
-from ..utils import address_list
+from ..utils import location_list
 
 module = Blueprint('site', __name__)
 
@@ -16,7 +16,7 @@ def index():
     if current_user.is_authenticated:
         if current_user.role == 'admin':
             return redirect('/admin/overview')
-    return render_template("index.html", title="หน้าหลัก", address_list=address_list())
+    return render_template("index.html", title="หน้าหลัก", location_list=location_list())
 
 @module.route('/login', methods=["GET", "POST"])
 def login():
@@ -55,8 +55,8 @@ def report():
         report = models.Report(
             title=title,
             detail=detail,
-            lat=float(lat),
-            lng=float(lng),
+            lat=round(float(lat), 6),
+            lng=round(float(lng), 6),
             reported_by=current_user
         )
         report.save()

@@ -1,0 +1,78 @@
+{% extends "./layouts/base.html" %} {% block content %}
+<div class="admin-container">
+  <h1 class="text-4xl font-bold pb-8">Location</h1>
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %} {% for category, message in messages %}
+  <div id="alert-message" class="alert alert-{{ category }} mb-4">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="stroke-current shrink-0 h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
+    </svg>
+    <span>{{ message }}</span>
+  </div>
+  {% endfor %} {% endif %} {% endwith %}
+  <div class="flex justify-end">
+    <a
+      href="{{ url_for('admin.create_location') }}"
+      class="btn bg-primary hover:bg-secondary dark:bg-neutral text-white"
+    >
+      เพิ่มที่ตั้ง
+    </a>
+  </div>
+  <div class="overflow-x-auto pt-10">
+    <table id="location-table" class="display nowrap" style="width: 100%">
+      <thead>
+        <tr>
+          <th></th>
+          <th>ชื่อสถานที่</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for location in locations %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ location.name }}</td>
+          <td>{{ location.lat }}</td>
+          <td>{{ location.lng }}</td>
+          <td>
+            <div class="text-center cursor-pointer">
+              <a
+                href="/admin/locations/edit/{{ location.id }}"
+                id="btn-location-edit"
+              >
+                <i
+                  class="bx bx-edit-alt text-indigo-500"
+                  style="font-size: 25px"
+                ></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th></th>
+          <th>ชื่อสถานที่</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+          <th></th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/locationTable.js') }}"></script>
+{% endblock %}
