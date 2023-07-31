@@ -54,7 +54,7 @@ L.control
   })
   .addTo(map);
 
-var marker, circle, zoomed;
+var marker, zoomed;
 
 var redIcon = L.icon({
   iconUrl: "../static/images/red-mark.png",
@@ -70,23 +70,17 @@ function success(pos) {
 
   if (marker) {
     map.removeLayer(marker);
-    map.removeLayer(circle);
   }
 
   marker = L.marker([lat, lng], {
     icon: redIcon,
     title: "ตำแหน่งปัจจุบัน",
   }).addTo(map);
-  circle = L.circle([lat, lng], { radius: accuracy }).addTo(map);
 
   map.setView([lat, lng], 15);
 
   document.getElementById("lat").value = lat;
   document.getElementById("lng").value = lng;
-
-  if (!zoomed) {
-    zoomed = map.fitBounds(circle.getBounds());
-  }
 }
 
 function error() {
@@ -106,14 +100,12 @@ function handleMapClick(e) {
 
   if (marker) {
     map.removeLayer(marker);
-    map.removeLayer(circle);
   }
 
   marker = L.marker([lat, lng], {
     icon: redIcon,
     title: "ตำแหน่งที่คุณเลือก",
   }).addTo(map);
-  circle = L.circle([lat, lng], { radius: 10 }).addTo(map);
 
   document.getElementById("lat").value = lat;
   document.getElementById("lng").value = lng;

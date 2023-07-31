@@ -18,7 +18,7 @@ def location():
 @admin_module.route("/locations/create", methods=["GET", "POST"])
 @acl.roles_required("admin")
 def create_location():
-    form = forms.location.LocationForm()
+    form = forms.LocationForm()
     if request.method == 'POST':
         name = request.form.get('name')
         lat = request.form.get('lat')
@@ -48,7 +48,7 @@ def edit_location(location_id):
     if not location:
         flash('ไม่พบข้อมูลที่ต้องการ', 'error')
         return redirect(url_for('admin.location'))
-    form = forms.location.LocationForm(obj=location)
+    form = forms.LocationForm(obj=location)
     if request.method == 'POST':
         name = request.form.get('name')
         lat = request.form.get('lat')
@@ -91,7 +91,7 @@ def permission():
 @admin_module.route("/reports", methods=["GET", "POST"])
 @acl.roles_required("admin")
 def report():
-    form = forms.report.ReportFilterForm()
+    form = forms.ReportFilterForm()
     reports = models.Report.objects()
     total_reports = reports.filter().count()
     pending_reports = reports.filter(status='PENDING').count()

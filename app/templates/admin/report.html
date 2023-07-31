@@ -1,25 +1,7 @@
-{% extends "./layouts/base.html" %} {% block content %}
+{% extends "/layouts/base.html" %} {% block content %}
 <div class="admin-container">
   <h1 class="text-4xl font-bold pb-8">Report Management</h1>
-  {% with messages = get_flashed_messages(with_categories=true) %} {% if
-  messages %} {% for category, message in messages %}
-  <div id="alert-message" class="alert alert-{{ category }} mb-4">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      class="stroke-current shrink-0 h-6 w-6"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-      />
-    </svg>
-    <span>{{ message }}</span>
-  </div>
-  {% endfor %} {% endif %} {% endwith %}
+  {% include "/layouts/messageSection.html" %}
   <div class="filter-section pb-10">
     <form method="post">
       {{ form.csrf_token }}
@@ -99,7 +81,10 @@
           <td>
             <div class="text-center cursor-pointer">
               <a href="/admin/reports/{{ report.id }}" id="btn-report-detail">
-                <i class='bx bx-search-alt-2 text-indigo-500' style="font-size: 25px;" ></i>
+                <i
+                  class="bx bx-search-alt-2 text-indigo-500"
+                  style="font-size: 25px"
+                ></i>
               </a>
             </div>
           </td>

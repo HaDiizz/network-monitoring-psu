@@ -57,16 +57,8 @@
 </div>
 
 <script src="{{ url_for('static', filename='js/map.js') }}"></script>
-<script>
-  function handleSelectChange() {
-    var selectedValue = document.getElementById("ddl-location").value;
-    var [lat, lng] = selectedValue.split("|");
-    lat = parseFloat(lat);
-    lng = parseFloat(lng);
-    updateMapView(lat, lng);
-  }
-</script>
-<script src="{{ url_for('static', filename='utils/handleExpandMap.js') }}"></script>
 <script src="{{ url_for('static', filename='js/hostTable.js') }}"></script>
+<script src="{{ url_for('static', filename='utils/handleExpandMap.js') }}"></script>
+<script src="{{ url_for('static', filename='utils/handleSelectChange.js') }}"></script>
 
 {% endblock %}

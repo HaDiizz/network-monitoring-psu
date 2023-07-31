@@ -1,24 +1,6 @@
-{% extends "./layouts/base.html" %} {% block content %}
+{% extends "/layouts/base.html" %} {% block content %}
 <div class="admin-container">
-  {% with messages = get_flashed_messages(with_categories=true) %} {% if
-  messages %} {% for category, message in messages %}
-  <div id="alert-message" class="alert alert-{{ category }} mb-4">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      class="stroke-current shrink-0 h-6 w-6"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-      />
-    </svg>
-    <span>{{ message }}</span>
-  </div>
-  {% endfor %} {% endif %} {% endwith %}
+  {% include "/layouts/messageSection.html" %}
   <div class="tabs">
     <a class="tab tab-lifted tab-active" data-tab="host">Host</a>
     <a class="tab tab-lifted" data-tab="service">Service</a>
@@ -168,18 +150,6 @@
 
 <script src="{{ url_for('static', filename='js/map.js') }}"></script>
 <script>
-  function handleSelectChange() {
-    var selectedValue = document.getElementById("ddl-location").value;
-    var [lat, lng] = selectedValue.split("|");
-    lat = parseFloat(lat);
-    lng = parseFloat(lng);
-    updateMapView(lat, lng);
-  }
-</script>
-<script src="{{ url_for('static', filename='utils/handleExpandMap.js') }}"></script>
-<script src="{{ url_for('static', filename='js/hostTable.js') }}"></script>
-<script src="{{ url_for('static', filename='js/serviceTable.js') }}"></script>
-<script>
   $(document).ready(function () {
     $(".tabs a").click(function () {
       var tab_id = $(this).attr("data-tab");
@@ -192,4 +162,8 @@
     });
   });
 </script>
+<script src="{{ url_for('static', filename='js/hostTable.js') }}"></script>
+<script src="{{ url_for('static', filename='js/serviceTable.js') }}"></script>
+<script src="{{ url_for('static', filename='utils/handleExpandMap.js') }}"></script>
+<script src="{{ url_for('static', filename='utils/handleSelectChange.js') }}"></script>
 {% endblock %}

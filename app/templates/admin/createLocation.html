@@ -1,32 +1,14 @@
-{% extends "./layouts/base.html" %} {% block content %}
+{% extends "/layouts/base.html" %} {% block content %}
 <div class="admin-container">
   <h1 class="text-4xl font-bold pb-8">Create Location</h1>
   <div class="text-sm breadcrumbs pb-5">
     <ul>
-      <li><a href="/admin/overview">Home</a></li> 
-      <li><a href="/admin/locations">Locations</a></li> 
+      <li><a href="/admin/overview">Home</a></li>
+      <li><a href="/admin/locations">Locations</a></li>
       <li>Create Location</li>
     </ul>
   </div>
-  {% with messages = get_flashed_messages(with_categories=true) %} {% if
-  messages %} {% for category, message in messages %}
-  <div id="alert-message" class="alert alert-{{ category }} mb-4">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      class="stroke-current shrink-0 h-6 w-6"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-      />
-    </svg>
-    <span>{{ message }}</span>
-  </div>
-  {% endfor %} {% endif %} {% endwith %}
+  {% include "/layouts/messageSection.html" %}
   <form method="post">
     {{ form.csrf_token }}
     <div class="flex justify-end">{{ form.submit() }}</div>

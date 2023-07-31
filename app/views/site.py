@@ -25,7 +25,7 @@ def login():
             return redirect('/admin/overview')
         else:
             return redirect('/')
-    form = forms.login.LoginForm()
+    form = forms.LoginForm()
     if form.validate_on_submit():
         username = form.username.data
         password = form.password.data
@@ -43,7 +43,7 @@ def logout():
 
 @module.route('/report', methods=["GET", "POST"])
 def report():
-    form = forms.report.ReportForm()
+    form = forms.ReportForm()
     if form.validate_on_submit():
         title = form.title.data
         detail = form.detail.data

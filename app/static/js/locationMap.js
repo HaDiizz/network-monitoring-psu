@@ -52,38 +52,32 @@ L.control
   })
   .addTo(map);
 
-var marker, circle, zoomed;
+var marker, zoomed;
 
 map.on("click", handleMapClick);
 
-function updateMarkerAndCircle() {
+function updateMarker() {
   const lat = parseFloat(document.getElementById("lat").value);
   const lng = parseFloat(document.getElementById("lng").value);
 
   if (!isNaN(lat) && !isNaN(lng)) {
     if (marker) {
       map.removeLayer(marker);
-      map.removeLayer(circle);
     }
 
     marker = L.marker([lat, lng], {
       icon: redIcon,
       title: "ตำแหน่งที่คุณเลือก",
     }).addTo(map);
-    circle = L.circle([lat, lng], { radius: 10 }).addTo(map);
 
     map.setView([lat, lng], 18);
   }
 }
 
-document
-  .getElementById("lat")
-  .addEventListener("change", updateMarkerAndCircle);
-document
-  .getElementById("lng")
-  .addEventListener("change", updateMarkerAndCircle);
+document.getElementById("lat").addEventListener("change", updateMarker);
+document.getElementById("lng").addEventListener("change", updateMarker);
 
-updateMarkerAndCircle();
+updateMarker();
 
 function handleMapClick(e) {
   const lat = e.latlng.lat;
@@ -91,14 +85,12 @@ function handleMapClick(e) {
 
   if (marker) {
     map.removeLayer(marker);
-    map.removeLayer(circle);
   }
 
   marker = L.marker([lat, lng], {
     icon: redIcon,
     title: "ตำแหน่งที่คุณเลือก",
   }).addTo(map);
-  circle = L.circle([lat, lng], { radius: 10 }).addTo(map);
 
   document.getElementById("lat").value = lat;
   document.getElementById("lng").value = lng;

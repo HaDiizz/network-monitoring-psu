@@ -1,3 +1,3 @@
-from . import report
-from . import login
-from . import location
+from .report import ReportForm, ReportFilterForm
+from .login import LoginForm
+from .location import LocationForm
