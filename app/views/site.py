@@ -1,9 +1,9 @@
-from flask import Blueprint, render_template, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash, jsonify
 from .. import forms
 from flask_login import login_user, login_required, logout_user, current_user
 from .. import models
 import mongoengine as me
-from ..utils import location_list
+from ..utils import location_list, host_list
 
 module = Blueprint('site', __name__)
 
@@ -16,7 +16,11 @@ def index():
     if current_user.is_authenticated:
         if current_user.role == 'admin':
             return redirect('/admin/overview')
-    return render_template("index.html", title="หน้าหลัก", location_list=location_list())
+    return render_template("index.html", title="หน้าหลัก", location_list=location_list(), host_list=host_list())
+
+@module.route('/get-hosts')
+def get_hosts():
+    return jsonify(host_list())
 
 @module.route('/login', methods=["GET", "POST"])
 def login():

@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 from ... import acl
-from ...utils import location_list
+from ...utils import location_list, host_list
 
 admin_module = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -11,4 +11,4 @@ from app.views.admin.management import *
 @admin_module.route("/overview")
 @acl.roles_required("admin")
 def index():
-    return render_template("/admin/index.html", title="Overview", location_list=location_list())
+    return render_template("/admin/index.html", title="Overview", location_list=location_list(), host_list=host_list())

@@ -32,7 +32,7 @@
 }
 
 #map {
-  height: 450px;
+  height: 550px;
   z-index: 12;
 }
 
@@ -44,6 +44,10 @@
 
 div.dataTables_wrapper div.dataTables_filter {
   text-align: left !important;
+}
+
+.dt-buttons {
+  padding-top: 14px;
 }
 
 /* Dark/Light Mode Switch */
@@ -91,7 +95,7 @@ div.dataTables_wrapper div.dataTables_filter {
   color: #151d2a;
 }
 [data-theme="light"] .ball {
-  background-color: #1D232A;
+  background-color: #1d232a;
 }
 
 /* ---- ---- Dark Mode ---- ---- */

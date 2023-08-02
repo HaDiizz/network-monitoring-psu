@@ -1,7 +1,12 @@
 $(document).ready(function () {
   var table = $("#host-table").DataTable({
-    dom: "Bfrtip",
+    dom: "lfrtipB",
     buttons: ["copy", "csv", "excel", "print", "colvis"],
+    pageSize: 5,
+    paging: true,
+    lengthMenu: [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "All"]],
+    scrollCollapse: true,
+    scrollY: '230px'
   });
 
   $("div.dataTables_filter").append(
