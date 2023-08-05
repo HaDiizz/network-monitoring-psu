@@ -16,7 +16,10 @@ def index():
     if current_user.is_authenticated:
         if current_user.role == 'admin':
             return redirect('/admin/overview')
-    return render_template("index.html", title="หน้าหลัก", location_list=location_list(), host_list=host_list())
+    hosts = host_list()
+    if not hosts:
+        hosts = []
+    return render_template("index.html", title="หน้าหลัก", location_list=location_list(), host_list=hosts)
 
 @module.route('/get-hosts')
 def get_hosts():

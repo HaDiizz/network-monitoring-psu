@@ -52,6 +52,10 @@ div.dataTables_wrapper div.dataTables_filter {
   padding-left: 1rem;
 }
 
+.dataTables_scrollHead {
+  overflow: scroll !important;
+}
+
 /* Dark/Light Mode Switch */
 .toggle-mode {
   position: relative;

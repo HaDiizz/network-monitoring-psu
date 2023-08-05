@@ -23,9 +23,12 @@ def host_list():
     try:
         response = requests.get("https://nwms-cms-api.onrender.com/api/hosts")
         response = response.json()
-        for item in response['value']:
-            if not current_user.is_authenticated:
-                del item['extensions']['attributes']['ipaddress']
-        return response['value']
+        if response:
+            for item in response['value']:
+                if not current_user.is_authenticated:
+                    del item['extensions']['attributes']['ipaddress']
+            return response['value']
+        else:
+            return []
     except Exception as ex:
-        return {"msg": "error"}
+        return None

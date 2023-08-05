@@ -11,4 +11,7 @@ from app.views.admin.management import *
 @admin_module.route("/overview")
 @acl.roles_required("admin")
 def index():
-    return render_template("/admin/index.html", title="Overview", location_list=location_list(), host_list=host_list())
+    hosts = host_list()
+    if not hosts:
+        hosts = []
+    return render_template("/admin/index.html", title="Overview", location_list=location_list(), host_list=hosts)

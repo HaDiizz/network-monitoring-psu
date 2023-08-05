@@ -163,6 +163,7 @@ function showHostModal(host) {
 fetch("/get-hosts")
   .then((response) => response.json())
   .then((data) => {
+    if (!data) return;
     data.forEach((host) => {
       var marker = host.extensions.last_state === 1 ? redIcon : greenIcon;
       L.marker(
