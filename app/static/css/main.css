@@ -1,3 +1,4 @@
+@import url("./loader.css");
 @import url("./variables.css");
 @import url("./navigation.css");
 
@@ -48,6 +49,7 @@ div.dataTables_wrapper div.dataTables_filter {
 
 .dt-buttons {
   padding-top: 14px;
+  padding-left: 1rem;
 }
 
 /* Dark/Light Mode Switch */

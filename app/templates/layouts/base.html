@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <script src="{{ url_for('static', filename='js/modeRender.js') }}"></script>
     <script src="{{ url_for('static', filename='js/modeSystem.js') }}"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -55,11 +54,19 @@
     {% endif %}
   </head>
   <body>
+    <div class="loader-wrapper">
+      <div class="loader"></div>
+    </div>
     {% if account.role == 'admin' %} {% include "/layouts/adminLayout.html" %}
     {% else %} {% include "/layouts/userLayout.html" %} {% endif %}
     <main class="container" style="margin-top: 2rem">
       {% block content %} {% endblock %}
     </main>
+    <script>
+      $(window).on("load", function () {
+        $(".loader-wrapper").fadeOut("slow");
+      });
+    </script>
     <script>
       function fadeOutElement() {
         $("#alert-message").fadeOut(1000);

@@ -80,17 +80,5 @@
     </table>
   </div>
 </div>
-<script src="{{ url_for('static', filename='js/locationTable.js') }}"></script>
-<script>
-  function openDeleteModal(locationId, locationName) {
-    const modal = document.getElementById("delete_modal");
-    modal.querySelector(
-      "p"
-    ).innerHTML = `คุณยืนยันที่จะลบ <i class="font-bold text-indigo-500">${locationName}</i> ?`;
-    const confirmBtn = modal.querySelector("#cf_delete");
-    confirmBtn.href = `/admin/locations/delete/${locationId}`;
-
-    modal.showModal();
-  }
-</script>
+<script src="{{ url_for('static', filename='js/location.js') }}"></script>
 {% endblock %}

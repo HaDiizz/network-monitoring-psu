@@ -61,7 +61,7 @@
       <table id="host-table" class="display" style="width: 100%">
         <thead>
           <tr>
-            <th>AP Name</th>
+            <th>Host Name</th>
             <th>Status</th>
             <th>Total User</th>
             <th>Availability</th>
@@ -97,21 +97,8 @@
     iconUrl: "{{ url_for('static', filename='images/red.png') }}",
     iconSize: [20, 20],
   });
-
-  $(document).ready(function () {
-    $(".tabs a").click(function () {
-      var tab_id = $(this).attr("data-tab");
-
-      $(".tabs a").removeClass("tab-active");
-      $(".tab-content").removeClass("current");
-
-      $(this).addClass("tab-active");
-      $("#" + tab_id).addClass("current");
-    });
-  });
 </script>
-<script src="{{ url_for('static', filename='js/hostTable.js') }}"></script>
-<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
 <script src="{{ url_for('static', filename='utils/handleExpandMap.js') }}"></script>
 <script src="{{ url_for('static', filename='utils/handleSelectChange.js') }}"></script>
 

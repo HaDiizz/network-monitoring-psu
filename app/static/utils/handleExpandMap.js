@@ -2,7 +2,8 @@ function handleExpand() {
   var layoutContainer = document.getElementById("layoutContainer");
   var mapContainer = document.getElementById("mapContainer");
   var elementContainer = document.getElementById("elementContainer");
-
+  const tableHeader = document.querySelector(".dataTables_scrollHeadInner");
+  const tableElement = document.querySelector(".display.dataTable.no-footer");
   if (mapContainer.classList.contains("expanded")) {
     mapContainer.classList.remove("expanded");
     layoutContainer.classList.remove("lg:flex-col");
@@ -13,6 +14,10 @@ function handleExpand() {
     mapContainer.classList.add("md:w-7/12");
     elementContainer.classList.remove("md:w-12/12");
     elementContainer.classList.add("md:w-5/12");
+    if (tableHeader) {
+      tableHeader.style.width = "455.05px";
+      tableElement.style.width = "455.05px";
+    }
   } else {
     mapContainer.classList.add("expanded");
     layoutContainer.classList.remove("lg:flex-row");
@@ -23,6 +28,10 @@ function handleExpand() {
     mapContainer.classList.add("md:w-12/12");
     elementContainer.classList.remove("md:w-5/12");
     elementContainer.classList.add("md:w-12/12");
+    if (tableHeader) {
+      tableHeader.style.width = "1146px";
+      tableElement.style.width = "1146px";
+    }
   }
   map.invalidateSize();
 }

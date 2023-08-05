@@ -94,7 +94,8 @@
           <table id="host-table" class="display" style="width: 100%">
             <thead>
               <tr>
-                <th>AP Name</th>
+                <th>Host Name</th>
+                <th>IP Address</th>
                 <th>Status</th>
                 <th>Total User</th>
                 <th>Availability</th>
@@ -104,6 +105,7 @@
               {% for host in host_list %}
               <tr>
                 <td>{{ host.title }}</td>
+                <td>{{ host.extensions.attributes.ipaddress }}</td>
                 <td>
                   {% if host.extensions.last_state == 0 %}
                   <div class="badge badge-success pb-0.5">UP</div>
@@ -175,7 +177,6 @@
   </div>
 </div>
 
-<script src="{{ url_for('static', filename='js/map.js') }}"></script>
 <script>
   var greenIcon = new L.Icon({
     iconUrl: "{{ url_for('static', filename='images/green.png') }}",
@@ -186,30 +187,8 @@
     iconUrl: "{{ url_for('static', filename='images/red.png') }}",
     iconSize: [20, 20],
   });
-
-  $(document).ready(function () {
-    $(".modal-tabs a").click(function () {
-      var tab_id = $(this).attr("data-tab");
-      $(".modal-tabs a").removeClass("tab-active");
-      $(".modal-section.tab-content").removeClass("current");
-
-      $(this).addClass("tab-active");
-      $("#" + tab_id).addClass("current");
-    });
-
-    $(".page-tabs a").click(function () {
-      var tab_id = $(this).attr("data-tab");
-      
-      $(".page-tabs a").removeClass("tab-active");
-      $(".page.tab-content").removeClass("current");
-
-      $(this).addClass("tab-active");
-      $("#" + tab_id).addClass("current");
-    });
-  });
 </script>
-<script src="{{ url_for('static', filename='js/hostTable.js') }}"></script>
-<script src="{{ url_for('static', filename='js/serviceTable.js') }}"></script>
+<script src="{{ url_for('static', filename='js/adminHome.js') }}"></script>
 <script src="{{ url_for('static', filename='utils/handleExpandMap.js') }}"></script>
 <script src="{{ url_for('static', filename='utils/handleSelectChange.js') }}"></script>
 {% endblock %}

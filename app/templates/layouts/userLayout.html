@@ -10,7 +10,10 @@
     /></a>
   </div>
   <div class="flex-none">
-    <ul class="menu menu-horizontal px-1 text-white" style="align-items: center">
+    <ul
+      class="menu menu-horizontal px-1 text-white"
+      style="align-items: center"
+    >
       <li>
         <span class="hover:text-white"
           ><input class="checkbox" type="checkbox" id="toggle" />
@@ -36,7 +39,24 @@
           tabindex="0"
           class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow dark:bg-base-100 dark:text-white text-black rounded-box w-52"
         >
-          <li><a class="text-red-500 hover:text-white hover:bg-red-500" href="/logout">Logout</a></li>
+          <li>
+            <div class="p-3 flex flex-col">
+              <span style="width: 100%; font-size: 16px"
+                >{{ account.first_name }} {{ account.last_name }}</span
+              >
+              <span class="text-neutral-500" style="width: 100%"
+                >{{ account.email }}</span
+              >
+            </div>
+          </li>
+          <li></li>
+          <li>
+            <a
+              class="text-red-500 hover:text-white hover:bg-red-500 pb-2"
+              href="/logout"
+              >Logout</a
+            >
+          </li>
         </ul>
       </div>
       {% else %}
