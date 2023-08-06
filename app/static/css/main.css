@@ -56,6 +56,14 @@ div.dataTables_wrapper div.dataTables_filter {
   overflow: scroll !important;
 }
 
+.dataTables_scrollHead::-webkit-scrollbar{
+  display: none; 
+ }
+
+.dataTables_scrollBody::-webkit-scrollbar{
+  display: none; 
+ }
+
 /* Dark/Light Mode Switch */
 .toggle-mode {
   position: relative;
