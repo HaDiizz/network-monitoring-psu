@@ -27,6 +27,12 @@
           </label>
           {{ form.title() }}
         </div>
+        <div class="form-control w-full pb-3">
+          <label for="{{ form.problem_type.id }}" class="label">
+            <span class="label-text">{{ form.problem_type.label }}</span>
+          </label>
+          {{ form.problem_type() }}
+        </div>
         <div class="form-control w-full pb-5">
           <label for="{{ form.detail.id }}" class="label">
             <span class="label-text">{{ form.detail.label }}</span>

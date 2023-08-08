@@ -138,6 +138,14 @@
             <span class="nav_name">Location</span>
           </a>
           <a
+            id="problem-link"
+            href="{{ url_for('admin.category') }}"
+            class="nav_link"
+          >
+            <i class='bx bx-category nav_icon'></i>
+            <span class="nav_name">Issue Category</span>
+          </a>
+          <a
             id="permission-link"
             href="{{ url_for('admin.permission') }}"
             class="nav_link"
@@ -153,6 +161,7 @@
             <i class="bx bx-bug nav_icon"></i>
             <span class="nav_name">Report</span>
           </a>
+          
         </div>
       </div>
     </div>

@@ -143,3 +143,8 @@ def reportDetail(report_id):
     except Exception as e:
         flash("ขออภัย มีข้อผิดพลาดเกิดขึ้น", "error")
         return redirect("/admin/reports")
+
+@admin_module.route("/category")
+@acl.roles_required("admin")
+def category():
+    return render_template("/admin/category.html", title="Issue Category")

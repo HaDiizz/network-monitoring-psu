@@ -3,6 +3,7 @@ from wtforms import validators, StringField, SubmitField, HiddenField, TextAreaF
 
 class ReportForm(FlaskForm):
     title = StringField("หัวข้อปัญหา", render_kw={'class': 'input input-bordered w-full', 'placeholder': 'หัวข้อ', 'maxlength': '100'}, validators=[validators.InputRequired()])
+    problem_type = SelectField("ประเภทปัญหา", choices=[('', '-- โปรดเลือก --'), (('none', 'การเชื่อมต่อ Wi-Fi ไม่ได้')), ('เน็ตช้า', 'เน็ตช้า'), ('การต่อเข้าอินเทอร์เน็ตไม่ได้', 'การต่อเข้าอินเทอร์เน็ตไม่ได้')], render_kw={'class': 'select select-bordered w-full max-w-xs'}, validators=[validators.InputRequired(message="กรุณาเลือกประเภทปัญหา")])
     detail = TextAreaField("รายละเอียด", render_kw={'class': 'textarea textarea-bordered w-full', 'placeholder': 'รายละเอียด (ปัญหา, สถานที่, ตึก, ชั้น)', 'maxlength': '300'}, validators=[validators.InputRequired()])
     lat = HiddenField("Latitude", render_kw={'class': 'input input-bordered w-full', 'placeholder': 'Latitude'})
     lng = HiddenField("Longitude", render_kw={'class': 'input input-bordered w-full', 'placeholder': 'Longitude'})
