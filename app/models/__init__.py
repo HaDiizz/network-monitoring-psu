@@ -4,6 +4,7 @@ import mongoengine as me
 from .users import User
 from .locations import Location
 from .reports import Report
+from .categories import Category
 # from .hosts import Host
 # from .services import Service
 

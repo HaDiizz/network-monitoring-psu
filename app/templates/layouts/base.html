@@ -55,7 +55,10 @@
   </head>
   <body>
     <div class="loader-wrapper">
-      <div class="loader"></div>
+      <div class="loader">
+        <div class="loader-text">LOADING...</div>
+        <div class="loader-bar"></div>
+      </div>
     </div>
     {% if account.role == 'admin' %} {% include "/layouts/adminLayout.html" %}
     {% else %} {% include "/layouts/userLayout.html" %} {% endif %}

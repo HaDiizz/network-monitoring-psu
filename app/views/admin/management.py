@@ -144,7 +144,50 @@ def reportDetail(report_id):
         flash("ขออภัย มีข้อผิดพลาดเกิดขึ้น", "error")
         return redirect("/admin/reports")
 
-@admin_module.route("/category")
+
+@admin_module.route("/categories", methods=["GET", "POST"])
 @acl.roles_required("admin")
 def category():
-    return render_template("/admin/category.html", title="Issue Category")
+    categories = models.Category.objects()
+    if request.method == 'POST':
+        category_name = request.form.get('category_name')
+        if not category_name or category_name == "":
+            flash("กรุณากรอกข้อมูลให้ครบถ้วน", "error")
+            return render_template("/admin/issueCategory.html", title="Issue Category")
+        category = models.Category(
+            category_name=category_name
+        )
+        category.save()
+        flash("เพิ่มข้อมูลสำเร็จ", "success")
+    return render_template("/admin/issueCategory.html", title="Issue Category", categories=categories)
+
+
+@admin_module.route("/categories/edit", methods=["POST"])
+@acl.roles_required("admin")
+def edit_category():
+    if request.method == 'POST':
+        category_name = request.form.get('category_name')
+        category_id = request.form.get('category_id')
+        if not category_id or category_id == "":
+            flash("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง", "error")
+            return render_template("/admin/issueCategory.html", title="Issue Category")
+        if not category_name or category_name == "":
+            flash("กรุณากรอกข้อมูลให้ครบถ้วน", "error")
+            return render_template("/admin/issueCategory.html", title="Issue Category")
+        category = models.Category.objects.with_id(category_id)
+        category.category_name = category_name
+        category.save()
+        flash("แก้ไขข้อมูลสำเร็จ", "success")
+    return redirect(url_for('admin.category'))
+
+
+@admin_module.route("/categories/delete/<string:category_id>")
+@acl.roles_required("admin")
+def delete_category(category_id):
+    category = models.Category.objects.with_id(category_id)
+    if not category:
+        flash('ไม่พบข้อมูลที่ต้องการ', 'error')
+        return redirect(url_for('admin.category'))
+    category.delete()
+    flash('ลบข้อมูลสำเร็จ', 'success')
+    return redirect(url_for('admin.category'))

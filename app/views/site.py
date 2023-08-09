@@ -56,7 +56,8 @@ def report():
         detail = form.detail.data
         lat = form.lat.data
         lng = form.lng.data
-        if any(field == "" for field in [title, detail, lat, lng]):
+        issue_category = form.issue_category.data
+        if any(field == "" for field in [title, detail, lat, lng, issue_category]):
             flash("กรุณากรอกข้อมูล/ปักหมุดสถานที่ในแมพ", "error")
             return render_template("report.html", title="รายงานปัญหา", form=form)
         report = models.Report(
@@ -64,7 +65,8 @@ def report():
             detail=detail,
             lat=round(float(lat), 6),
             lng=round(float(lng), 6),
-            reported_by=current_user
+            reported_by=current_user,
+            category=issue_category
         )
         report.save()
         flash("บันทึกสำเร็จ", "success")
@@ -72,6 +74,7 @@ def report():
         form.detail.data = ""
         form.lat.data = ""
         form.lng.data = ""
+        form.issue_category.data = ""
 
     if current_user.is_authenticated:
         if current_user.role == 'admin':

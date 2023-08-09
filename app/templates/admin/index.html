@@ -27,25 +27,34 @@
     <div class="cards">
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
-          <h1 class="text-4xl">1,635</h1>
+          <h1 class="text-4xl">
+            {% if host_groups_summary["TOTAL"] %} {{
+            host_groups_summary["TOTAL"] }} {% else %} - {% endif %}
+          </h1>
           <span>Total Hosts</span>
         </div>
       </div>
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
-          <h1 class="text-4xl">1,600</h1>
+          <h1 class="text-4xl">
+            {% if host_groups_summary["UP"] %} {{ host_groups_summary["UP"] }}
+            {% else %} - {% endif %}
+          </h1>
           <span>UP</span>
         </div>
       </div>
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
-          <h1 class="text-4xl">31</h1>
+          <h1 class="text-4xl">
+            {% if host_groups_summary["DOWN"] %} {{ host_groups_summary["DOWN"]
+            }} {% else %} - {% endif %}
+          </h1>
           <span>DOWN</span>
         </div>
       </div>
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
-          <h1 class="text-4xl">4</h1>
+          <h1 class="text-4xl">-</h1>
           <span>Maintain</span>
         </div>
       </div>
@@ -163,12 +172,14 @@
               </tr>
             </thead>
             <tbody>
+              {% for key, value in service_list.items() %}
               <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{ key }}</td>
+                <td>-</td>
+                <td>{{ value["value"] }}</td>
+                <td>100%</td>
               </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>

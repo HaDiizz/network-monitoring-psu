@@ -52,7 +52,7 @@
         <tr>
           <th>วันที่รายงาน</th>
           <th>เรื่อง</th>
-          <th>รายละเอียด</th>
+          <th>ประเภท</th>
           <th>สถานะ</th>
           <th>Action</th>
         </tr>
@@ -63,10 +63,11 @@
           <td>{{ report.created_date.strftime("%Y-%m-%d %H:%M:%S") }}</td>
           <td>{{ report.title }}</td>
           <td>
-            <div class="truncate-text" data-content="{{ report.detail }}">
-              {{ report.detail }}
+            <div class="truncate-text" data-content="{{ report.category }}">
+              {{ report.category }}
             </div>
           </td>
+
           <td>
             {% if report.status == 'PENDING' %}
             <div class="badge badge-warning pb-0.5">{{ report.status }}</div>
@@ -95,7 +96,7 @@
         <tr>
           <th>วันที่รายงาน</th>
           <th>เรื่อง</th>
-          <th>รายละเอียด</th>
+          <th>ประเภท</th>
           <th>สถานะ</th>
           <th>Action</th>
         </tr>

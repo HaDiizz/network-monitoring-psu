@@ -6,6 +6,7 @@ class Report(me.Document):
     reported_by = me.ReferenceField(User, required=True)
     title = me.StringField(required=True, max_length=100)
     detail = me.StringField(required=True, max_length=300)
+    category = me.StringField(required=True, max_length=100)
     lat = me.FloatField(required=True)
     lng = me.FloatField(required=True)
     status = me.StringField(required=True, default="PENDING")
