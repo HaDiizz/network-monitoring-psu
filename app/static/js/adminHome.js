@@ -184,8 +184,9 @@ $(document).ready(function () {
 
   $("#service-table_wrapper div.dataTables_filter").append(
     '<div class="join uppercase p-3 w-100" role="group">' +
-      '<button id="btn-filter-up-service" type="button" class="btn join-item filter-btn" data-status="UP"><i class="bx bxs-caret-up-circle text-green-500" style="font-size: 18px"></i><span class="pl-2"> UP</span></button>' +
-      '<button id="btn-filter-down" type="button" class="btn join-item filter-btn" data-status="DOWN"><i class="bx bxs-caret-down-circle text-red-500" style="font-size: 18px"></i><span class="pl-2"> DOWN</span></button>' +
+      '<button id="btn-filter-up-service" type="button" class="btn join-item filter-btn" data-status="OK"><i class="bx bxs-caret-up-circle text-green-500" style="font-size: 18px"></i><span class="pl-2"> OK</span></button>' +
+      '<button id="btn-filter-warn-service" type="button" class="btn join-item filter-btn" data-status="WARN"><i class="bx bxs-info-circle text-yellow-500" style="font-size: 18px"></i><span class="pl-2"> WARN</span></button>' +
+      '<button id="btn-filter-down" type="button" class="btn join-item filter-btn" data-status="CRIT"><i class="bx bxs-caret-down-circle text-red-500" style="font-size: 18px"></i><span class="pl-2"> CRIT</span></button>' +
       '<button id="btn-filter-clear-service" type="button" class="btn join-item clear-btn">CLR</button>' +
       "</div>"
   );
@@ -201,13 +202,16 @@ $(document).ready(function () {
   });
   $(".filter-btn").on("click", function () {
     var status = $(this).data("status");
-    if (status === "UP") {
-      table.columns(statusColIndex).search("^UP$", true, false).draw();
-    } else if (status === "DOWN") {
-      table.columns(statusColIndex).search("^DOWN$", true, false).draw();
+    if (status === "OK") {
+      table.columns(statusColIndex).search("^OK$", true, false).draw();
+    } else if (status === "CRIT") {
+      table.columns(statusColIndex).search("^CRIT$", true, false).draw();
+    } else if (status === "WARN") {
+      table.columns(statusColIndex).search("^WARN$", true, false).draw();
     }
   });
 });
+
 $(document).ready(function () {
   $(".modal-tabs a").click(function () {
     var tab_id = $(this).attr("data-tab");

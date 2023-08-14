@@ -55,7 +55,7 @@
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
           <h1 class="text-4xl">-</h1>
-          <span>Maintain</span>
+          <span>MAINTAIN</span>
         </div>
       </div>
     </div>
@@ -123,7 +123,7 @@
                   {% endif %}
                 </td>
                 <td>{{ host.extensions.connected_devices }}</td>
-                <td>100%</td>
+                <td>-</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -136,26 +136,38 @@
     <div class="cards">
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
-          <h1 class="text-4xl">20</h1>
+          <h1 class="text-4xl">
+            {% if service_groups_summary["TOTAL"] %} {{
+            service_groups_summary["TOTAL"] }} {% else %} - {% endif %}
+          </h1>
           <span>Total Services</span>
         </div>
       </div>
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
-          <h1 class="text-4xl">17</h1>
-          <span>UP</span>
+          <h1 class="text-4xl">
+            {% if service_groups_summary["OK"] %} {{
+            service_groups_summary["OK"] }} {% else %} - {% endif %}
+          </h1>
+          <span>OK</span>
         </div>
       </div>
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
-          <h1 class="text-4xl">2</h1>
-          <span>DOWN</span>
+          <h1 class="text-4xl">
+            {% if service_groups_summary["CRIT"] %} {{
+            service_groups_summary["CRIT"] }} {% else %} - {% endif %}
+          </h1>
+          <span>CRIT</span>
         </div>
       </div>
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
-          <h1 class="text-4xl">1</h1>
-          <span>Maintain</span>
+          <h1 class="text-4xl">
+            {% if service_groups_summary["WARN"] %} {{
+            service_groups_summary["WARN"] }} {% else %} - {% endif %}
+          </h1>
+          <span>WARN</span>
         </div>
       </div>
     </div>
@@ -172,12 +184,27 @@
               </tr>
             </thead>
             <tbody>
-              {% for key, value in service_list.items() %}
+              {% for service in service_list %}
               <tr>
-                <td>{{ key }}</td>
+                <td>{{ service["extensions"]["display_name"] }}</td>
+                <td>
+                  <a
+                    href='{{ service["extensions"]["display_name"].replace("HTTPS", "https://").replace("HTTP", "http://").replace(" ", "") | trim }}'
+                    target="_blank"
+                    >{{ service["extensions"]["display_name"].replace("HTTPS",
+                    "").replace("HTTP", "") }}</a
+                  >
+                </td>
+                <td>
+                  {% if service["extensions"]["state"] == 0 %}
+                  <div class="badge badge-success pb-0.5">OK</div>
+                  {% elif service["extensions"]["state"] == 1 %}
+                  <div class="badge badge-warning pb-0.5">WARN</div>
+                  {% else %}
+                  <div class="badge badge-error pb-0.5">CRIT</div>
+                  {% endif %}
+                </td>
                 <td>-</td>
-                <td>{{ value["value"] }}</td>
-                <td>100%</td>
               </tr>
               {% endfor %}
             </tbody>

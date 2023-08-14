@@ -45,16 +45,16 @@ def service_list():
         session.headers['Authorization'] = f"Bearer {os.environ['CHECKMK_USERNAME']} {os.environ['CHECKMK_PASSWORD']}"
         session.headers['Accept'] = 'application/json'
         response = session.get(
-            f"{API_URL}/objects/service_discovery/localhost",
+            f"{API_URL}/domain-types/service/collections/all",
             params={
-                # "effective_attributes": True
-                "columns": ['state']
-            },
+                "host_name": 'localhost',
+                "columns": ['state', 'display_name', 'last_time_ok', 'last_time_critical', 'last_time_unknown', 'last_time_warning'],
+            }
         )
         if response.status_code == 200:
             response = response.json()
             if response:
-                return response['extensions']['check_table']
+                return response['value']
         else:
             return []
     except Exception as ex:
