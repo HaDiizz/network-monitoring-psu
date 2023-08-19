@@ -28,4 +28,8 @@ pip install -r requirements.txt
 ```
 
 
+***run flask in debug mode***
 
+```bash
+flask --app app.py run --debug
+```
