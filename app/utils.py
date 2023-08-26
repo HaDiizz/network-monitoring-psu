@@ -26,7 +26,7 @@ def location_list():
 
 def host_list():
     try:
-        response = requests.get("https://nwms-cms-api.onrender.com/api/hosts")
+        response = requests.get("http://localhost:3000/api/hosts")
         response = response.json()
         if response:
             for item in response['value']:

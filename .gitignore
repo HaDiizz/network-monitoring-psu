@@ -9,3 +9,4 @@ __pycache__
 /app/views/admin/__pycache__
 /app/forms/__pycache__
 /app/models/__pycache__
+/app/dash/__pycache__

@@ -1,4 +1,3 @@
-from app.views import admin, site
 from flask import Flask
 import os
 from dotenv import load_dotenv
@@ -16,5 +15,6 @@ models.init_mongoengine(server)
 acl.init_acl(server)
 caches.init_cache(server)
 
+from app.views import admin, site
 server.register_blueprint(admin.admin_module)
 server.register_blueprint(site.module)

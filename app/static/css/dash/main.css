@@ -1,0 +1,5 @@
+.dash_card {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}

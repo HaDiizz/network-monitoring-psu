@@ -2975,6 +2975,10 @@ html {
   z-index: 1;
 }
 
+.m-1 {
+  margin: 0.25rem;
+}
+
 .mb-4 {
   margin-bottom: 1rem;
 }
