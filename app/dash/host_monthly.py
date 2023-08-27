@@ -383,32 +383,100 @@ for view_func in server.view_functions:
             server.view_functions[view_func])
 
 
-summary_result = []
+def get_color(sla):
+    if sla > 50:
+        return "green"
+    else:
+        return "red"
 
 
-def get_month():
-    return
+def get_month(month):
+    if month == 1:
+        return "JAN"
+    elif month == 2:
+        return "FEB"
+    elif month == 3:
+        return "MAR"
+    elif month == 4:
+        return "APR"
+    elif month == 5:
+        return "MAY"
+    elif month == 6:
+        return "JUN"
+    elif month == 7:
+        return "JUL"
+    elif month == 8:
+        return "AUG"
+    elif month == 9:
+        return "SEP"
+    elif month == 10:
+        return "OCT"
+    elif month == 11:
+        return "NOV"
+    elif month == 12:
+        return "DEC"
 
 
-def get_color(total_sla):
-    return
+def calculate_cumulative_sla(data):
+    cumulative_sla = {}
+    record_count = {}
+    for item in data:
+        year = item['year']
+        month = item['month']
+        sla = item['sla']
+        key = (year, month)
+        if key in cumulative_sla:
+            cumulative_sla[key] += sla
+            record_count[key] += 1
+        else:
+            cumulative_sla[key] = sla
+            record_count[key] = 1
+    return cumulative_sla, record_count
 
 
 dash_host.layout = html.Div([
-    html.H1("Host Monthly", className="text-4xl font-bold pb-5"),
-    html.Div([
-        html.Div([
-            html.Div(
-                [
-                    # html.Div(get_month(date)),
-                ],
-                className=f"card text-white m-1 justify-center text-center",
-                # style={'width': '120px', 'height': '80px',
-                #    'background': get_color(total_sla)}
-            )
-            # for date, total_sla in summary_result.items()
+    html.H1("Host Monthly", className='text-4xl font-bold', style={'padding-bottom': '3rem'}),
+    dcc.Dropdown(
+        id='year-dropdown',
+        options=[
+            {'label': '2021', 'value': 2021},
+            {'label': '2022', 'value': 2022},
+            {'label': '2023', 'value': 2023},
         ],
-            className="flex justify-center"
+        value=2021,
+        style={'margin-bottom': '20px'},
+    ),
+    html.Div(id='cards-row', className='dash_card'),
+], className='')
+
+
+@dash_host.callback(
+    dash.dependencies.Output('cards-row', 'children'),
+    [dash.dependencies.Input('year-dropdown', 'value')]
+)
+def update_cards(selected_year):
+    filtered_data = [
+        item for item in mock_host_monthly if item['year'] == selected_year]
+    cumulative_sla, record_count = calculate_cumulative_sla(filtered_data)
+
+    cards = [
+        html.A(
+            html.Div(
+                html.Div([
+                    html.P(get_month(month)),
+                    html.P(
+                        f"SLA: {cumulative_sla.get((year, month), 0) / record_count.get((year, month), 1):.2f}%",
+                        style={'font-size': '12px'}
+                        ),
+                ],
+                    className="text-white justify-center text-center p-3")
+            ),
+            style={'width': '90px', 'height': '90px', 'background': get_color(
+                cumulative_sla.get((year, month), 0) / record_count.get((year, month), 1))},
+            className='p-5 text-center flex justify-center card place-self-center',
+            href=f"hosts/{year}/{month}"
         )
-    ])
-])
+        for (year, month), cumulative_sla_value in cumulative_sla.items()
+    ]
+
+    return cards

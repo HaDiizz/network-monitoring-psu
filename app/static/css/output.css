@@ -3488,3 +3488,7 @@ html {
     flex-direction: row;
   }
 }
+
+.place-self-center {
+  place-self: center;
+}

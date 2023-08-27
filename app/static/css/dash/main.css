@@ -1,5 +1,7 @@
 .dash_card {
-    display: flex;
-    justify-content: center;
-    text-align: center;
+    margin: 10px;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(71px, 1fr));
+    padding-top: 3rem;
 }
