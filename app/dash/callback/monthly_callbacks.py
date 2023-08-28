@@ -464,5 +464,5 @@ def monthly_callbacks(dash_host):
 
         sla_avg = "{:.{}f}".format((total_sum/len(average_sla_per_year)),2)
         #
-        
-        return cards, f"Average SLA in {datetime.datetime.now().year} is {sla_avg}"
+
+        return cards, f"SLA Average in {datetime.datetime.now().year} is {sla_avg}"
