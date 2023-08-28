@@ -3,6 +3,7 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from flask_login import login_required
+import datetime
 
 mock_host_monthly = [
     {
@@ -433,17 +434,17 @@ def calculate_cumulative_sla(data):
             record_count[key] = 1
     return cumulative_sla, record_count
 
+def generate_year_options():
+    current_year = datetime.datetime.now().year
+    year_options = [{'label': str(year), 'value': year} for year in range(2023 - 2, current_year + 1)]
+    return year_options
 
 dash_host.layout = html.Div([
     html.H1("Host Monthly", className='text-4xl font-bold', style={'padding-bottom': '3rem'}),
     dcc.Dropdown(
         id='year-dropdown',
-        options=[
-            {'label': '2021', 'value': 2021},
-            {'label': '2022', 'value': 2022},
-            {'label': '2023', 'value': 2023},
-        ],
-        value=2021,
+        options=generate_year_options(),
+        value=datetime.datetime.now().year,
         style={'margin-bottom': '20px'},
     ),
     html.Div(id='cards-row', className='dash_card'),
