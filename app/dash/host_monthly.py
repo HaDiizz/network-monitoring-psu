@@ -32,6 +32,7 @@ dash_host.layout = html.Div([
         value=datetime.datetime.now().year,
         style={'margin-bottom': '20px'},
     ),
+    html.Div(id='average-sla-per-year', className='text-center', style={'margin-top': '20px'}),
     html.Div(id='cards-row', className='dash_card'),
 ], className='')
 
