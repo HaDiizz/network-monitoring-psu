@@ -4,7 +4,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 from flask_login import login_required
 import datetime
-from .callback.monthly_callbacks import monthly_callbacks
+from .callback import monthly_callbacks
 
 
 
