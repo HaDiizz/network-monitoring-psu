@@ -427,7 +427,8 @@ def calculate_cumulative_sla(data):
 def monthly_callbacks(dash_host):
     @dash_host.callback(
         [dash.dependencies.Output('cards-row', 'children'),
-         dash.dependencies.Output('average-sla-per-year', 'children')
+         dash.dependencies.Output('average-sla-per-year', 'children'),
+         dash.dependencies.Output('sla-graph', 'figure')
         ],
         [dash.dependencies.Input('year-dropdown', 'value')]
     )
@@ -465,4 +466,18 @@ def monthly_callbacks(dash_host):
         sla_avg = "{:.{}f}".format((total_sum/len(average_sla_per_year)),2)
         #
 
-        return cards, f"SLA Average in {datetime.datetime.now().year} is {sla_avg}"
+        graph_figure = {
+        'data': [
+            {'x': [f"{get_month(month)} {year}" for year, month in cumulative_sla.keys()],
+             'y': [cumulative_sla_value / record_count.get((year, month), 1) for (year, month), cumulative_sla_value in cumulative_sla.items()],
+             'type': 'line',
+             'name': 'Average SLA'}
+        ],
+        'layout': {
+            'title': 'Average SLA by Month and Year',
+            'xaxis': {'title': 'Month and Year'},
+            'yaxis': {'title': 'Average SLA'}
+        }
+    }
+
+        return cards, f"SLA Average in {datetime.datetime.now().year} is {sla_avg}",graph_figure

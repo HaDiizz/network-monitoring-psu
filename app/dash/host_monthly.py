@@ -21,19 +21,27 @@ for view_func in server.view_functions:
 
 def generate_year_options():
     current_year = datetime.datetime.now().year
-    year_options = [{'label': str(year), 'value': year} for year in range(2023 - 2, current_year + 1)]
+    year_options = [{'label': str(year), 'value': year} for year in range(2023 - 2, current_year + 1)] #! Delete -2 this is for test function
     return year_options
 
 dash_host.layout = html.Div([
     html.H1("Host Monthly", className='text-4xl font-bold', style={'padding-bottom': '3rem'}),
     dcc.Dropdown(
         id='year-dropdown',
-        options=generate_year_options(),
-        value=datetime.datetime.now().year,
+        options=[
+            {'label': '2021', 'value': 2021},
+            {'label': '2022', 'value': 2022},
+            {'label': '2023', 'value': 2023},
+        ],
+        value=2021,
         style={'margin-bottom': '20px'},
     ),
     html.Div(id='average-sla-per-year', className='text-center', style={'margin-top': '20px'}),
     html.Div(id='cards-row', className='dash_card'),
+        html.Div([
+        html.Div(dcc.Graph(id='sla-graph'), className='pt-5') 
+    ], className='grid grid-cols-1'),
 ], className='')
+
 
 monthly_callbacks(dash_host)
