@@ -480,4 +480,4 @@ def monthly_callbacks(dash_host):
         }
     }
 
-        return cards, f"SLA Average in {datetime.datetime.now().year} is {sla_avg}",graph_figure
+        return cards, f"SLA Average in {selected_year} is {sla_avg}",graph_figure

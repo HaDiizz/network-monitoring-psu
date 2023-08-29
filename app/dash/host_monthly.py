@@ -33,7 +33,7 @@ dash_host.layout = html.Div([
             {'label': '2022', 'value': 2022},
             {'label': '2023', 'value': 2023},
         ],
-        value=2021,
+        value=datetime.datetime.now().year,
         style={'margin-bottom': '20px'},
     ),
     html.Div(id='average-sla-per-year', className='text-center', style={'margin-top': '20px'}),
