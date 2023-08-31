@@ -3,5 +3,5 @@
     display: grid;
     gap: 20px;
     grid-template-columns: repeat(auto-fill, minmax(71px, 1fr));
-    padding-top: 3rem;
+    padding-top: 1rem;
 }

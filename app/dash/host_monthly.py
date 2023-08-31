@@ -36,7 +36,7 @@ dash_host.layout = html.Div([
         value=datetime.datetime.now().year,
         style={'margin-bottom': '20px'},
     ),
-    html.Div(id='average-sla-per-year', className='text-center', style={'margin-top': '20px'}),
+    html.Div(id='average-sla-per-year', className='text-left font-bold text-2xl', style={'margin-top': '3rem'}),
     html.Div(id='cards-row', className='dash_card'),
         html.Div([
         html.Div(dcc.Graph(id='sla-graph'), className='pt-5') 

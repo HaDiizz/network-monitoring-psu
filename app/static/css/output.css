@@ -3113,6 +3113,10 @@ html {
   background-color: rgb(249 250 251 / var(--tw-bg-opacity));
 }
 
+.bg-white {
+  background-color: white;
+}
+
 .bg-primary {
   --tw-bg-opacity: 1;
   background-color: rgb(0 60 113 / var(--tw-bg-opacity));

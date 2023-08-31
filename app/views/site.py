@@ -25,6 +25,18 @@ def index():
 def get_hosts():
     return jsonify(host_list())
 
+@module.route('/get-locations')
+def getLocations():
+    location_data = []
+    for location in location_list():
+        location_data.append({
+            "id": str(location.id),
+            "name": location.name,
+            "lat": location.lat,
+            "lng": location.lng
+        })
+    return jsonify(location_data)
+
 @module.route('/login', methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:

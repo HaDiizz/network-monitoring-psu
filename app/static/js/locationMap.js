@@ -95,3 +95,41 @@ function handleMapClick(e) {
   document.getElementById("lat").value = lat;
   document.getElementById("lng").value = lng;
 }
+
+let markers = [];
+let markersVisible = false;
+
+function showAllLocations() {
+  const showButton = document.getElementById("showLocationsButton");
+
+  if (markersVisible) {
+    markers.forEach((marker) => map.removeLayer(marker));
+    markers = [];
+    markersVisible = false;
+    showButton.textContent = "แสดงหมุดทั้งหมด";
+  } else {
+    fetch("/get-locations")
+      .then((response) => response.json())
+      .then((data) => {
+        if (!data) return;
+
+        data.forEach((location) => {
+          var marker = L.marker([location.lat, location.lng], {
+            icon: markedIcon,
+          }).bindPopup(`${location.name}<br/>`);
+
+          marker.addTo(map);
+          markers.push(marker);
+        });
+
+        markersVisible = true;
+        showButton.textContent = "ซ่อนหมุดทั้งหมด";
+      })
+      .catch((error) => {
+        console.error("Error fetching location data:", error);
+      });
+  }
+}
+
+const showButton = document.getElementById("showLocationsButton");
+showButton.addEventListener("click", showAllLocations);
