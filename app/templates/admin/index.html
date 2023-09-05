@@ -114,9 +114,9 @@
               {% for host in host_list %}
               <tr>
                 <td>{{ host.title }}</td>
-                <td>{{ host.extensions.attributes.ipaddress }}</td>
+                <td>{{ host.extensions.ipaddress }}</td>
                 <td>
-                  {% if host.extensions.last_state == 0 %}
+                  {% if host.extensions.state == 0 %}
                   <div class="badge badge-success pb-0.5">UP</div>
                   {% else %}
                   <div class="badge badge-error pb-0.5">DOWN</div>
