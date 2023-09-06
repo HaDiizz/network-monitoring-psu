@@ -5,7 +5,8 @@ from .users import User
 from .locations import Location
 from .reports import Report
 from .categories import Category
-# from .hosts import Host
+from .hosts import Host
+from .hosts import HostList
 # from .services import Service
 
 def init_mongoengine(server):

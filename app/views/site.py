@@ -3,13 +3,19 @@ from .. import forms
 from flask_login import login_user, login_required, logout_user, current_user
 from .. import models
 import mongoengine as me
-from ..utils import location_list, host_list
+from ..utils import location_list, host_list, host_down_handler
 
 module = Blueprint('site', __name__)
 
 @module.app_context_processor
 def account_context():
     return {'account': current_user}
+
+@module.route('/host-down')
+def host_down():
+    host_down_handler()
+    # print(host_down_handler())
+    return "hello"
 
 @module.route('/')
 def index():
