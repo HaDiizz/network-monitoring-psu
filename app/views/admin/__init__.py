@@ -32,7 +32,7 @@ def index():
             service_last_state = service["extensions"]["state"]
             if service_last_state == 0:
                 service_state = "OK" 
-            elif service_last_state == 2:
+            elif service_last_state == 1:
                 service_state = "CRIT"
             else:
                 service_state = "WARN" 

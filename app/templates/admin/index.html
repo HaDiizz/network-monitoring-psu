@@ -149,7 +149,7 @@
             {% if service_groups_summary["OK"] %} {{
             service_groups_summary["OK"] }} {% else %} - {% endif %}
           </h1>
-          <span>OK</span>
+          <span>UP</span>
         </div>
       </div>
       <div class="card-single dark:bg-base-200 shadow-xl">
@@ -158,7 +158,7 @@
             {% if service_groups_summary["CRIT"] %} {{
             service_groups_summary["CRIT"] }} {% else %} - {% endif %}
           </h1>
-          <span>CRIT</span>
+          <span>DOWN</span>
         </div>
       </div>
       <div class="card-single dark:bg-base-200 shadow-xl">
@@ -167,7 +167,7 @@
             {% if service_groups_summary["WARN"] %} {{
             service_groups_summary["WARN"] }} {% else %} - {% endif %}
           </h1>
-          <span>WARN</span>
+          <span>UNREACH</span>
         </div>
       </div>
     </div>
@@ -186,22 +186,22 @@
             <tbody>
               {% for service in service_list %}
               <tr>
-                <td>{{ service["extensions"]["display_name"] }}</td>
+                <td>{{ service["extensions"]["name"] }}</td>
                 <td>
                   <a
-                    href='{{ service["extensions"]["display_name"].replace("HTTPS", "https://").replace("HTTP", "http://").replace(" ", "") | trim }}'
+                    href='{{ service["extensions"]["name"].replace("HTTPS", "https://").replace("HTTP", "http://").replace(" ", "") | trim }}'
                     target="_blank"
-                    >{{ service["extensions"]["display_name"].replace("HTTPS",
+                    >{{ service["extensions"]["name"].replace("HTTPS",
                     "").replace("HTTP", "") }}</a
                   >
                 </td>
                 <td>
                   {% if service["extensions"]["state"] == 0 %}
-                  <div class="badge badge-success pb-0.5">OK</div>
+                  <div class="badge badge-success pb-0.5">UP</div>
                   {% elif service["extensions"]["state"] == 1 %}
-                  <div class="badge badge-warning pb-0.5">WARN</div>
+                  <div class="badge badge-warning pb-0.5">DOWN</div>
                   {% else %}
-                  <div class="badge badge-error pb-0.5">CRIT</div>
+                  <div class="badge badge-error pb-0.5">UNREACH</div>
                   {% endif %}
                 </td>
                 <td>-</td>

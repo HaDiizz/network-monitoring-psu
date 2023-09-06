@@ -36,15 +36,15 @@ def host_list():
                 "columns": ['name', 'state', 'last_state', 'last_time_up', 'last_time_down', 'last_time_unreachable', 'last_state_change', 'labels', "groups"],
             }
 
-            resp = client.get(
+            response = client.get(
                 f"{API_URL}/domain-types/host/collections/all",
                 headers=HEADERS,
                 params=params
             )
-            if resp.status_code == 200:
-                resp = resp.json()
-                if resp:
-                    return resp['value']
+            if response.status_code == 200:
+                response = response.json()
+                if response:
+                    return response['value']
             else:
                 return []
     except Exception as ex:
@@ -53,22 +53,23 @@ def host_list():
 
 def service_list():
     try:
-        session = requests.session()
-        session.headers['Authorization'] = f"Bearer {os.environ['CHECKMK_USERNAME']} {os.environ['CHECKMK_PASSWORD']}"
-        session.headers['Accept'] = 'application/json'
-        response = session.get(
-            f"{API_URL}/domain-types/service/collections/all",
-            params={
-                "host_name": 'localhost',
-                "columns": ['state', 'display_name', 'last_time_ok', 'last_time_critical', 'last_time_unknown', 'last_time_warning'],
+        with httpx.Client() as client:
+            params = {
+                "columns": ['name', 'state', 'last_state', 'last_time_up', 'last_time_down', 'last_time_unreachable', 'last_state_change', 'labels', "groups"],
             }
-        )
-        if response.status_code == 200:
-            response = response.json()
-            if response:
-                return response['value']
-        else:
-            return []
+            
+            response = client.get(
+                f"https://checkmk.psu.ac.th/PSU/check_mk/api/1.0/domain-types/host/collections/all?query=%7B%22op%22%3A+%22~%22%2C+%22left%22%3A+%22hosts.filename%22%2C+%22right%22%3A+%22%5E%5C%2Fwato%5C%2Fpsu_main_service%5C%2F%22%7D",
+                headers=HEADERS,
+                params=params
+            )
+            
+            if response.status_code == 200:
+                response = response.json()
+                if response:
+                    return response['value']
+            else:
+                return []
     except Exception as ex:
         return None
 
