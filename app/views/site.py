@@ -1,9 +1,11 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, jsonify
+from flask import Blueprint, render_template, redirect, url_for, flash, jsonify, session
 from .. import forms
 from flask_login import login_user, login_required, logout_user, current_user
 from .. import models
 import mongoengine as me
 from ..utils import location_list, host_list, host_down_handler
+from .. import oauth2
+import datetime
 
 module = Blueprint('site', __name__)
 
@@ -14,7 +16,6 @@ def account_context():
 @module.route('/host-down')
 def host_down():
     host_down_handler()
-    # print(host_down_handler())
     return "hello"
 
 @module.route('/')
@@ -43,27 +44,73 @@ def getLocations():
         })
     return jsonify(location_data)
 
-@module.route('/login', methods=["GET", "POST"])
+@module.route('/login')
 def login():
     if current_user.is_authenticated:
         if current_user.role == 'admin':
             return redirect('/admin/overview')
         else:
             return redirect('/')
-    form = forms.LoginForm()
-    if form.validate_on_submit():
-        username = form.username.data
-        password = form.password.data
-        user = models.User.objects(me.Q(username=username) & me.Q(password=password)).first()
-        if user:
-            login_user(user, remember=True)
-            return redirect('/')
-    return render_template("login.html", title="เข้าสู่ระบบ", form=form)
+    
+    client = oauth2.oauth2_client
+    redirect_uri = url_for("site.auth", _external=True)
+    return client.psu_passport.authorize_redirect(redirect_uri)
+
+@module.route('/auth')
+def auth():
+    
+    client = oauth2.oauth2_client
+    try:
+        token = client.psu_passport.authorize_access_token()
+    except Exception as e:
+        print(e)
+        return redirect(url_for("site.login"))
+    print(token)
+    session['user'] = token['userinfo']
+    
+
+    user = models.User.objects(
+        me.Q(username=session['user'].get("username", ""))
+        | me.Q(email=session['user'].get("email", ""))
+    ).first()
+
+    if not user:
+        user = models.User(
+            username=session['user'].get("username"),
+            email=session['user'].get("email"),
+            first_name=session['user'].get("first_name").title(),
+            last_name=session['user'].get("last_name").title(),
+            status="active",
+        )
+        if session['user']["username"].isdigit():
+            user.role = "user"
+    
+
+    user.save()
+
+    login_user(user)
+
+    oauth2token = models.OAuth2Token(
+        name=client.psu_passport.name,
+        user=user,
+        access_token=token.get("access_token"),
+        token_type=token.get("token_type"),
+        refresh_token=token.get("refresh_token", None),
+        expires=datetime.datetime.utcfromtimestamp(token.get("expires_in")),
+    )
+    oauth2token.save()
+
+    next_uri = session.get("next", None)
+    if next_uri:
+        session.pop("next")
+        return redirect(next_uri)
+    return redirect(url_for("site.index"))
 
 @module.route('/logout')
 @login_required
 def logout():
     logout_user()
+    session.pop('user', None)
     return redirect(url_for('site.index'))
 
 @module.route('/report', methods=["GET", "POST"])

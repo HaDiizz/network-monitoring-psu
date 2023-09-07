@@ -84,7 +84,7 @@ def edit_location(location_id):
 @acl.roles_required("admin")
 def permission():
     try:
-        users = models.User.objects.exclude('password')
+        users = models.User.objects()
         if request.method == 'POST':
             user_id = ObjectId(request.form.get('user_id'))
             is_admin = request.form.get('is_admin')

@@ -7,6 +7,7 @@ from .reports import Report
 from .categories import Category
 from .hosts import Host
 from .hosts import HostList
+from .oauth2 import OAuth2Token
 # from .services import Service
 
 def init_mongoengine(server):
