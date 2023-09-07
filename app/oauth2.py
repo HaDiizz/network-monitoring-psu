@@ -72,7 +72,7 @@ def handle_authorize(remote, token, user_info):
 
 
 def init_oauth(server):
-    oauth2_client.init_app(app=server)
+    oauth2_client.init_app(app=server, fetch_token=fetch_token, update_token=update_token)
     oauth2_client.register(
         name='psu_passport',
         client_id = os.getenv("PSU_PASSPORT_CLIENT_ID"),

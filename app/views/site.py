@@ -6,6 +6,10 @@ import mongoengine as me
 from ..utils import location_list, host_list, host_down_handler
 from .. import oauth2
 import datetime
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 module = Blueprint('site', __name__)
 
