@@ -67,7 +67,7 @@ def auth():
     try:
         token = client.psu_passport.authorize_access_token()
     except Exception as e:
-        print(e)
+        # print(e)
         return redirect(url_for("site.login"))
     print(token)
     session['user'] = token['userinfo']
