@@ -6,6 +6,7 @@ import os
 from dotenv import load_dotenv
 import httpx
 import datetime
+import json
 
 load_dotenv()
 
@@ -73,6 +74,20 @@ def service_list():
     except Exception as ex:
         return None
 
+def cal_min_down(down_time):
+
+    print("in fuction")
+    date = datetime.datetime.now()
+    current_time = int(date.timestamp())
+    time_difference_seconds = current_time - down_time
+    print("convert success : ", time_difference_seconds)
+    #time_difference_seconds = int(int(time_difference.total_seconds())/60)
+    time_difference_minute = int(int(time_difference_seconds)/60)
+
+    print("Time Difference:", (time_difference_minute))
+    print("Time Difference in Seconds:", time_difference_seconds)
+
+    return time_difference_minute
 
 def host_down_handler():
     try:
@@ -90,25 +105,29 @@ def host_down_handler():
                 room = item['extensions']['attributes']['labels']['room']
                 state = item['extensions']['last_state']
                 host_id = item['title']
-                
+            
+                print("Host : ",host_id ," state : " , state)
                 #! Host DOWN
                 if state == 1:
+                    
                     host = models.Host.objects(host_id=host_id, month=month, year=year).first()
                     if host:
                         host_list_ids = host.host_list
                         if not host_list_ids:
                             return
                         last_host_list_id = host_list_ids[-1]
-                        host_list = models.HostList.objects(id=last_host_list_id.id, last_state=1).first()
+                        host_list = models.HostList.objects(id=last_host_list_id.id, last_state=5).first()
                         #? ตัวที่ Down แต่ยังไม่แก้ก็ให้ update last_time_down ไว้ calculate SLA
                         if host_list:
+                            print("still have")
                             #TODO  ตรงนี้อาจจะเขียน check if host_list.updated_date == today ถ้าไม่ใช่ก็ให้ส่ง line notify อีก
                             host_list.last_time_down = datetime.datetime.now()
                             host_list.save()  
                         else:
+                            print("add new one")
                             new_host_list = models.HostList(
                                 state=int(state),
-                                last_state=int(state),
+                                last_state=5,
                                 notified=False,
                                 remark="",
                                 last_time_up=datetime.datetime.now(),
@@ -120,9 +139,10 @@ def host_down_handler():
                             host.host_list.append(new_host_list)
                             host.save()
                     else:
+                        # print("Working2 !!!!")
                         new_host_list = models.HostList(
                             state=int(state),
-                            last_state=int(state),
+                            last_state=5,
                             notified=False,
                             remark="",
                             last_time_up=datetime.datetime.now(),
@@ -155,9 +175,16 @@ def host_down_handler():
                         if not host_list_ids:
                             return
                         last_host_list_id = host_list_ids[-1]
-                        host_list = models.HostList.objects(id=last_host_list_id.id, last_state=1).first()
-                        host_list.last_state = 0
-                        host_list.save()
+                        host_list = models.HostList.objects(id=last_host_list_id.id, last_state=5).first()
+                        if host_list :
+                            last_time_down = host_list.last_time_down
+                            unix_timestamp = int(last_time_down.timestamp())                         
+                            minute = cal_min_down(unix_timestamp)
+                            print("min in main = " , minute)
+                            host_list.last_state = 0
+                            host_list.hour = minute
+                            host_list.save()
+                break
             return response['value']
         else:
             return []
