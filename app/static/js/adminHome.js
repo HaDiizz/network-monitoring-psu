@@ -189,8 +189,8 @@ $(document).ready(function () {
     '<div class="join uppercase p-3 w-100" role="group">' +
       '<button id="btn-filter-up-service" type="button" class="btn join-item filter-btn" data-status="UP"><i class="bx bxs-caret-up-circle text-green-500" style="font-size: 18px"></i><span class="pl-2">UP</span></button>' +
       '<button id="btn-filter-down" type="button" class="btn join-item filter-btn" data-status="DOWN"><i class="bx bxs-caret-down-circle text-red-500" style="font-size: 18px"></i><span class="pl-2">DOWN</span></button>' +
-      '<button id="btn-filter-warn-service" type="button" class="btn join-item filter-btn" data-status="WARN"><i class="bx bxs-info-circle text-yellow-500" style="font-size: 18px"></i><span class="pl-2">WARN</span></button>' +
-      '<button id="btn-filter-unknown-service" type="button" class="btn join-item filter-btn" data-status="UNKNOWN"><i class="bx bxs-minus-circle text-neutral-500" style="font-size: 18px"></i><span class="pl-2">UNKNOWN</span></button>' +
+      '<button id="btn-filter-unreach-service" type="button" class="btn join-item filter-btn" data-status="UNREACH"><i class="bx bxs-info-circle text-yellow-500" style="font-size: 18px"></i><span class="pl-2">UNREACH</span></button>' +
+      '<button id="btn-filter-maintain-service" type="button" class="btn join-item filter-btn" data-status="MAINTAIN"><i class="bx bxs-minus-circle text-neutral-500" style="font-size: 18px"></i><span class="pl-2">MAINTAIN</span></button>' +
       '<button id="btn-filter-clear-service" type="button" class="btn join-item clear-btn">CLR</button>' +
       "</div>"
   );
@@ -210,10 +210,10 @@ $(document).ready(function () {
       table.columns(statusColIndex).search("^UP$", true, false).draw();
     } else if (status === "DOWN") {
       table.columns(statusColIndex).search("^DOWN$", true, false).draw();
-    } else if (status === "WARN") {
-      table.columns(statusColIndex).search("^WARN$", true, false).draw();
-    } else if (status === "UNKNOWN") {
-      table.columns(statusColIndex).search("^UNKNOWN$", true, false).draw();
+    } else if (status === "UNREACH") {
+      table.columns(statusColIndex).search("^UNREACH$", true, false).draw();
+    } else if (status === "MAINTAIN") {
+      table.columns(statusColIndex).search("^MAINTAIN$", true, false).draw();
     }
   });
 });
