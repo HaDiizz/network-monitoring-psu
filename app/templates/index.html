@@ -72,10 +72,14 @@
           <tr>
             <td>{{ host.title }}</td>
             <td>
-              {% if host.extensions.last_state == 0 %}
+              {% if host.extensions.state == 0 %}
               <div class="badge badge-success pb-0.5">UP</div>
-              {% else %}
+              {% elif host.extensions.state == 1 %}
               <div class="badge badge-error pb-0.5">DOWN</div>
+              {% elif host.extensions.state == 2 %}
+              <div class="badge badge-warning pb-0.5">UNREACH</div>
+              {% else %}
+              <div class="badge badge-neutral pb-0.5">MAINTAIN</div>
               {% endif %}
             </td>
             <td>{{ host.extensions.connected_devices }}</td>

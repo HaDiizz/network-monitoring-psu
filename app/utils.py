@@ -34,7 +34,7 @@ def host_list():
     try:
         with httpx.Client() as client:
             params = {
-                "columns": ['name', 'state', 'last_state', 'last_time_up', 'last_time_down', 'last_time_unreachable', 'last_state_change', 'labels', "groups", 'address'],
+                "columns": ['name', 'state', 'last_state', 'last_time_up', 'last_time_down', 'last_time_unreachable', 'last_state_change', 'labels', 'groups', 'address'],
             }
 
             response = client.get(
@@ -56,7 +56,7 @@ def service_list():
     try:
         with httpx.Client() as client:
             params = {
-                "columns": ['name', 'state', 'last_state', 'last_time_up', 'last_time_down', 'last_time_unreachable', 'last_state_change', 'labels', "groups"],
+                "columns": ['name', 'state', 'last_state', 'last_time_up', 'last_time_down', 'last_time_unreachable', 'last_state_change', 'labels', 'groups'],
             }
             
             response = client.get(

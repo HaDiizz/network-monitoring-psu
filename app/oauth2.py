@@ -1,4 +1,4 @@
-from flask import g, config, session, redirect, url_for
+from flask import session, redirect, url_for
 from flask_login import current_user, login_user
 from authlib.integrations.flask_client import OAuth
 import requests
@@ -7,6 +7,7 @@ import os
 from . import models
 import mongoengine as me
 from dotenv import load_dotenv
+
 load_dotenv()
 
 def fetch_token(name):

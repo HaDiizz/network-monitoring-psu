@@ -22,7 +22,14 @@ def index():
     if hosts:
         for host in hosts:
             host_last_state = host["extensions"]["last_state"]
-            host_state = "UP" if host_last_state == 0 else "DOWN"
+            if host_last_state == 0:
+                host_state = "UP"
+            elif host_last_state == 1:
+                host_state = "DOWN"
+            elif host_last_state == 2:
+                host_state = "UNREACH"
+            else:
+                host_state = "MAINTAIN"
             if host_state not in host_groups_summary:
                 host_groups_summary[host_state] = 0
             host_groups_summary[host_state] += 1
@@ -31,11 +38,13 @@ def index():
         for service in services:
             service_last_state = service["extensions"]["state"]
             if service_last_state == 0:
-                service_state = "OK" 
+                service_state = "UP" 
             elif service_last_state == 1:
-                service_state = "CRIT"
+                service_state = "WARN"
+            elif service_last_state == 2:
+                service_state = "DOWN"
             else:
-                service_state = "WARN" 
+                service_state = "UNKNOWN" 
             if service_state not in service_groups_summary:
                 service_groups_summary[service_state] = 0
             service_groups_summary[service_state] += 1

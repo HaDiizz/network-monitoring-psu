@@ -13,9 +13,10 @@ $(document).ready(function () {
   });
 
   $("div.dataTables_filter").append(
-    '<div class="join uppercase p-3 w-100" role="group">' +
-      '<button id="btn-filter-up" type="button" class="btn join-item filter-btn" data-status="UP"><i class="bx bxs-caret-up-circle text-green-500" style="font-size: 18px"></i><span class="pl-2"> UP</span></button>' +
-      '<button id="btn-filter-down" type="button" class="btn join-item filter-btn" data-status="DOWN"><i class="bx bxs-caret-down-circle text-red-500" style="font-size: 18px"></i><span class="pl-2"> DOWN</span></button>' +
+    '<div class="join uppercase p-3 w-100 container" role="group">' +
+      '<button id="btn-filter-up" type="button" class="btn join-item filter-btn" data-status="UP"><i class="bx bxs-caret-up-circle text-green-500" style="font-size: 18px"></i><span class="pl-2">UP</span></button>' +
+      '<button id="btn-filter-down" type="button" class="btn join-item filter-btn" data-status="DOWN"><i class="bx bxs-caret-down-circle text-red-500" style="font-size: 18px"></i><span class="pl-2">DOWN</span></button>' +
+      '<button id="btn-filter-unreach" type="button" class="btn join-item filter-btn" data-status="UNREACH"><i class="bx bxs-info-circle text-yellow-500" style="font-size: 18px"></i><span class="pl-2">UNREACH</span></button>' +
       '<button id="btn-filter-clear" type="button" class="btn join-item clear-btn">CLR</button>' +
       "</div>"
   );
@@ -35,6 +36,8 @@ $(document).ready(function () {
       table.columns(statusColIndex).search("^UP$", true, false).draw();
     } else if (status === "DOWN") {
       table.columns(statusColIndex).search("^DOWN$", true, false).draw();
+    } else if (status === "UNREACH") {
+      table.columns(statusColIndex).search("^UNREACH$", true, false).draw();
     }
   });
 });
