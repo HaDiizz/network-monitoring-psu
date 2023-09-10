@@ -40,9 +40,9 @@ def index():
             if service_last_state == 0:
                 service_state = "UP" 
             elif service_last_state == 1:
-                service_state = "WARN"
-            elif service_last_state == 2:
                 service_state = "DOWN"
+            elif service_last_state == 2:
+                service_state = "UNREACH"
             else:
                 service_state = "UNKNOWN" 
             if service_state not in service_groups_summary:

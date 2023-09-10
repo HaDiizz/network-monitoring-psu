@@ -180,19 +180,19 @@
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
           <h1 class="text-4xl">
-            {% if service_groups_summary["WARN"] %} {{
-            service_groups_summary["WARN"] }} {% else %} - {% endif %}
+            {% if service_groups_summary["UNREACH"] %} {{
+            service_groups_summary["UNREACH"] }} {% else %} - {% endif %}
           </h1>
-          <span>WARN</span>
+          <span>UNREACH</span>
         </div>
       </div>
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
           <h1 class="text-4xl">
-            {% if service_groups_summary["UNKNOWN"] %} {{
-            service_groups_summary["UNKNOWN"] }} {% else %} - {% endif %}
+            {% if service_groups_summary["MAINTAIN"] %} {{
+            service_groups_summary["MAINTAIN"] }} {% else %} - {% endif %}
           </h1>
-          <span>UNKNOWN</span>
+          <span>MAINTAIN</span>
         </div>
       </div>
     </div>
@@ -224,11 +224,11 @@
                   {% if service["extensions"]["state"] == 0 %}
                   <div class="badge badge-success pb-0.5">UP</div>
                   {% elif service["extensions"]["state"] == 1 %}
-                  <div class="badge badge-warning pb-0.5">WARN</div>
-                  {% elif service["extensions"]["state"] == 2 %}
                   <div class="badge badge-error pb-0.5">DOWN</div>
+                  {% elif service["extensions"]["state"] == 2 %}
+                  <div class="badge badge-warning pb-0.5">UNREACH</div>
                   {% else %}
-                  <div class="badge badge-neutral pb-0.5">UNKNOWN</div>
+                  <div class="badge badge-neutral pb-0.5">MAINTAIN</div>
                   {% endif %}
                 </td>
                 <td>-</td>
