@@ -74,20 +74,53 @@ def service_list():
     except Exception as ex:
         return None
 
+def host_group(api_hostgroup_url):
+    try:
+        with httpx.Client() as client:
+            params = {
+                "columns": ['name', 'state', 'last_state', 'last_time_up', 'last_time_down', 'last_time_unreachable', 'last_state_change', 'labels', 'groups', 'address'],
+            }
+
+            response = client.get(
+                f"{api_hostgroup_url}",
+                headers=HEADERS,
+                params=params
+            )
+            if response.status_code == 200:
+                response = response.json()
+                if response:
+                    return response['value']
+            else:
+                return []
+    except Exception as ex:
+        return None
+    
+
 def cal_min_down(down_time):
 
     print("in fuction")
     date = datetime.datetime.now()
     current_time = int(date.timestamp())
     time_difference_seconds = current_time - down_time
-    print("convert success : ", time_difference_seconds)
+    # print("convert success : ", time_difference_seconds)
     #time_difference_seconds = int(int(time_difference.total_seconds())/60)
     time_difference_minute = int(int(time_difference_seconds)/60)
 
-    print("Time Difference:", (time_difference_minute))
-    print("Time Difference in Seconds:", time_difference_seconds)
+    # print("Time Difference:", (time_difference_minute))
+    # print("Time Difference in Seconds:", time_difference_seconds)
 
     return time_difference_minute
+
+def cal_sla(month,year,sum_min):
+    start_date = datetime.datetime(year, month, 1, 0, 1)
+    current_date = datetime.datetime.now()
+    time_difference = current_date - start_date
+    total_minutes = int(time_difference.total_seconds() / 60)
+    sla = ((total_minutes - sum_min)/total_minutes) * 100
+    return sla
+    
+   
+
 
 def host_down_handler():
     try:
@@ -121,8 +154,8 @@ def host_down_handler():
                         if host_list:
                             print("still have")
                             #TODO  ตรงนี้อาจจะเขียน check if host_list.updated_date == today ถ้าไม่ใช่ก็ให้ส่ง line notify อีก
-                            host_list.last_time_down = datetime.datetime.now()
-                            host_list.save()  
+                            #host_list.last_time_down = datetime.datetime.now()
+                            #host_list.save()  
                         else:
                             print("add new one")
                             new_host_list = models.HostList(
@@ -139,7 +172,7 @@ def host_down_handler():
                             host.host_list.append(new_host_list)
                             host.save()
                     else:
-                        # print("Working2 !!!!")
+                        #print("Working2 !!!!")
                         new_host_list = models.HostList(
                             state=int(state),
                             last_state=5,
@@ -150,6 +183,7 @@ def host_down_handler():
                             hour=0,
                         )
                         new_host_list.save()
+                        
                         new_host = models.Host(
                             host_id=host_id,
                             name=host_id,
@@ -157,7 +191,7 @@ def host_down_handler():
                             month=month,
                             year=year,
                             count=1,
-                            availability=0,
+                            availability=100,
                             coordinates= (lat, lng),
                             floor=floor,
                             room=room,
@@ -184,7 +218,28 @@ def host_down_handler():
                             host_list.last_state = 0
                             host_list.hour = minute
                             host_list.save()
-                break
+
+                        if host_list :    
+                            host = models.Host.objects(host_id=host_id, month=month, year=year).first()
+                            host_list_id = []
+                            sum_min = 0
+                            
+                            for value in host.host_list :
+                                host_list_id.append(value.id)
+                            
+                            query  = models.HostList.objects(id__in=host_list_id)
+                            matching_data = query.all()
+                            
+                            for data in matching_data:
+                                sum_min += data.hour
+                            print("sum min : ", sum_min)
+                            
+                            sla = int(cal_sla(month,year,sum_min))
+                            host.availability = sla
+                            host.save()
+                            
+
+            
             return response['value']
         else:
             return []
