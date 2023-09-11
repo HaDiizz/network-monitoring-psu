@@ -13,6 +13,7 @@ PSU_HATYAI_CAMPUS_NETWORK = f"{os.environ['PSU_HATYAI_CAMPUS_NETWORK']}"
 PSU_HAT_YAI_WIRELESS = f"{os.environ['PSU_HAT_YAI_WIRELESS']}"
 GROUP_CHECK_MK = f"{os.environ['GROUP_CHECK_MK']}"
 OUTSIDE_PSU = f"{os.environ['OUTSIDE_PSU']}"
+AD_SERVICE_GROUP = f"{os.environ['AD_SERVICE_GROUP']}"
 
 @admin_module.route("/overview")
 @acl.roles_required("admin")
@@ -24,6 +25,7 @@ def index():
     psu_hat_yai_wireless = host_group(api_hostgroup_url=PSU_HAT_YAI_WIRELESS)
     check_mk_group = host_group(api_hostgroup_url=GROUP_CHECK_MK)
     outside_psu = host_group(api_hostgroup_url=OUTSIDE_PSU)
+    ad_service_group = host_group(api_hostgroup_url=AD_SERVICE_GROUP)
     if not services:
         services = []
     if not hosts:
