@@ -95,27 +95,6 @@ def host_group(api_hostgroup_url):
     except Exception as ex:
         return None
 
-def host_group(api_hostgroup_url):
-    try:
-        with httpx.Client() as client:
-            params = {
-                "columns": ['name', 'state', 'last_state', 'last_time_up', 'last_time_down', 'last_time_unreachable', 'last_state_change', 'labels', 'groups', 'address'],
-            }
-
-            response = client.get(
-                f"{api_hostgroup_url}",
-                headers=HEADERS,
-                params=params
-            )
-            if response.status_code == 200:
-                response = response.json()
-                if response:
-                    return response['value']
-            else:
-                return []
-    except Exception as ex:
-        return None
-    
 
 def cal_min_down(down_time):
 
