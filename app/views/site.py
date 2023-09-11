@@ -69,7 +69,7 @@ def auth():
     except Exception as e:
         # print(e)
         return redirect(url_for("site.login"))
-    print(token)
+    # print(token)
     session['user'] = token['userinfo']
     
 

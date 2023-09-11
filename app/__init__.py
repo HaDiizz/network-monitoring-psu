@@ -15,7 +15,7 @@ server.config['SECRET_KEY'] = os.environ['SECRET_KEY']
 server.config['CACHE_TYPE'] = 'SimpleCache'
 server.template_folder = 'templates'
 server.config['SESSION_COOKIE_NAME'] = 'psu-passport-login-session'
-server.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=5)
+server.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 models.init_mongoengine(server)
 acl.init_acl(server)
 caches.init_cache(server)
