@@ -52,7 +52,7 @@ def host_list():
         return None
 
 
-def service_list():
+def service_list(api_hostgroup_url):
     try:
         with httpx.Client() as client:
             params = {
@@ -60,7 +60,7 @@ def service_list():
             }
             
             response = client.get(
-                f"{os.environ['WEB_SERVICE_GROUP']}",
+                f"{api_hostgroup_url}",
                 headers=HEADERS,
                 params=params
             )
