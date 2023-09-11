@@ -1,18 +1,29 @@
 from flask import Blueprint, render_template
 from ... import acl
-from ...utils import location_list, host_list, service_list
-
+from ...utils import location_list, host_list, service_list, host_group
+import os
 admin_module = Blueprint("admin", __name__, url_prefix="/admin")
 
 from app.views.admin.service import *
 from app.views.admin.host import *
 from app.views.admin.management import *
 
+PSU_CORE_NETWORK = f"{os.environ['PSU_CORE_NETWORK']}"
+PSU_HATYAI_CAMPUS_NETWORK = f"{os.environ['PSU_HATYAI_CAMPUS_NETWORK']}"
+PSU_HAT_YAI_WIRELESS = f"{os.environ['PSU_HAT_YAI_WIRELESS']}"
+GROUP_CHECK_MK = f"{os.environ['GROUP_CHECK_MK']}"
+OUTSIDE_PSU = f"{os.environ['OUTSIDE_PSU']}"
+
 @admin_module.route("/overview")
 @acl.roles_required("admin")
 def index():
     hosts = host_list()
     services = service_list()
+    psu_core_network_group = host_group(api_hostgroup_url=PSU_CORE_NETWORK)
+    psu_hatyai_campus_network = host_group(api_hostgroup_url=PSU_HATYAI_CAMPUS_NETWORK)
+    psu_hat_yai_wireless = host_group(api_hostgroup_url=PSU_HAT_YAI_WIRELESS)
+    check_mk_group = host_group(api_hostgroup_url=GROUP_CHECK_MK)
+    outside_psu = host_group(api_hostgroup_url=OUTSIDE_PSU)
     if not services:
         services = []
     if not hosts:
