@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 import httpx
 import datetime
 import json
+import requests
 
 load_dotenv()
 
@@ -15,6 +16,10 @@ HEADERS = {
     'Authorization': f"Bearer {os.environ['CHECKMK_USERNAME']} {os.environ['CHECKMK_PASSWORD']}",
     'Accept': 'application/json'
 }
+
+url = 'https://notify-api.line.me/api/notify'
+token = '4qg3p8FPpB9m4RWmt60mAKoyTdrfItSqovqvKO6mcIE'
+headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+token}
 
 def status_list():
     return [
@@ -171,6 +176,11 @@ def host_down_handler():
                             new_host_list.save()
                             host.host_list.append(new_host_list)
                             host.save()
+
+                            time = datetime.datetime.now()
+                            format_time = time.strftime('%Y-%m-%d %H:%M')
+                            msg = "\nHost : " + host_id + "\nState : " + "down" + "\nTime Down : " + format_time
+                            r = requests.post(url, headers=headers, data = {'message':msg})
                     else:
                         #print("Working2 !!!!")
                         new_host_list = models.HostList(
@@ -238,8 +248,7 @@ def host_down_handler():
                             host.availability = sla
                             host.save()
                             
-
-            
+                break
             return response['value']
         else:
             return []
