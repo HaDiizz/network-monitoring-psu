@@ -18,8 +18,8 @@ HEADERS = {
 }
 
 url = 'https://notify-api.line.me/api/notify'
-token = '4qg3p8FPpB9m4RWmt60mAKoyTdrfItSqovqvKO6mcIE'
-headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+token}
+line_noti_token = os.environ['LINE_NOTI_TOKEN']
+headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+line_noti_token}
 
 def status_list():
     return [
