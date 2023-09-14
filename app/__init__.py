@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 from . import models
 from . import acl
 from . import caches
-from authlib.integrations.flask_client import OAuth
 from datetime import timedelta
 from . import oauth2
 

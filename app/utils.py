@@ -50,6 +50,9 @@ def host_list():
             if response.status_code == 200:
                 response = response.json()
                 if response:
+                    for item in response['value']:
+                        if not current_user.is_authenticated or current_user.role != 'admin':
+                            del item['extensions']['address']
                     return response['value']
             else:
                 return []
@@ -70,6 +73,40 @@ def service_list(api_hostgroup_url):
                 params=params
             )
             
+            if response.status_code == 200:
+                response = response.json()
+                if response:
+                    return response['value']
+            else:
+                return []
+    except Exception as ex:
+        return None
+    
+def host_group_list():
+    try:
+        with httpx.Client() as client:
+
+            response = client.get(
+                f"{API_URL}/domain-types/host_group_config/collections/all",
+                headers=HEADERS,
+            )
+            if response.status_code == 200:
+                response = response.json()
+                if response:
+                    return response['value']
+            else:
+                return []
+    except Exception as ex:
+        return None
+
+def service_group_list():
+    try:
+        with httpx.Client() as client:
+
+            response = client.get(
+                f"{API_URL}/domain-types/service_group_config/collections/all",
+                headers=HEADERS,
+            )
             if response.status_code == 200:
                 response = response.json()
                 if response:

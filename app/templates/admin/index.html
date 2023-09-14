@@ -28,8 +28,8 @@
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
           <h1 class="text-4xl">
-            {% if host_groups_summary["TOTAL"] %} {{
-            host_groups_summary["TOTAL"] }} {% else %} - {% endif %}
+            {% if host_summary["TOTAL"] %} {{ host_summary["TOTAL"] }} {% else
+            %} - {% endif %}
           </h1>
           <span>Total Hosts</span>
         </div>
@@ -37,8 +37,8 @@
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
           <h1 class="text-4xl">
-            {% if host_groups_summary["UP"] %} {{ host_groups_summary["UP"] }}
-            {% else %} - {% endif %}
+            {% if host_summary["UP"] %} {{ host_summary["UP"] }} {% else %} - {%
+            endif %}
           </h1>
           <span>UP</span>
         </div>
@@ -46,8 +46,8 @@
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
           <h1 class="text-4xl">
-            {% if host_groups_summary["DOWN"] %} {{ host_groups_summary["DOWN"]
-            }} {% else %} - {% endif %}
+            {% if host_summary["DOWN"] %} {{ host_summary["DOWN"] }} {% else %}
+            - {% endif %}
           </h1>
           <span>DOWN</span>
         </div>
@@ -55,8 +55,8 @@
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
           <h1 class="text-4xl">
-            {% if host_groups_summary["UNREACH"] %} {{ host_groups_summary["UNREACH"]
-            }} {% else %} - {% endif %}
+            {% if host_summary["UNREACH"] %} {{ host_summary["UNREACH"] }} {%
+            else %} - {% endif %}
           </h1>
           <span>UNREACH</span>
         </div>
@@ -64,10 +64,42 @@
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
           <h1 class="text-4xl">
-            {% if host_groups_summary["MAINTAIN"] %} {{ host_groups_summary["MAINTAIN"]
-            }} {% else %} - {% endif %}
+            {% if host_summary["MAINTAIN"] %} {{ host_summary["MAINTAIN"] }} {%
+            else %} - {% endif %}
           </h1>
           <span>MAINTAIN</span>
+        </div>
+      </div>
+    </div>
+    <div class="host-group-container pb-5 pt-5">
+      <div tabindex="0" class="collapse collapse-arrow border border-base-300">
+        <div class="collapse">
+          <input type="checkbox" />
+          <div class="collapse-title text-xl font-medium">Host Group</div>
+          <div class="collapse-content">
+            <div class="overflow-x-auto pb-4">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Group Name</th>
+                    <th>SLA Availability</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for host_group in host_group_list %}
+                  <tr>
+                    <td>
+                      <a href="/{{ host_group['title'] | replace(' ', '-') }}"
+                        >{{ host_group["title"] }}</a
+                      >
+                    </td>
+                    <td>97.13%</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -153,8 +185,8 @@
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
           <h1 class="text-4xl">
-            {% if service_groups_summary["TOTAL"] %} {{
-            service_groups_summary["TOTAL"] }} {% else %} - {% endif %}
+            {% if service_summary["TOTAL"] %} {{ service_summary["TOTAL"] }} {%
+            else %} - {% endif %}
           </h1>
           <span>Total Services</span>
         </div>
@@ -162,8 +194,8 @@
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
           <h1 class="text-4xl">
-            {% if service_groups_summary["UP"] %} {{
-            service_groups_summary["UP"] }} {% else %} - {% endif %}
+            {% if service_summary["UP"] %} {{ service_summary["UP"] }} {% else
+            %} - {% endif %}
           </h1>
           <span>UP</span>
         </div>
@@ -171,8 +203,8 @@
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
           <h1 class="text-4xl">
-            {% if service_groups_summary["DOWN"] %} {{
-            service_groups_summary["DOWN"] }} {% else %} - {% endif %}
+            {% if service_summary["DOWN"] %} {{ service_summary["DOWN"] }} {%
+            else %} - {% endif %}
           </h1>
           <span>DOWN</span>
         </div>
@@ -180,8 +212,8 @@
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
           <h1 class="text-4xl">
-            {% if service_groups_summary["UNREACH"] %} {{
-            service_groups_summary["UNREACH"] }} {% else %} - {% endif %}
+            {% if service_summary["UNREACH"] %} {{ service_summary["UNREACH"] }}
+            {% else %} - {% endif %}
           </h1>
           <span>UNREACH</span>
         </div>
@@ -189,10 +221,42 @@
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
           <h1 class="text-4xl">
-            {% if service_groups_summary["MAINTAIN"] %} {{
-            service_groups_summary["MAINTAIN"] }} {% else %} - {% endif %}
+            {% if service_summary["MAINTAIN"] %} {{ service_summary["MAINTAIN"]
+            }} {% else %} - {% endif %}
           </h1>
           <span>MAINTAIN</span>
+        </div>
+      </div>
+    </div>
+    <div class="service-group-container pb-5 pt-5">
+      <div tabindex="0" class="collapse collapse-arrow border border-base-300">
+        <div class="collapse">
+          <input type="checkbox" />
+          <div class="collapse-title text-xl font-medium">Service Group</div>
+          <div class="collapse-content">
+            <div class="overflow-x-auto pb-4">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Group Name</th>
+                    <th>SLA Availability</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for service_group in service_group_list %}
+                  <tr>
+                    <td>
+                      <a href="/{{ service_group['title'] | replace(' ', '-') }}"
+                        >{{ service_group["title"] }}</a
+                      >
+                    </td>
+                    <td>97.13%</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>

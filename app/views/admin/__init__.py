@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 from ... import acl
-from ...utils import location_list, host_list, service_list, host_group
+from ...utils import location_list, host_list, service_list, host_group, host_group_list, service_group_list
 import os
 admin_module = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -22,18 +22,25 @@ AD_SERVICE_GROUP = f"{os.environ['AD_SERVICE_GROUP']}"
 def index():
     hosts = host_list()
     services = service_list(api_hostgroup_url=WEB_SERVICE_GROUP)
+    host_groups = host_group_list()
+    service_groups = service_group_list()
     psu_core_network_group = host_group(api_hostgroup_url=PSU_CORE_NETWORK)
     psu_hatyai_campus_network = host_group(api_hostgroup_url=PSU_HATYAI_CAMPUS_NETWORK)
     psu_hat_yai_wireless = host_group(api_hostgroup_url=PSU_HAT_YAI_WIRELESS)
     check_mk_group = host_group(api_hostgroup_url=GROUP_CHECK_MK)
     outside_psu = host_group(api_hostgroup_url=OUTSIDE_PSU)
     ad_service_group = service_list(api_hostgroup_url=AD_SERVICE_GROUP)
+
+    if not host_groups:
+        host_groups = []
+    if not service_groups:
+        service_groups = []
     if not services:
         services = []
     if not hosts:
         hosts = []
-    host_groups_summary = {}
-    service_groups_summary = {}
+    host_summary = {}
+    service_summary = {}
     if hosts:
         for host in hosts:
             host_last_state = host["extensions"]["last_state"]
@@ -45,10 +52,10 @@ def index():
                 host_state = "UNREACH"
             else:
                 host_state = "MAINTAIN"
-            if host_state not in host_groups_summary:
-                host_groups_summary[host_state] = 0
-            host_groups_summary[host_state] += 1
-        host_groups_summary["TOTAL"] = len(hosts)
+            if host_state not in host_summary:
+                host_summary[host_state] = 0
+            host_summary[host_state] += 1
+        host_summary["TOTAL"] = len(hosts)
     if services:
         for service in services:
             service_last_state = service["extensions"]["state"]
@@ -60,8 +67,8 @@ def index():
                 service_state = "UNREACH"
             else:
                 service_state = "UNKNOWN" 
-            if service_state not in service_groups_summary:
-                service_groups_summary[service_state] = 0
-            service_groups_summary[service_state] += 1
-        service_groups_summary["TOTAL"] = len(services)
-    return render_template("/admin/index.html", title="Overview", location_list=location_list(), host_list=hosts, service_list=services, host_groups_summary=host_groups_summary, service_groups_summary=service_groups_summary)
+            if service_state not in service_summary:
+                service_summary[service_state] = 0
+            service_summary[service_state] += 1
+        service_summary["TOTAL"] = len(services)
+    return render_template("/admin/index.html", title="Overview", location_list=location_list(), host_list=hosts, service_list=services, host_summary=host_summary, service_summary=service_summary, host_group_list=host_groups, service_group_list=service_groups)
