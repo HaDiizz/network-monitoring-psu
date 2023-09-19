@@ -180,22 +180,43 @@ def host_down_handler():
                 room = item['extensions']['attributes']['labels']['room']
                 state = item['extensions']['last_state']
                 host_id = item['title']
-            
+                
                 print("Host : ",host_id ," state : " , state)
                 #! Host DOWN
                 if state == 1:
-                    
                     host = models.Host.objects(host_id=host_id, month=month, year=year).first()
                     if host:
                         host_list_ids = host.host_list
                         if not host_list_ids:
-                            return
+                            print("add new one")
+                            new_host_list = models.HostList(
+                                state=int(state),
+                                last_state=5,
+                                notified=False,
+                                remark="",
+                                last_time_up=datetime.datetime.now(),
+                                last_time_down=datetime.datetime.now(),
+                                hour=0,
+                            )
+                            
+                            #TODO  ตรงนี้ให้เขียนส่ง LINE NOTIFY แล้วก็ให้ update notified เป็น True ถ้าส่ง req notify สำเร็จ
+                            new_host_list.save()
+                            host.host_list.append(new_host_list)
+                            host.save()
+
+                            #! Line notify function
+                            print("Line sending")
+                            time = datetime.datetime.now()
+                            format_time = time.strftime('%Y-%m-%d %H:%M')
+                            msg = "\nHost : " + host_id + "\nState : " + "down" + "\nTime Down : " + format_time
+                            r = requests.post(url, headers=headers, data = {'message':msg})
+                        
                         last_host_list_id = host_list_ids[-1]
                         host_list = models.HostList.objects(id=last_host_list_id.id, last_state=5).first()
                         #? ตัวที่ Down แต่ยังไม่แก้ก็ให้ update last_time_down ไว้ calculate SLA
                         if host_list:
                             print("still have")
-                            #TODO  ตรงนี้อาจจะเขียน check if host_list.updated_date == today ถ้าไม่ใช่ก็ให้ส่ง line notify อีก
+                            
                             #host_list.last_time_down = datetime.datetime.now()
                             #host_list.save()  
                         else:
@@ -209,17 +230,19 @@ def host_down_handler():
                                 last_time_down=datetime.datetime.now(),
                                 hour=0,
                             )
-                            #TODO  ตรงนี้ให้เขียนส่ง LINE NOTIFY แล้วก็ให้ update notified เป็น True ถ้าส่ง req notify สำเร็จ
+                            
                             new_host_list.save()
                             host.host_list.append(new_host_list)
                             host.save()
 
+                            #! Line notify function
+                            print("Line sending")
                             time = datetime.datetime.now()
                             format_time = time.strftime('%Y-%m-%d %H:%M')
                             msg = "\nHost : " + host_id + "\nState : " + "down" + "\nTime Down : " + format_time
                             r = requests.post(url, headers=headers, data = {'message':msg})
                     else:
-                        #print("Working2 !!!!")
+                        
                         new_host_list = models.HostList(
                             state=int(state),
                             last_state=5,
@@ -249,12 +272,13 @@ def host_down_handler():
                         new_host.save()
                 #! Host UP
                 elif state == 0:
+                    
                     #TODO  ตรงนี้มันน่าจะมีปัญหาเช่น host down ไปเดือนนึง พอขึ้นเดือนใหม่ปรากฏว่า UP record ที่เก็บก่อนหน้าก็จะไม่ถูก update last_state
                     host = models.Host.objects(host_id=host_id, month=month, year=year).first()
                     if host:
                         host_list_ids = host.host_list
                         if not host_list_ids:
-                            return
+                            continue
                         last_host_list_id = host_list_ids[-1]
                         host_list = models.HostList.objects(id=last_host_list_id.id, last_state=5).first()
                         if host_list :
@@ -284,8 +308,22 @@ def host_down_handler():
                             sla = int(cal_sla(month,year,sum_min))
                             host.availability = sla
                             host.save()
-                            
-                break
+                    else :
+                        print("New host add")
+                        new_host = models.Host(
+                            host_id=host_id,
+                            name=host_id,
+                            ip_address=ip_address,
+                            month=month,
+                            year=year,
+                            count=1,
+                            availability=100,
+                            coordinates= (lat, lng),
+                            floor=floor,
+                            room=room,
+                        )
+                        new_host.save()
+                # break
             return response['value']
         else:
             return []
