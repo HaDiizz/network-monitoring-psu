@@ -239,7 +239,7 @@ def host_down_handler():
                             print("Line sending")
                             time = datetime.datetime.now()
                             format_time = time.strftime('%Y-%m-%d %H:%M')
-                            msg = "\nHost : " + host_id + "\nState : " + "down" + "\nTime Down : " + format_time
+                            msg = "🔴" + "\nHost : " + host_id + "\nState : " + "down" + "\nTime Down : " + format_time
                             r = requests.post(url, headers=headers, data = {'message':msg})
                     else:
                         
