@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, jsonify, session
+from flask import Blueprint, render_template, redirect, url_for, flash, jsonify, session, request
 from .. import forms
 from flask_login import login_user, login_required, logout_user, current_user
 from .. import models
@@ -57,7 +57,8 @@ def login():
             return redirect('/')
     
     client = oauth2.oauth2_client
-    redirect_uri = url_for("site.auth", _external=True)
+    scheme = request.environ.get("CONF_URL", "http")
+    redirect_uri = url_for("site.auth", _external=True, _scheme=scheme)
     return client.psu_passport.authorize_redirect(redirect_uri)
 
 @module.route('/auth')
@@ -114,7 +115,14 @@ def auth():
 @login_required
 def logout():
     logout_user()
-    session.pop('user', None)
+    session.clear()
+    client = oauth2.oauth2_client
+    remote = client.psu_passport
+    logout_url = f"{ remote.server_metadata.get('end_session_endpoint') }?redirect={ request.scheme }://{ request.host }"
+    # session.pop('user', None)
+    if logout_url:
+        return redirect(logout_url)
+    
     return redirect(url_for('site.index'))
 
 @module.route('/report', methods=["GET", "POST"])
