@@ -15,10 +15,10 @@ def host():
 @acl.roles_required("admin")
 def host_quarterly(year, month):
     
-    avg_sla , month_name = get_month(int(month),int(year))
+    avg_sla , host_all_count, host_name, host_sla , host_ip, host_count,month_name = get_data(int(month),int(year))
     card_tiltle = month_name
     print(month_name , avg_sla)
-    return render_template("/admin/host/quarterly.html", title="Host Quarterly", month_name=month_name , avg_sla=avg_sla)
+    return render_template("/admin/host/quarterly.html", title="Host Quarterly", month_name=month_name , host_name = host_name, host_all_count = host_all_count , host_sla = host_sla, host_ip = host_ip, host_count = host_count,avg_sla=avg_sla)
 
 def get_name_month(selected_month,selected_year) :
     if selected_month + 2 <=  12  :
@@ -36,8 +36,14 @@ def get_name_month(selected_month,selected_year) :
     return card_tittle
 
 def search_month(start_month,end_month,selected_year)   :
-    if end_month  == 13:
-        print("working")
+    if end_month  <= 12:
+        query = models.Host.objects(
+            month__gte=start_month,
+            month__lte=end_month,
+            year__in=[selected_year]
+        )
+        return query
+    elif end_month  == 13:
         query = models.Host.objects(
             (Q(month=11) & Q(year=selected_year)) | (Q(month=12) & Q(year=selected_year)) | (Q(month=1) & Q(year=selected_year + 1))
         )
@@ -48,39 +54,113 @@ def search_month(start_month,end_month,selected_year)   :
         )
         return query
 
-def get_month(selected_month,selected_year):
+def search_host(start_month,end_month,selected_year, host_name)   :
+    if end_month <= 12:
+        query = models.Host.objects(
+                host_id = host_name,
+                month__gte=start_month,
+                month__lte=end_month,
+                year__in=[selected_year])
+        return query
+    if end_month  == 13:
+        print("working")
+        query = models.Host.objects(
+            (Q(host_id= host_name) & Q(month=11) & Q(year=selected_year)) | Q(host_id= host_name) & (Q(month=12) & Q(year=selected_year)) | Q(host_id= host_name) & (Q(month=1) & Q(year=selected_year + 1))
+        )
+        return query
+    elif end_month  == 14:
+        query = models.Host.objects(
+            (Q(host_id= host_name) & Q(month=12) & Q(year=selected_year)) | Q(host_id= host_name) & (Q(month=1) & Q(year=selected_year  + 1)) | Q(host_id= host_name) & (Q(month=2) & Q(year=selected_year + 1))
+        )
+        return query
+
+def get_data(selected_month,selected_year):
     start_month = selected_month
     end_month = selected_month + 2
     print(selected_month , selected_year)
     avg_sla = 0
     count = 0
+    host_all_count = 0
+    host_name = []
+    host_sla = []
+    host_ip = []
+    host_count = []
     
     if end_month > 12:
         query = search_month(start_month,end_month,selected_year)
         matching_hosts = query.all()
 
-        print("many of data : ",len(matching_hosts))
+        
         for host in matching_hosts:
 
             avg_sla += host.availability
+            host_all_count += host.count
             count  += 1
 
+            if host.availability != 100 :
+                if host.name in host_name :
+                    continue
+                else :
+                    host_name.append(host.name)
+            
+        for host in host_name :
+            query = search_host(start_month,end_month,selected_year, host)
+            matching_hosts = query.all()
+            sla = 0
+            count_down = 0
+            for host in matching_hosts:
+                sla += host.availability
+                count_down += host.count
+
+                if host.ip_address in host_ip :
+                    continue
+                else :
+                    host_ip.append(host.ip_address)
+
+            sla = sla / len(matching_hosts)
+            host_sla.append(sla)
+            host_count.append(count_down)
     else :
-        query = models.Host.objects(
-            month__gte=start_month,
-            month__lte=end_month,
-            year__in=[selected_year]
-        )
+        query = search_month(start_month,end_month,selected_year)
         matching_hosts = query.all()
-        print("Len of data : " , len(matching_hosts))
+
         for host in matching_hosts:
             avg_sla += host.availability
+            host_all_count += host.count
             count  += 1
             
+            if host.availability != 100 :
+                if host.name in host_name :
+                    continue
+                else :
+                    host_name.append(host.name)
+
+        for host in host_name :
+            
+            query = search_host(start_month,end_month,selected_year, host)
+
+            matching_hosts = query.all()
+            sla = 0
+            count_down = 0
+            for host in matching_hosts:
+                sla += host.availability
+                count_down += host.count
+
+                if host.ip_address in host_ip :
+                    continue
+                else :
+                    host_ip.append(host.ip_address)
+
+            sla = sla / len(matching_hosts)
+            host_sla.append(sla)
+            host_count.append(count_down)
+
+            
+
     if avg_sla != 0 :
         avg_sla = avg_sla  / count
         print("AVG_SLA  : " , avg_sla)    
         
     Card_tittle = get_name_month(selected_month,selected_year)    
     print("New line\n")
-    return  avg_sla,Card_tittle
+    return  avg_sla,host_all_count, host_name, host_sla, host_ip, host_count,Card_tittle
