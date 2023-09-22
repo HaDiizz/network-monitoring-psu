@@ -17,8 +17,9 @@ def host_quarterly(year, month):
     
     avg_sla , host_all_count, host_name, host_sla , host_ip, host_count,month_name = get_data(int(month),int(year))
     card_tiltle = month_name
-    print(month_name , avg_sla)
-    return render_template("/admin/host/quarterly.html", title="Host Quarterly", month_name=month_name , host_name = host_name, host_all_count = host_all_count , host_sla = host_sla, host_ip = host_ip, host_count = host_count,avg_sla=avg_sla)
+    host_detail = {host_name[i]: {"host_sla": host_sla[i] , "host_ip": host_ip[i] , "host_count": host_count[i]} for i in range(len(host_name))} 
+    print(host_detail)
+    return render_template("/admin/host/quarterly.html", title="Host Quarterly", month_name=month_name , host_detail = host_detail, host_all_count = host_all_count , avg_sla=avg_sla)
 
 def get_name_month(selected_month,selected_year) :
     if selected_month + 2 <=  12  :
