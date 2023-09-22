@@ -95,13 +95,14 @@ def get_data(selected_month,selected_year):
 
             avg_sla += host.availability
             host_all_count += host.count
+            print("Host name : ", host.host_id , " count : " , host.count ," month : ", host.month)
             count  += 1
 
-            if host.availability != 100 :
-                if host.name in host_name :
-                    continue
-                else :
-                    host_name.append(host.name)
+            
+            if host.name in host_name :
+                continue
+            else :
+                host_name.append(host.name)
             
         for host in host_name :
             query = search_host(start_month,end_month,selected_year, host)
@@ -128,12 +129,13 @@ def get_data(selected_month,selected_year):
             avg_sla += host.availability
             host_all_count += host.count
             count  += 1
+            print("Host name : ", host.host_id , " count : " , host.count ," month : ", host.month , " sum of count : " , host_all_count)
             
-            if host.availability != 100 :
-                if host.name in host_name :
-                    continue
-                else :
-                    host_name.append(host.name)
+            
+            if host.name in host_name :
+                continue
+            else :
+                host_name.append(host.name)
 
         for host in host_name :
             
