@@ -3771,3 +3771,11 @@ details.collapse summary::-webkit-details-marker {
 .place-self-center {
   place-self: center;
 }
+
+.float-right {
+  float: right;
+}
+
+.gap-x-3 {
+  column-gap: 0.75rem;
+}

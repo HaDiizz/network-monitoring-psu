@@ -1,8 +1,16 @@
 {% extends "./layouts/base.html" %} {% block content %}
 
 <h1 class="text-4xl font-bold pb-5">รายงานปัญหา</h1>
+<div class="flex justify-end pb-5">
+  <a id="link-report" class="btn flex gap-x-3 items-center p-3" href="/history"
+    ><i class="bx bx-history"></i><span>ประวัติแจ้งปัญหา</span>
+  </a>
+</div>
 {% include "/layouts/messageSection.html" %}
-<div class="flex flex-col lg:flex-row md:flex-row gap-5 pb-5" id="layoutContainer">
+<div
+  class="flex flex-col lg:flex-row md:flex-row gap-5 pb-5"
+  id="layoutContainer"
+>
   <div
     class="w-full md:w-7/12 sm:w-12/12 pt-5 bg-light-primary dark:bg-dark-primary pr-2 pl-2 rounded-md"
     id="mapContainer"

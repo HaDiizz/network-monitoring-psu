@@ -160,3 +160,13 @@ def report():
         return redirect('/login')
 
     return render_template("report.html", title="รายงานปัญหา", form=form)
+
+@module.route('/history', methods=["GET", "POST"])
+def report_history():
+    if current_user.is_authenticated:
+        if current_user.role == 'admin':
+            return redirect('/admin/overview')
+    else:
+        return redirect('/login')
+    reports = models.Report.objects(reported_by=current_user.id)
+    return render_template("reportHistory.html", title="ประวัติรายงานปัญหา", reports=reports)
