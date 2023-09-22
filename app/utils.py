@@ -191,7 +191,7 @@ def host_down_handler():
                             print("add new one")
                             new_host_list = models.HostList(
                                 state=int(state),
-                                last_state=5,
+                                last_state=-1,
                                 notified=False,
                                 remark="",
                                 last_time_up=datetime.datetime.now(),
@@ -212,7 +212,7 @@ def host_down_handler():
                             r = requests.post(url, headers=headers, data = {'message':msg})
                         
                         last_host_list_id = host_list_ids[-1]
-                        host_list = models.HostList.objects(id=last_host_list_id.id, last_state=5).first()
+                        host_list = models.HostList.objects(id=last_host_list_id.id, last_state=-1).first()
                         #? ตัวที่ Down แต่ยังไม่แก้ก็ให้ update last_time_down ไว้ calculate SLA
                         if host_list:
                             print("still have")
@@ -223,7 +223,7 @@ def host_down_handler():
                             print("add new one")
                             new_host_list = models.HostList(
                                 state=int(state),
-                                last_state=5,
+                                last_state=-1,
                                 notified=False,
                                 remark="",
                                 last_time_up=datetime.datetime.now(),
@@ -245,7 +245,7 @@ def host_down_handler():
                         
                         new_host_list = models.HostList(
                             state=int(state),
-                            last_state=5,
+                            last_state=-1,
                             notified=False,
                             remark="",
                             last_time_up=datetime.datetime.now(),
@@ -280,7 +280,7 @@ def host_down_handler():
                         if not host_list_ids:
                             continue
                         last_host_list_id = host_list_ids[-1]
-                        host_list = models.HostList.objects(id=last_host_list_id.id, last_state=5).first()
+                        host_list = models.HostList.objects(id=last_host_list_id.id, last_state=-1).first()
                         if host_list :
                             last_time_down = host_list.last_time_down
                             unix_timestamp = int(last_time_down.timestamp())                         
