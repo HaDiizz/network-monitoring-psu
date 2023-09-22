@@ -194,37 +194,37 @@
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
           <h1 class="text-4xl">
-            {% if service_summary["UP"] %} {{ service_summary["UP"] }} {% else
+            {% if service_summary["OK"] %} {{ service_summary["OK"] }} {% else
             %} - {% endif %}
           </h1>
-          <span>UP</span>
+          <span>OK</span>
         </div>
       </div>
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
           <h1 class="text-4xl">
-            {% if service_summary["DOWN"] %} {{ service_summary["DOWN"] }} {%
+            {% if service_summary["CRIT"] %} {{ service_summary["CRIT"] }} {%
             else %} - {% endif %}
           </h1>
-          <span>DOWN</span>
+          <span>CRIT</span>
         </div>
       </div>
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
           <h1 class="text-4xl">
-            {% if service_summary["UNREACH"] %} {{ service_summary["UNREACH"] }}
+            {% if service_summary["WARN"] %} {{ service_summary["WARN"] }}
             {% else %} - {% endif %}
           </h1>
-          <span>UNREACH</span>
+          <span>WARN</span>
         </div>
       </div>
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
           <h1 class="text-4xl">
-            {% if service_summary["MAINTAIN"] %} {{ service_summary["MAINTAIN"]
+            {% if service_summary["UNKNOWN"] %} {{ service_summary["UNKNOWN"]
             }} {% else %} - {% endif %}
           </h1>
-          <span>MAINTAIN</span>
+          <span>UNKNOWN</span>
         </div>
       </div>
     </div>
@@ -275,24 +275,24 @@
             <tbody>
               {% for service in service_list %}
               <tr>
-                <td>{{ service["extensions"]["name"] }}</td>
+                <td>{{ service["extensions"]["host_name"] }}: {{ service["extensions"]["description"].replace("HTTPS", "https://").replace("HTTP", "http://").replace(" ", "") | trim }}</td>
                 <td>
                   <a
-                    href='{{ service["extensions"]["name"].replace("HTTPS", "https://").replace("HTTP", "http://").replace(" ", "") | trim }}'
+                    href='{{ service["extensions"]["host_name"].replace("HTTPS", "https://").replace("HTTP", "http://").replace(" ", "") | trim }}'
                     target="_blank"
-                    >{{ service["extensions"]["name"].replace("HTTPS",
+                    >{{ service["extensions"]["host_name"].replace("HTTPS",
                     "").replace("HTTP", "") }}</a
                   >
                 </td>
                 <td>
                   {% if service["extensions"]["state"] == 0 %}
-                  <div class="badge badge-success pb-0.5">UP</div>
+                  <div class="badge badge-success pb-0.5">OK</div>
                   {% elif service["extensions"]["state"] == 1 %}
-                  <div class="badge badge-error pb-0.5">DOWN</div>
+                  <div class="badge badge-warning pb-0.5">WARN</div>
                   {% elif service["extensions"]["state"] == 2 %}
-                  <div class="badge badge-warning pb-0.5">UNREACH</div>
+                  <div class="badge badge-error pb-0.5">CRIT</div>
                   {% else %}
-                  <div class="badge badge-neutral pb-0.5">MAINTAIN</div>
+                  <div class="badge badge-neutral pb-0.5">UNKNOWN</div>
                   {% endif %}
                 </td>
                 <td>-</td>

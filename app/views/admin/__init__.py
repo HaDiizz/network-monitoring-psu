@@ -21,7 +21,8 @@ AD_SERVICE_GROUP = f"{os.environ['AD_SERVICE_GROUP']}"
 @acl.roles_required("admin")
 def index():
     hosts = host_list()
-    services = service_list(api_hostgroup_url=WEB_SERVICE_GROUP)
+    web_service = service_list(api_service_url=WEB_SERVICE_GROUP)
+    services = web_service
     host_groups = host_group_list()
     service_groups = service_group_list()
     psu_core_network_group = host_group(api_hostgroup_url=PSU_CORE_NETWORK)
@@ -29,7 +30,6 @@ def index():
     psu_hat_yai_wireless = host_group(api_hostgroup_url=PSU_HAT_YAI_WIRELESS)
     check_mk_group = host_group(api_hostgroup_url=GROUP_CHECK_MK)
     outside_psu = host_group(api_hostgroup_url=OUTSIDE_PSU)
-    ad_service_group = service_list(api_hostgroup_url=AD_SERVICE_GROUP)
 
     if not host_groups:
         host_groups = []
@@ -60,11 +60,11 @@ def index():
         for service in services:
             service_last_state = service["extensions"]["state"]
             if service_last_state == 0:
-                service_state = "UP" 
+                service_state = "OK" 
             elif service_last_state == 1:
-                service_state = "DOWN"
+                service_state = "WARN"
             elif service_last_state == 2:
-                service_state = "UNREACH"
+                service_state = "CRIT"
             else:
                 service_state = "UNKNOWN" 
             if service_state not in service_summary:

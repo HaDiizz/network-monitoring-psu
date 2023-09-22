@@ -60,15 +60,15 @@ def host_list():
         return None
 
 
-def service_list(api_hostgroup_url):
+def service_list(api_service_url):
     try:
         with httpx.Client() as client:
             params = {
-                "columns": ['name', 'state', 'last_state', 'last_time_up', 'last_time_down', 'last_time_unreachable', 'last_state_change', 'labels', 'groups'],
+                "columns": [ 'state', 'last_state', 'last_time_ok', 'last_time_critical', 'last_time_unknown','last_time_warning' ,'last_state_change', 'labels', "groups", 'downtimes_with_extra_info', ],
             }
             
             response = client.get(
-                f"{api_hostgroup_url}",
+                f"{api_service_url}",
                 headers=HEADERS,
                 params=params
             )
