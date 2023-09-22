@@ -275,7 +275,7 @@
             <tbody>
               {% for service in service_list %}
               <tr>
-                <td>{{ service["extensions"]["host_name"] }}: {{ service["extensions"]["description"].replace("HTTPS", "https://").replace("HTTP", "http://").replace(" ", "") | trim }}</td>
+                <td>{{ service["extensions"]["host_name"] }}: {{ service["extensions"]["description"]}}</td>
                 <td>
                   <a
                     href='{{ service["extensions"]["host_name"].replace("HTTPS", "https://").replace("HTTP", "http://").replace(" ", "") | trim }}'
