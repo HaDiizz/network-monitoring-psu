@@ -3321,6 +3321,11 @@ details.collapse summary::-webkit-details-marker {
   gap: 1.25rem;
 }
 
+.gap-x-3 {
+  -moz-column-gap: 0.75rem;
+       column-gap: 0.75rem;
+}
+
 .overflow-x-auto {
   overflow-x: auto;
 }
@@ -3349,6 +3354,11 @@ details.collapse summary::-webkit-details-marker {
 .border-base-300 {
   --tw-border-opacity: 1;
   border-color: hsl(var(--b3) / var(--tw-border-opacity));
+}
+
+.border-gray-800 {
+  --tw-border-opacity: 1;
+  border-color: rgb(31 41 55 / var(--tw-border-opacity));
 }
 
 .border-t-neutral-500 {
@@ -3525,6 +3535,10 @@ details.collapse summary::-webkit-details-marker {
 
 .font-medium {
   font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
 }
 
 .uppercase {
@@ -3774,8 +3788,4 @@ details.collapse summary::-webkit-details-marker {
 
 .float-right {
   float: right;
-}
-
-.gap-x-3 {
-  column-gap: 0.75rem;
 }

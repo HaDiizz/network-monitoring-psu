@@ -1,13 +1,17 @@
 {% extends "./layouts/base.html" %} {% block content %}
 <div class="admin-container">
-  <h1>Host Quarterly</h1>
-  <h1>{{ month_name }}</h1>
-  <h1>{{ avg_sla }}</h1>
-  <h1>{{ host_all_count  }}</h1>
-  <h1>{{ host_detail  }}</h1>
-  
-  
-  
-  
+  <h1 class="text-4xl font-bold pb-8">{{ month_name }}</h1>
+  <div class="stats stats-vertical lg:stats-horizontal shadow w-full">
+    <div class="stat">
+      <div class="stat-title">SLA Availability</div>
+      <div class="stat-value text-indigo-500">{{ avg_sla }}%</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-title">Host Down Total</div>
+      <div class="stat-value text-error">{{ host_all_count }}</div>
+    </div>
+  </div>
+  <h1>{{ host_detail }}</h1>
 </div>
 {% endblock %}

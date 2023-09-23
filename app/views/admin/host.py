@@ -2,6 +2,7 @@ from flask import render_template
 from app.views.admin import admin_module
 from ... import acl
 from ...dash.host_monthly import dash_host
+from ...dash.host_quarterly import dash_host_quarterly, dash
 import calendar
 from ... import models
 from mongoengine import Q
@@ -14,7 +15,8 @@ def host():
 @admin_module.route("/hosts/<int:year>/<string:month>")
 @acl.roles_required("admin")
 def host_quarterly(year, month):
-    
+    dash.ctx.set("year", year)
+    dash.ctx.set("month", month)
     avg_sla , host_all_count, host_name, host_sla , host_ip, host_count,month_name = get_data(int(month),int(year))
     card_tiltle = month_name
     host_detail = {host_name[i]: {"host_sla": host_sla[i] , "host_ip": host_ip[i] , "host_count": host_count[i]} for i in range(len(host_name))} 
