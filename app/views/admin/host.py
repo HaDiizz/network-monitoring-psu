@@ -14,10 +14,11 @@ def host():
 @admin_module.route("/hosts/<int:year>/<string:month>")
 @acl.roles_required("admin")
 def host_quarterly(year, month):
-    avg_sla , host_all_count, host_name, host_sla , host_ip, host_count,month_name = get_data(int(month),int(year))
+    avg_sla , host_all_count, host_name, host_sla , host_ip, host_count,month_name = get_quarter_data(int(month),int(year))
+    day_data =  get_day_data(int(month),int(year))
     card_tiltle = month_name
     host_detail = {host_name[i]: {"host_sla": host_sla[i] , "host_ip": host_ip[i] , "host_count": host_count[i]} for i in range(len(host_name))} 
-    return render_template("/admin/host/quarterly.html", title="Host Quarterly", month_name=month_name , host_detail = host_detail, host_all_count = host_all_count , avg_sla=avg_sla)
+    return render_template("/admin/host/quarterly.html", title="Host Quarterly", month_name=month_name , host_detail = host_detail, host_all_count = host_all_count , avg_sla = avg_sla ,day_data = day_data)
 
 def get_name_month(selected_month,selected_year) :
     if selected_month + 2 <=  12  :
@@ -71,8 +72,75 @@ def search_host(start_month,end_month,selected_year, host_name)   :
             (Q(host_id= host_name) & Q(month=12) & Q(year=selected_year)) | Q(host_id= host_name) & (Q(month=1) & Q(year=selected_year  + 1)) | Q(host_id= host_name) & (Q(month=2) & Q(year=selected_year + 1))
         )
         return query
+    
+def search_day_data(matching_data):
+    host_day_dict = []
+    for data in matching_data:
+            print(data.created_date)
+            day = data.created_date.day
+            month = data.created_date.month
+            day = str(day) + "-" + str(month)
+            if host_day_dict :
+                for check_day in host_day_dict :
+                    day_exists = any(check_day["day"] == day for check_day in host_day_dict)
+                    if day_exists:
+                        if check_day["day"] == day:
+                            print("Day : ", check_day["day"],"COUNT : ",check_day["count"] , "SUM : " ,check_day["time"])
+                            check_day["time"] =  check_day["time"] + data.minutes
+                            check_day["count"] =  check_day["count"] + 1
+                            print("After : ","Day : ", check_day["day"],"COUNT : ",check_day["count"] , "SUM : " ,check_day["time"])
+                            break
+            
+                    else :
+                        date = day
+                        time = data.minutes
+                        count = 1
+                        start_day = {"day": day, "time": time, "count": count}
+                        host_day_dict.append(start_day)
+                        break
+                
+                        
+            else :
+                date = day
+                time = data.minutes
+                count = 1
+                start_day = {"day": day, "time": time, "count": count}
+                host_day_dict.append(start_day)
+            print(host_day_dict)
+            print("\n")
+    print(host_day_dict)
+    return host_day_dict
 
-def get_data(selected_month,selected_year):
+def get_day_data(selected_month,selected_year):
+    start_month = selected_month
+    end_month = selected_month + 2
+    if end_month > 12:
+        query = search_month(start_month,end_month,selected_year)
+    else :
+        query = search_month(start_month,end_month,selected_year)    
+    
+    host = query.all()
+    
+    host_list_id = []
+    if host :
+        for hosts in host :
+            for value in hosts.host_list:
+                if value.last_state != -1:
+                    print(value.id)
+                    host_list_id.append(value.id)
+
+        query  = models.HostList.objects(id__in=host_list_id)
+        matching_data = query.all()
+        host_day_dict = search_day_data(matching_data)
+        data_dict = {item['day']: {'sla': (1440 - (item['time']/item['count']))/1440 * 100} for item in host_day_dict}
+
+        print(data_dict)
+
+        return data_dict
+                            
+    
+
+def get_quarter_data(selected_month,selected_year):
     start_month = selected_month
     end_month = selected_month + 2
     avg_sla = 0
