@@ -17,11 +17,6 @@ module = Blueprint('site', __name__)
 def account_context():
     return {'account': current_user}
 
-@module.route('/host-down')
-def host_down():
-    host_down_handler()
-    return "hello"
-
 @module.route('/')
 def index():
     if current_user.is_authenticated:

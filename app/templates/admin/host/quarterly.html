@@ -1,6 +1,12 @@
 {% extends "./layouts/base.html" %} {% block content %}
 <div class="admin-container">
   <h1 class="text-4xl font-bold pb-8">{{ month_name }}</h1>
+  <div class="text-sm breadcrumbs pb-5">
+    <ul>
+      <li><a href="/admin/hosts">Host</a></li>
+      <li>{{ month_name }}</li>
+    </ul>
+  </div>
   <div class="stats stats-vertical lg:stats-horizontal shadow w-full">
     <div class="stat">
       <div class="stat-title">SLA Availability</div>
