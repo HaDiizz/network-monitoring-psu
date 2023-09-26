@@ -18,7 +18,84 @@
       <div class="stat-value text-error">{{ host_all_count }}</div>
     </div>
   </div>
-  <h1>{{ host_detail }}</h1>
-  <h1>{{ day_data }}</h1>
+  <div class="flex flex-col lg:flex-row md:flex-row gap-5 pt-8 pb-8">
+    <div class="w-full bg-light-primary rounded-md dark:bg-dark-primary">
+      <div class="table-responsive p-3 pt-5">
+        <table id="quarterly-table" class="display" style="width: 100%">
+          <thead>
+            <tr>
+              <th>Host Name</th>
+              <th>IP Address</th>
+              <th>จำนวนครั้งที่มีปัญหา</th>
+              <th>SLA Availability</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for host in host_data %}
+            <tr>
+              <td>{{ host_data[host]["host_name"] }}</td>
+              <td>{{ host_data[host]["host_ip"] }}</td>
+              <td>{{ host_data[host]["host_count"] }}</td>
+              <td>{{ host_data[host]["host_sla"] }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="tabs tabs-boxed month-tabs">
+    {% for month in months_name %}
+    <a
+      data-tab="{{ month }}"
+      class="tab {% if loop.first %}tab-active{% endif %}"
+      >{{ month }}</a
+    >
+    {% endfor %}
+  </div> -->
+  <div class="page tab-content current">
+    {% for month_name, month_number in months.items() %}
+    <h2 class="text-2xl font-bold pb-5">{{ month_name }}</h2>
+    <div class="grid grid-cols-1 xl:grid-cols-7 lg:grid-cols-7 md:grid-cols-7 sm:grid-cols-1 gap-5 pb-8">
+      {% for date in day_data if day_data[date]["date"].endswith('-' +
+      month_number) %} {% if day_data[date]["sla"] >= 90 %}
+      <div class="card shadow-xl bg-green-600 text-white">
+        <div class="place-self-center m-5 text-center font-bold">
+          <span class="text-xl">{{ day_data[date]["sla"] }}%</span>
+          <p>{{ day_data[date]["date"] }}</p>
+        </div>
+      </div>
+      {% elif day_data[date]["sla"] < 90 and day_data[date]["sla"] >= 50 %}
+      <div class="card shadow-xl bg-yellow-600 text-white">
+        <div class="place-self-center m-5 text-center font-bold">
+          <span class="text-xl">{{ day_data[date]["sla"] }}%</span>
+          <p>{{ day_data[date]["date"] }}</p>
+        </div>
+      </div>
+      {% elif day_data[date]["sla"] < 50 %}
+      <div class="card shadow-xl bg-red-600 text-white">
+        <div class="place-self-center m-5 text-center font-bold">
+          <span class="text-xl">{{ day_data[date]["sla"] }}%</span>
+          <p>{{ day_data[date]["date"] }}</p>
+        </div>
+      </div>
+      {% endif %} {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
 </div>
+<script src="{{ url_for('static', filename='js/quarterlyTable.js') }}"></script>
+<script>
+  $(document).ready(function () {
+    $(".month-tabs a").click(function () {
+      var tab_id = $(this).attr("data-tab");
+
+      $(".month-tabs a").removeClass("tab-active");
+      $(".page.tab-content").removeClass("current");
+
+      $(this).addClass("tab-active");
+      $("#" + tab_id).addClass("current");
+    });
+  });
+</script>
 {% endblock %}

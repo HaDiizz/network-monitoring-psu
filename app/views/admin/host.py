@@ -16,11 +16,19 @@ def host():
 def host_quarterly(year, month):
     avg_sla , host_all_count, host_name, host_sla , host_ip, host_count,month_name = get_quarter_data(int(month),int(year))
     day_data =  get_day_data(int(month),int(year))
-    card_tiltle = month_name
-    host_detail = {host_name[i]: {"host_sla": host_sla[i] , "host_ip": host_ip[i] , "host_count": host_count[i]} for i in range(len(host_name))} 
-    return render_template("/admin/host/quarterly.html", title="Host Quarterly", month_name=month_name , host_detail = host_detail, host_all_count = host_all_count , avg_sla = avg_sla ,day_data = day_data)
+    # months = set() if not day_data else set(calendar.month_name[int(key.split('-')[1])] for key in day_data.keys())
+    months = {}
+    if day_data:
+        for key in day_data.keys():
+            month_number = int(key.split('-')[1])
+            month_name = calendar.month_name[month_number]
+            months[month_name] = str(month_number)
+    # months_number = set() if not day_data else set(key.split('-')[1] for key in day_data.keys())
+    card_title = month_name
+    host_data = {host_name[i]: {"host_name": host_name[i], "host_sla": host_sla[i] , "host_ip": host_ip[i] , "host_count": host_count[i]} for i in range(len(host_name))} 
+    return render_template("/admin/host/quarterly.html", title="Host Quarterly", month_name=month_name , host_data = host_data, host_all_count = host_all_count , avg_sla = round(avg_sla, 2) ,day_data = day_data, months=months,)
 
-def get_name_month(selected_month,selected_year) :
+def get_name_month(selected_month, selected_year) :
     if selected_month + 2 <=  12  :
         start_month = calendar.month_name[selected_month]
         end_month  = calendar.month_name[selected_month+2]
@@ -132,10 +140,7 @@ def get_day_data(selected_month,selected_year):
         query  = models.HostList.objects(id__in=host_list_id)
         matching_data = query.all()
         host_day_dict = search_day_data(matching_data)
-        data_dict = {item['day']: {'sla': (1440 - (item['time']/item['count']))/1440 * 100} for item in host_day_dict}
-
-        print(data_dict)
-
+        data_dict = {item['day']: {"date": item['day'], 'sla': round((1440 - (item['time']/item['count']))/1440 * 100, 2)} for item in host_day_dict}
         return data_dict
                             
     
