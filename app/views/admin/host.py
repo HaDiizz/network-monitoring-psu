@@ -16,6 +16,7 @@ def host():
 def host_quarterly(year, month):
     avg_sla , host_all_count, host_name, host_sla , host_ip, host_count,month_name = get_quarter_data(int(month),int(year))
     day_data =  get_day_data(int(month),int(year))
+
     # months = set() if not day_data else set(calendar.month_name[int(key.split('-')[1])] for key in day_data.keys())
     months = {}
     if day_data:
@@ -116,8 +117,58 @@ def search_day_data(matching_data):
                 host_day_dict.append(start_day)
             print(host_day_dict)
             print("\n")
-    print(host_day_dict)
+
     return host_day_dict
+
+def get_day_in_month(month,year) :
+    days_in_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+    # Check if the input month is valid (between 1 and 12)
+    if 1 <= month <= 12:
+        # Adjust the number of days in February (month 2) for leap years
+        if (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0):
+            days_in_month[1] = 29  # Leap year, so February has 29 days
+
+        # Subtract 1 from the month input to get the correct index in the list
+        num_days = days_in_month[month - 1]
+
+    return num_days   
+
+def get_all_quarter_data(month,year) :
+
+    quarter_month = {}
+    for i in range (1,4):
+        if i == 1 :
+            num_days = get_day_in_month(month,year)
+            first_month = {str(i)+"-"+str(month): {"date": str(i)+"-"+str(month), 'sla': 100} for i in range (1,num_days + 1) }
+        elif i == 2:
+            if month + 1 == 13 : #! 12 1
+                num_days = get_day_in_month(1 ,year + 1)
+                second_month = {str(i)+"-"+str(1): {"date": str(i)+"-"+str(1), 'sla': 100} for i in range (1,num_days + 1) }
+            else :
+                num_days = get_day_in_month(month + 1,year)
+                second_month = {str(i)+"-"+str(month + 1): {"date": str(i)+"-"+str(month + 1), 'sla': 100} for i in range (1,num_days + 1) }
+            
+            
+        elif i == 3:
+            if month + 2 == 13 : #! 11 2
+                num_days = get_day_in_month(1 ,year + 1)
+                third_month = {str(i)+"-"+str(1): {"date": str(i)+"-"+str(1), 'sla': 100} for i in range (1,num_days + 1) }
+            elif month + 2 == 14 : #! 12 2
+                num_days = get_day_in_month(2 ,year + 1)
+                third_month = {str(i)+"-"+str(2): {"date": str(i)+"-"+str(2), 'sla': 100} for i in range (1,num_days + 1) }
+            else :
+                num_days = get_day_in_month(month + 2,year)
+                third_month = {str(i)+"-"+str(month + 2): {"date": str(i)+"-"+str(month + 2), 'sla': 100} for i in range (1,num_days + 1) }
+            
+    
+    quarter_month = {**first_month, **second_month , **third_month} #! Merge all 3 month in 1 dict
+    print(quarter_month)
+    
+    
+    return quarter_month
+
+            
 
 def get_day_data(selected_month,selected_year):
     start_month = selected_month
@@ -140,8 +191,18 @@ def get_day_data(selected_month,selected_year):
         query  = models.HostList.objects(id__in=host_list_id)
         matching_data = query.all()
         host_day_dict = search_day_data(matching_data)
+        quarter_month_dict = get_all_quarter_data(selected_month,selected_year)
+
+
         data_dict = {item['day']: {"date": item['day'], 'sla': round((1440 - (item['time']/item['count']))/1440 * 100, 2)} for item in host_day_dict}
-        return data_dict
+        
+        # ! Update SLA from data_dict
+        for key in quarter_month_dict:
+            if key in data_dict:
+                quarter_month_dict[key]['sla'] = data_dict[key]['sla']
+        
+
+        return quarter_month_dict
                             
     
 
