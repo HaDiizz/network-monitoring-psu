@@ -19,113 +19,7 @@ HEADERS = {
 url = 'https://notify-api.line.me/api/notify'
 line_noti_token = os.environ['LINE_NOTI_TOKEN']
 headers = {'content-type': 'application/x-www-form-urlencoded',
-           'Authorization': 'Bearer '+line_noti_token}
-
-
-def host_list():
-    try:
-        with httpx.Client() as client:
-            params = {
-                "columns": ['name', 'state', 'last_state', 'last_time_up', 'last_time_down', 'last_time_unreachable', 'last_state_change', 'labels', 'groups', 'address'],
-            }
-
-            response = client.get(
-                f"{API_URL}/domain-types/host/collections/all",
-                headers=HEADERS,
-                params=params
-            )
-            if response.status_code == 200:
-                response = response.json()
-                if response:
-                    for item in response['value']:
-                        if not current_user.is_authenticated or current_user.role != 'admin':
-                            del item['extensions']['address']
-                    return response['value']
-            else:
-                return []
-    except Exception as ex:
-        return None
-
-
-def service_list(api_service_url):
-    try:
-        with httpx.Client() as client:
-            params = {
-                "columns": ['state', 'last_state', 'last_time_ok', 'last_time_critical', 'last_time_unknown', 'last_time_warning', 'last_state_change', 'labels', "groups", 'downtimes_with_extra_info', ],
-            }
-
-            response = client.get(
-                f"{api_service_url}",
-                headers=HEADERS,
-                params=params
-            )
-
-            if response.status_code == 200:
-                response = response.json()
-                if response:
-                    return response['value']
-            else:
-                return []
-    except Exception as ex:
-        return None
-
-
-def host_group_list():
-    try:
-        with httpx.Client() as client:
-
-            response = client.get(
-                f"{API_URL}/domain-types/host_group_config/collections/all",
-                headers=HEADERS,
-            )
-            if response.status_code == 200:
-                response = response.json()
-                if response:
-                    return response['value']
-            else:
-                return []
-    except Exception as ex:
-        return None
-
-
-def service_group_list():
-    try:
-        with httpx.Client() as client:
-
-            response = client.get(
-                f"{API_URL}/domain-types/service_group_config/collections/all",
-                headers=HEADERS,
-            )
-            if response.status_code == 200:
-                response = response.json()
-                if response:
-                    return response['value']
-            else:
-                return []
-    except Exception as ex:
-        return None
-
-
-def host_group(api_hostgroup_url):
-    try:
-        with httpx.Client() as client:
-            params = {
-                "columns": ['name', 'state', 'last_state', 'last_time_up', 'last_time_down', 'last_time_unreachable', 'last_state_change', 'labels', 'groups', 'address'],
-            }
-
-            response = client.get(
-                f"{api_hostgroup_url}",
-                headers=HEADERS,
-                params=params
-            )
-            if response.status_code == 200:
-                response = response.json()
-                if response:
-                    return response['value']
-            else:
-                return []
-    except Exception as ex:
-        return None
+           'Authorization': 'Bearer ' + line_noti_token}
 
 
 def host_down_handler():
@@ -144,6 +38,7 @@ def host_down_handler():
                 room = item['extensions']['attributes']['labels']['room']
                 state = item['extensions']['last_state']
                 host_id = item['title']
+                groups = []
                 if state == 1:
                     host = models.Host.objects(
                         host_id=host_id, month=month, year=year).first()
@@ -270,10 +165,117 @@ def host_down_handler():
                             coordinates=(lat, lng),
                             floor=floor,
                             room=room,
+                            groups=groups
                         )
                         new_host.save()
             return response['value']
         else:
             return []
+    except Exception as ex:
+        return None
+
+
+def host_list():
+    try:
+        with httpx.Client() as client:
+            params = {
+                "columns": ['name', 'state', 'last_state', 'last_time_up', 'last_time_down', 'last_time_unreachable', 'last_state_change', 'labels', 'groups', 'address'],
+            }
+
+            response = client.get(
+                f"{API_URL}/domain-types/host/collections/all",
+                headers=HEADERS,
+                params=params
+            )
+            if response.status_code == 200:
+                response = response.json()
+                if response:
+                    for item in response['value']:
+                        if not current_user.is_authenticated or current_user.role != 'admin':
+                            del item['extensions']['address']
+                    return response['value']
+            else:
+                return []
+    except Exception as ex:
+        return None
+
+
+def service_list(api_service_url):
+    try:
+        with httpx.Client() as client:
+            params = {
+                "columns": ['state', 'last_state', 'last_time_ok', 'last_time_critical', 'last_time_unknown', 'last_time_warning', 'last_state_change', 'labels', "groups", 'downtimes_with_extra_info', ],
+            }
+
+            response = client.get(
+                f"{api_service_url}",
+                headers=HEADERS,
+                params=params
+            )
+
+            if response.status_code == 200:
+                response = response.json()
+                if response:
+                    return response['value']
+            else:
+                return []
+    except Exception as ex:
+        return None
+
+
+def host_group_list():
+    try:
+        with httpx.Client() as client:
+
+            response = client.get(
+                f"{API_URL}/domain-types/host_group_config/collections/all",
+                headers=HEADERS,
+            )
+            if response.status_code == 200:
+                response = response.json()
+                if response:
+                    return response['value']
+            else:
+                return []
+    except Exception as ex:
+        return None
+
+
+def service_group_list():
+    try:
+        with httpx.Client() as client:
+
+            response = client.get(
+                f"{API_URL}/domain-types/service_group_config/collections/all",
+                headers=HEADERS,
+            )
+            if response.status_code == 200:
+                response = response.json()
+                if response:
+                    return response['value']
+            else:
+                return []
+    except Exception as ex:
+        return None
+
+
+def host_group(api_hostgroup_url):
+    try:
+        with httpx.Client() as client:
+            params = {
+                "columns": ['name', 'state', 'last_state', 'last_time_up', 'last_time_down', 'last_time_unreachable', 'last_state_change', 'labels', 'groups', 'address'],
+            }
+
+            response = client.get(
+                f"{api_hostgroup_url}",
+                headers=HEADERS,
+                params=params
+            )
+            if response.status_code == 200:
+                response = response.json()
+                if response:
+                    return response['value']
+            else:
+                return []
     except Exception as ex:
         return None
