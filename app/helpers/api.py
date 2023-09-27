@@ -54,8 +54,12 @@ def host_down_handler():
                                 last_time_down=datetime.datetime.now(),
                                 minutes=0,
                             )
+                            
                             new_host_list.save()
                             host.host_list.append(new_host_list)
+                            count_down = host.count + 1
+                            print(count_down)
+                            host.count = count_down
                             host.save()
                             time = datetime.datetime.now()
                             format_time = time.strftime('%Y-%m-%d %H:%M')
@@ -67,6 +71,7 @@ def host_down_handler():
                         last_host_list_id = host_list_ids[-1]
                         host_list = models.HostList.objects(
                             id=last_host_list_id.id, last_state=-1).first()
+                        
                         if not host_list:
                             new_host_list = models.HostList(
                                 state=int(state),
@@ -79,7 +84,11 @@ def host_down_handler():
                             )
 
                             new_host_list.save()
+                            
                             host.host_list.append(new_host_list)
+                            count_down = host.count + 1
+                            print(count_down)
+                            host.count = count_down
                             host.save()
 
                             time = datetime.datetime.now()
@@ -89,7 +98,6 @@ def host_down_handler():
                             r = requests.post(
                                 url, headers=headers, data={'message': msg})
                     else:
-
                         new_host_list = models.HostList(
                             state=int(state),
                             last_state=-1,
