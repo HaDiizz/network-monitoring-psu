@@ -64,9 +64,7 @@ def auth():
     try:
         token = client.psu_passport.authorize_access_token()
     except Exception as e:
-        # print(e)
         return redirect(url_for("site.login"))
-    # print(token)
     session['user'] = token['userinfo']
     
 
@@ -86,7 +84,6 @@ def auth():
         if session['user']["username"].isdigit():
             user.role = "user"
     
-
     user.save()
 
     login_user(user)
@@ -115,7 +112,6 @@ def logout():
     client = oauth2.oauth2_client
     remote = client.psu_passport
     logout_url = f"{ remote.server_metadata.get('end_session_endpoint') }?redirect={ request.scheme }://{ request.host }"
-    # session.pop('user', None)
     if logout_url:
         return redirect(logout_url)
     
@@ -149,20 +145,14 @@ def report():
         form.lng.data = ""
         form.issue_category.data = ""
 
-    if current_user.is_authenticated:
-        if current_user.role == 'admin':
-            return redirect('/admin/overview')
-    else:
+    if not current_user.is_authenticated:
         return redirect('/login')
 
     return render_template("report.html", title="รายงานปัญหา", form=form)
 
 @module.route('/history', methods=["GET", "POST"])
 def report_history():
-    if current_user.is_authenticated:
-        if current_user.role == 'admin':
-            return redirect('/admin/overview')
-    else:
+    if not current_user.is_authenticated:
         return redirect('/login')
     reports = models.Report.objects(reported_by=current_user.id)
     return render_template("reportHistory.html", title="ประวัติรายงานปัญหา", reports=reports)
