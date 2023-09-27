@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template
 from ... import acl
-from ...utils import location_list, host_list, service_list, host_group, host_group_list, service_group_list
+from ...helpers.api import host_list, service_list, host_group, host_group_list, service_group_list
+from ...helpers.utils import location_list
 import os
+
 admin_module = Blueprint("admin", __name__, url_prefix="/admin")
 
 from app.views.admin.service import *

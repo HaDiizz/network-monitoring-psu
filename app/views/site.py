@@ -3,7 +3,8 @@ from .. import forms
 from flask_login import login_user, login_required, logout_user, current_user
 from .. import models
 import mongoengine as me
-from ..utils import location_list, host_list, host_down_handler
+from ..helpers.utils import location_list
+from ..helpers.api import host_list
 from .. import oauth2
 import datetime
 import os

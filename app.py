@@ -1,5 +1,5 @@
 from app import server
-from app.utils import host_down_handler
+from app.helpers.api import host_down_handler
 from apscheduler.schedulers.background import BackgroundScheduler
 
 scheduler = BackgroundScheduler()

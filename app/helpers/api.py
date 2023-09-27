@@ -1,12 +1,12 @@
-from . import models
+from .. import models
 import requests
 from flask_login import current_user
-from . import caches
+from .. import caches
 import os
 from dotenv import load_dotenv
 import httpx
 import datetime
-import requests
+from .utils import cal_min_down, cal_sla
 
 load_dotenv()
 
@@ -18,20 +18,8 @@ HEADERS = {
 
 url = 'https://notify-api.line.me/api/notify'
 line_noti_token = os.environ['LINE_NOTI_TOKEN']
-headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+line_noti_token}
-
-def status_list():
-    return [
-        'PENDING',
-        'CHECKING',
-        'APPROVED',
-        'REJECTED',
-    ]
-
-
-@caches.cache.cached(timeout=3600, key_prefix='location_list')
-def location_list():
-    return models.Location.objects().order_by("name")
+headers = {'content-type': 'application/x-www-form-urlencoded',
+           'Authorization': 'Bearer '+line_noti_token}
 
 
 def host_list():
@@ -63,15 +51,15 @@ def service_list(api_service_url):
     try:
         with httpx.Client() as client:
             params = {
-                "columns": [ 'state', 'last_state', 'last_time_ok', 'last_time_critical', 'last_time_unknown','last_time_warning' ,'last_state_change', 'labels', "groups", 'downtimes_with_extra_info', ],
+                "columns": ['state', 'last_state', 'last_time_ok', 'last_time_critical', 'last_time_unknown', 'last_time_warning', 'last_state_change', 'labels', "groups", 'downtimes_with_extra_info', ],
             }
-            
+
             response = client.get(
                 f"{api_service_url}",
                 headers=HEADERS,
                 params=params
             )
-            
+
             if response.status_code == 200:
                 response = response.json()
                 if response:
@@ -80,7 +68,8 @@ def service_list(api_service_url):
                 return []
     except Exception as ex:
         return None
-    
+
+
 def host_group_list():
     try:
         with httpx.Client() as client:
@@ -98,6 +87,7 @@ def host_group_list():
     except Exception as ex:
         return None
 
+
 def service_group_list():
     try:
         with httpx.Client() as client:
@@ -114,7 +104,8 @@ def service_group_list():
                 return []
     except Exception as ex:
         return None
-    
+
+
 def host_group(api_hostgroup_url):
     try:
         with httpx.Client() as client:
@@ -137,21 +128,6 @@ def host_group(api_hostgroup_url):
         return None
 
 
-def cal_min_down(down_time):
-    date = datetime.datetime.now()
-    current_time = int(date.timestamp())
-    time_difference_seconds = current_time - down_time
-    time_difference_minute = int(int(time_difference_seconds)/60)
-    return time_difference_minute
-
-def cal_sla(month,year,sum_min):
-    start_date = datetime.datetime(year, month, 1, 0, 1)
-    current_date = datetime.datetime.now()
-    time_difference = current_date - start_date
-    total_minutes = int(time_difference.total_seconds() / 60)
-    sla = ((total_minutes - sum_min)/total_minutes) * 100
-    return sla
-
 def host_down_handler():
     try:
         response = requests.get("http://localhost:3000/api/hosts")
@@ -169,7 +145,8 @@ def host_down_handler():
                 state = item['extensions']['last_state']
                 host_id = item['title']
                 if state == 1:
-                    host = models.Host.objects(host_id=host_id, month=month, year=year).first()
+                    host = models.Host.objects(
+                        host_id=host_id, month=month, year=year).first()
                     if host:
                         host_list_ids = host.host_list
                         if not host_list_ids:
@@ -187,11 +164,14 @@ def host_down_handler():
                             host.save()
                             time = datetime.datetime.now()
                             format_time = time.strftime('%Y-%m-%d %H:%M')
-                            msg = "🔴" + "\nHost : " + host_id + "\nState : " + "Down" + "\nTime Down : " + format_time
-                            r = requests.post(url, headers=headers, data = {'message':msg})
-                        
+                            msg = "🔴" + "\nHost : " + host_id + "\nState : " + \
+                                "Down" + "\nTime Down : " + format_time
+                            r = requests.post(
+                                url, headers=headers, data={'message': msg})
+
                         last_host_list_id = host_list_ids[-1]
-                        host_list = models.HostList.objects(id=last_host_list_id.id, last_state=-1).first()
+                        host_list = models.HostList.objects(
+                            id=last_host_list_id.id, last_state=-1).first()
                         if not host_list:
                             new_host_list = models.HostList(
                                 state=int(state),
@@ -202,17 +182,19 @@ def host_down_handler():
                                 last_time_down=datetime.datetime.now(),
                                 minutes=0,
                             )
-                            
+
                             new_host_list.save()
                             host.host_list.append(new_host_list)
                             host.save()
 
                             time = datetime.datetime.now()
                             format_time = time.strftime('%Y-%m-%d %H:%M')
-                            msg = "🔴" + "\nHost : " + host_id + "\nState : " + "Down" + "\nTime Down : " + format_time
-                            r = requests.post(url, headers=headers, data = {'message':msg})
+                            msg = "🔴" + "\nHost : " + host_id + "\nState : " + \
+                                "Down" + "\nTime Down : " + format_time
+                            r = requests.post(
+                                url, headers=headers, data={'message': msg})
                     else:
-                        
+
                         new_host_list = models.HostList(
                             state=int(state),
                             last_state=-1,
@@ -223,7 +205,7 @@ def host_down_handler():
                             minutes=0,
                         )
                         new_host_list.save()
-                        
+
                         new_host = models.Host(
                             host_id=host_id,
                             name=host_id,
@@ -232,7 +214,7 @@ def host_down_handler():
                             year=year,
                             count=1,
                             availability=100,
-                            coordinates= (lat, lng),
+                            coordinates=(lat, lng),
                             floor=floor,
                             room=room,
                             host_list=[
@@ -241,38 +223,42 @@ def host_down_handler():
                         )
                         new_host.save()
                 elif state == 0:
-                    host = models.Host.objects(host_id=host_id, month=month, year=year).first()
+                    host = models.Host.objects(
+                        host_id=host_id, month=month, year=year).first()
                     if host:
                         host_list_ids = host.host_list
                         if not host_list_ids:
                             continue
                         last_host_list_id = host_list_ids[-1]
-                        host_list = models.HostList.objects(id=last_host_list_id.id, last_state=-1).first()
-                        if host_list :
+                        host_list = models.HostList.objects(
+                            id=last_host_list_id.id, last_state=-1).first()
+                        if host_list:
                             last_time_down = host_list.last_time_down
-                            unix_timestamp = int(last_time_down.timestamp())                         
+                            unix_timestamp = int(last_time_down.timestamp())
                             minute = cal_min_down(unix_timestamp)
                             host_list.last_state = 0
                             host_list.minutes = minute
                             host_list.save()
 
-                        if host_list :    
-                            host = models.Host.objects(host_id=host_id, month=month, year=year).first()
+                        if host_list:
+                            host = models.Host.objects(
+                                host_id=host_id, month=month, year=year).first()
                             host_list_id = []
                             sum_min = 0
-                            
-                            for value in host.host_list :
+
+                            for value in host.host_list:
                                 host_list_id.append(value.id)
-                            
-                            query  = models.HostList.objects(id__in=host_list_id)
+
+                            query = models.HostList.objects(
+                                id__in=host_list_id)
                             matching_data = query.all()
-                            
+
                             for data in matching_data:
                                 sum_min += data.minutes
-                            sla = int(cal_sla(month,year,sum_min))
+                            sla = int(cal_sla(month, year, sum_min))
                             host.availability = sla
                             host.save()
-                    else :
+                    else:
                         new_host = models.Host(
                             host_id=host_id,
                             name=host_id,
@@ -281,7 +267,7 @@ def host_down_handler():
                             year=year,
                             count=1,
                             availability=100,
-                            coordinates= (lat, lng),
+                            coordinates=(lat, lng),
                             floor=floor,
                             room=room,
                         )

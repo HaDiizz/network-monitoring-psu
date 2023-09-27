@@ -5,7 +5,7 @@ from app.views.admin import admin_module
 from ... import acl
 from ... import models
 from ... import forms
-from ...utils import status_list
+from ...helpers.utils import status_list
 
 
 @admin_module.route("/locations")

@@ -24,6 +24,7 @@ class HostList(me.Document):
 class Host(me.Document):
     host_id = me.StringField(required=True)
     host_list = me.ListField(me.ReferenceField(HostList, lazy=True))
+    group = me.ListField(me.StringField())
     name = me.StringField(required=True)
     ip_address = me.StringField(required=True)
     month = me.IntField(required=True)
