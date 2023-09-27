@@ -160,7 +160,7 @@ def host_down_handler():
                             ip_address=ip_address,
                             month=month,
                             year=year,
-                            count=1,
+                            count=0,
                             availability=100,
                             coordinates=(lat, lng),
                             floor=floor,
