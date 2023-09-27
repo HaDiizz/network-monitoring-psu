@@ -211,3 +211,8 @@ div.dataTables_wrapper div.dataTables_filter {
 .tab-content.current {
   display: inherit;
 }
+
+/* Back to top btn */
+#back-to-up:hover {
+	transform: translateY(-22%);
+}

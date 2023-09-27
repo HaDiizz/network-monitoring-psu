@@ -65,6 +65,13 @@
     <main class="container" style="margin-top: 2rem">
       {% block content %} {% endblock %}
     </main>
+    <button
+      class="btn fixed bottom-5 end-8 hidden bg-neutral-800 dark:bg-white hover:dark:bg-white hover:bg-neutral-800"
+      onclick="scrollToTop()"
+      id="back-to-up"
+    >
+      <i class="bx bxs-chevrons-up text-white dark:text-black text-xl"></i>
+    </button>
     <script>
       $(window).on("load", function () {
         $(".loader-wrapper").fadeOut("slow");
@@ -76,6 +83,25 @@
       }
 
       setTimeout(fadeOutElement, 5000);
+    </script>
+    <script>
+      window.onscroll = () => {
+        toggleTopButton();
+      };
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function toggleTopButton() {
+        if (
+          document.body.scrollTop > 20 ||
+          document.documentElement.scrollTop > 20
+        ) {
+          document.getElementById("back-to-up").classList.remove("hidden");
+        } else {
+          document.getElementById("back-to-up").classList.add("hidden");
+        }
+      }
     </script>
   </body>
 </html>

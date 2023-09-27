@@ -1,10 +1,6 @@
-from app import server
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-from flask_login import login_required
-import datetime
-from dash.dependencies import Input, Output
 
 mock_host_monthly = [
     {
@@ -370,7 +366,35 @@ mock_host_monthly = [
         "month": 6,
         "year": 2022,
         "sla": 95
-    }
+    },
+    {
+        "_id": 54,
+        "host_id": 1,
+        "month": 6,
+        "year": 2023,
+        "sla": 49
+    },
+    {
+        "_id": 55,
+        "host_id": 1,
+        "month": 7,
+        "year": 2023,
+        "sla": 90
+    },
+    {
+        "_id": 56,
+        "host_id": 1,
+        "month": 9,
+        "year": 2023,
+        "sla": 92
+    },
+    {
+        "_id": 57,
+        "host_id": 1,
+        "month": 9,
+        "year": 2023,
+        "sla": 95
+    },
 ]
 
 
