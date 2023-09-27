@@ -18,8 +18,10 @@
       <div class="stat-value text-error">{{ host_all_count }}</div>
     </div>
   </div>
-  <div class="flex flex-col lg:flex-row md:flex-row gap-5 pt-8 pb-8">
-    <div class="w-full bg-light-primary rounded-md dark:bg-dark-primary">
+  <div class="pt-8 pb-8">
+    <div
+      class="w-full md:w-12/12 sm:w-12/12 bg-light-primary rounded-md dark:bg-dark-primary shadow-xl overflow-x-scroll"
+    >
       <div class="table-responsive p-3 pt-5">
         <table id="quarterly-table" class="display" style="width: 100%">
           <thead>
@@ -44,19 +46,28 @@
       </div>
     </div>
   </div>
-  <!-- <div class="tabs tabs-boxed month-tabs">
-    {% for month in months_name %}
-    <a
-      data-tab="{{ month }}"
-      class="tab {% if loop.first %}tab-active{% endif %}"
-      >{{ month }}</a
+  <div class="divider"></div>
+  <div class="flex justify-center pt-5 pb-5">
+    <ul
+      class="menu menu-horizontal bg-light-primary text-neutral-700 dark:bg-base-200 dark:text-white rounded-box"
     >
-    {% endfor %}
-  </div> -->
-  <div class="page tab-content current">
+      {% for month_name, month_number in months.items() %}
+      <li>
+        <a href="#" class="scroll-link" data-target="{{ month_name | lower }}"
+          >{{ month_name }}</a
+        >
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div>
     {% for month_name, month_number in months.items() %}
-    <h2 class="text-2xl font-bold pb-5">{{ month_name }}</h2>
-    <div class="grid grid-cols-1 xl:grid-cols-7 lg:grid-cols-7 md:grid-cols-7 sm:grid-cols-1 gap-5 pb-8">
+    <h2 class="text-2xl font-bold pb-5" id="{{ month_name | lower }}">
+      {{ month_name }}
+    </h2>
+    <div
+      class="grid grid-cols-1 xl:grid-cols-7 lg:grid-cols-7 md:grid-cols-7 sm:grid-cols-1 gap-5 pb-8"
+    >
       {% for date in day_data if day_data[date]["date"].endswith('-' +
       month_number) %} {% if day_data[date]["sla"] >= 90 %}
       <div class="card shadow-xl bg-green-600 text-white">
@@ -87,15 +98,27 @@
 </div>
 <script src="{{ url_for('static', filename='js/quarterlyTable.js') }}"></script>
 <script>
-  $(document).ready(function () {
-    $(".month-tabs a").click(function () {
-      var tab_id = $(this).attr("data-tab");
+  document.addEventListener("DOMContentLoaded", function () {
+    const scrollLinks = document.querySelectorAll(".scroll-link");
 
-      $(".month-tabs a").removeClass("tab-active");
-      $(".page.tab-content").removeClass("current");
+    scrollLinks.forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
 
-      $(this).addClass("tab-active");
-      $("#" + tab_id).addClass("current");
+        const targetId = link.getAttribute("data-target");
+        const targetElement = document.getElementById(targetId);
+
+        if (targetElement) {
+          const offset = 90;
+          const targetOffset =
+            targetElement.getBoundingClientRect().top + window.scrollY - offset;
+
+          window.scrollTo({
+            top: targetOffset,
+            behavior: "smooth",
+          });
+        }
+      });
     });
   });
 </script>
