@@ -107,13 +107,13 @@ def report():
     reports = models.Report.objects()
     total_reports = reports.filter().count()
     pending_reports = reports.filter(status='PENDING').count()
-    approved_reports = reports.filter(status='APPROVED').count()
+    completed_reports = reports.filter(status='COMPLETED').count()
     checking_reports = reports.filter(status='CHECKING').count()
     rejected_reports = reports.filter(status='REJECTED').count()
     status_counts = {
         'TOTAL': total_reports,
         'PENDING': pending_reports,
-        'APPROVED': approved_reports,
+        'COMPLETED': completed_reports,
         'CHECKING': checking_reports,
         'REJECTED': rejected_reports,
     }
