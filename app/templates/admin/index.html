@@ -88,12 +88,8 @@
                 <tbody>
                   {% for host_group in host_group_list %}
                   <tr>
-                    <td>
-                      <a href="/{{ host_group['title'] | replace(' ', '-') }}"
-                        >{{ host_group["title"] }}</a
-                      >
-                    </td>
-                    <td>97.13%</td>
+                    <td>{{ host_group["title"] }}</td>
+                    <td>-</td>
                   </tr>
                   {% endfor %}
                 </tbody>
@@ -130,7 +126,6 @@
       <div
         class="w-full md:w-7/12 sm:w-12/12 pt-5 bg-light-primary dark:bg-dark-primary pr-2 pl-2 rounded-md shadow-xl"
         id="mapContainer"
-        style="max-height: 600px"
       >
         <div class="map-container pb-5">
           <div class="btn-full cursor-pointer" onclick="handleExpand()">
@@ -140,7 +135,7 @@
         </div>
       </div>
       <div
-        class="w-full md:w-5/12 sm:w-12/12 bg-light-primary rounded-md dark:bg-dark-primary shadow-xl"
+        class="w-full md:w-5/12 sm:w-12/12 bg-light-primary rounded-md dark:bg-dark-primary shadow-xl overflow-x-scroll"
         id="elementContainer"
       >
         <div class="table-responsive p-3 pt-5">
@@ -150,14 +145,18 @@
                 <th>Host Name</th>
                 <th>IP Address</th>
                 <th>Status</th>
-                <th>Total User</th>
                 <th>Availability</th>
               </tr>
             </thead>
             <tbody>
               {% for host in host_list %}
               <tr>
-                <td>{{ host.title }}</td>
+                <td
+                  class="tooltip tooltip-right w-[90%] text-left dark:tooltip-primary"
+                  data-tip="{{ host.title }}"
+                >
+                  <div id="host-name">{{ host.title }}</div>
+                </td>
                 <td>{{ host.extensions.address }}</td>
                 <td>
                   {% if host.extensions.state == 0 %}
@@ -170,7 +169,6 @@
                   <div class="badge badge-neutral pb-0.5">MAINTAIN</div>
                   {% endif %}
                 </td>
-                <td>{{ host.extensions.connected_devices }}</td>
                 <td>-</td>
               </tr>
               {% endfor %}
@@ -212,8 +210,8 @@
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
           <h1 class="text-4xl">
-            {% if service_summary["WARN"] %} {{ service_summary["WARN"] }}
-            {% else %} - {% endif %}
+            {% if service_summary["WARN"] %} {{ service_summary["WARN"] }} {%
+            else %} - {% endif %}
           </h1>
           <span>WARN</span>
         </div>
@@ -221,8 +219,8 @@
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
           <h1 class="text-4xl">
-            {% if service_summary["UNKNOWN"] %} {{ service_summary["UNKNOWN"]
-            }} {% else %} - {% endif %}
+            {% if service_summary["UNKNOWN"] %} {{ service_summary["UNKNOWN"] }}
+            {% else %} - {% endif %}
           </h1>
           <span>UNKNOWN</span>
         </div>
@@ -245,12 +243,8 @@
                 <tbody>
                   {% for service_group in service_group_list %}
                   <tr>
-                    <td>
-                      <a href="/{{ service_group['title'] | replace(' ', '-') }}"
-                        >{{ service_group["title"] }}</a
-                      >
-                    </td>
-                    <td>97.13%</td>
+                    <td>{{ service_group["title"] }}</td>
+                    <td>-</td>
                   </tr>
                   {% endfor %}
                 </tbody>
@@ -275,10 +269,13 @@
             <tbody>
               {% for service in service_list %}
               <tr>
-                <td>{{ service["extensions"]["host_name"] }}: {{ service["extensions"]["description"]}}</td>
+                <td>
+                  {{ service["extensions"]["host_name"] }}: {{
+                  service["extensions"]["description"]}}
+                </td>
                 <td>
                   <a
-                    href='{{ service["extensions"]["host_name"].replace("HTTPS", "https://").replace("HTTP", "http://").replace(" ", "") | trim }}'
+                    href='https://{{ service["extensions"]["host_name"].split(":")[0] | trim }}'
                     target="_blank"
                     >{{ service["extensions"]["host_name"].replace("HTTPS",
                     "").replace("HTTP", "") }}</a
@@ -320,4 +317,12 @@
 <script src="{{ url_for('static', filename='js/adminHome.js') }}"></script>
 <script src="{{ url_for('static', filename='utils/handleExpandMap.js') }}"></script>
 <script src="{{ url_for('static', filename='utils/handleSelectChange.js') }}"></script>
+<script>
+  const hostNameElements = document.querySelectorAll("#host-name");
+  for (const hostNameElement of hostNameElements) {
+    const hostTitle = hostNameElement.textContent;
+    const limitedTitle = limitLength(hostTitle, 20);
+    hostNameElement.textContent = limitedTitle;
+  }
+</script>
 {% endblock %}

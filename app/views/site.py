@@ -4,19 +4,18 @@ from flask_login import login_user, login_required, logout_user, current_user
 from .. import models
 import mongoengine as me
 from ..helpers.utils import location_list
-from ..helpers.api import host_list
+from ..helpers.api import host_list, get_host_markers
 from .. import oauth2
 import datetime
-import os
-from dotenv import load_dotenv
 
-load_dotenv()
 
 module = Blueprint('site', __name__)
+
 
 @module.app_context_processor
 def account_context():
     return {'account': current_user}
+
 
 @module.route('/')
 def index():
@@ -28,9 +27,11 @@ def index():
         hosts = []
     return render_template("index.html", title="หน้าหลัก", location_list=location_list(), host_list=hosts)
 
+
 @module.route('/get-hosts')
 def get_hosts():
-    return jsonify(host_list())
+    return jsonify(get_host_markers())
+
 
 @module.route('/get-locations')
 def getLocations():
@@ -44,6 +45,7 @@ def getLocations():
         })
     return jsonify(location_data)
 
+
 @module.route('/login')
 def login():
     if current_user.is_authenticated:
@@ -51,22 +53,22 @@ def login():
             return redirect('/admin/overview')
         else:
             return redirect('/')
-    
+
     client = oauth2.oauth2_client
     scheme = request.environ.get("CONF_URL", "http")
     redirect_uri = url_for("site.auth", _external=True, _scheme=scheme)
     return client.psu_passport.authorize_redirect(redirect_uri)
 
+
 @module.route('/auth')
 def auth():
-    
+
     client = oauth2.oauth2_client
     try:
         token = client.psu_passport.authorize_access_token()
     except Exception as e:
         return redirect(url_for("site.login"))
     session['user'] = token['userinfo']
-    
 
     user = models.User.objects(
         me.Q(username=session['user'].get("username", ""))
@@ -83,7 +85,7 @@ def auth():
         )
         if session['user']["username"].isdigit():
             user.role = "user"
-    
+
     user.save()
 
     login_user(user)
@@ -104,6 +106,7 @@ def auth():
         return redirect(next_uri)
     return redirect(url_for("site.index"))
 
+
 @module.route('/logout')
 @login_required
 def logout():
@@ -114,8 +117,9 @@ def logout():
     logout_url = f"{ remote.server_metadata.get('end_session_endpoint') }?redirect={ request.scheme }://{ request.host }"
     if logout_url:
         return redirect(logout_url)
-    
+
     return redirect(url_for('site.index'))
+
 
 @module.route('/report', methods=["GET", "POST"])
 def report():
@@ -149,6 +153,7 @@ def report():
         return redirect('/login')
 
     return render_template("report.html", title="รายงานปัญหา", form=form)
+
 
 @module.route('/history', methods=["GET", "POST"])
 def report_history():

@@ -43,8 +43,12 @@ html {
 }
 
 #map {
-  height: 550px;
+  height: 650px;
   z-index: 12;
+}
+
+#mapContainer {
+  max-height: 706px;
 }
 
 /* TableComponent */
@@ -76,6 +80,22 @@ div.dataTables_wrapper div.dataTables_filter {
 
 #service-table_wrapper div.dataTables_filter {
   float: left;
+}
+
+#elementContainer::-webkit-scrollbar {
+  display: none;
+}
+
+#elementContainer {
+  overflow-x: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.dataTables_paginate.paging_simple_numbers {
+  width: 100%;
+  display: grid;
+  justify-content: center;
 }
 
 /* Dark/Light Mode Switch */

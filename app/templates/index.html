@@ -44,7 +44,6 @@
   <div
     class="w-full md:w-7/12 sm:w-12/12 pt-5 bg-light-primary dark:bg-dark-primary pr-2 pl-2 rounded-md shadow-xl"
     id="mapContainer"
-    style="max-height: 600px"
   >
     <div class="map-container pb-5">
       <div class="btn-full cursor-pointer" onclick="handleExpand()">
@@ -63,14 +62,18 @@
           <tr>
             <th>Host Name</th>
             <th>Status</th>
-            <th>Total User</th>
             <th>Availability</th>
           </tr>
         </thead>
         <tbody>
           {% for host in host_list %}
           <tr>
-            <td>{{ host.title }}</td>
+            <td
+              class="tooltip tooltip-right w-[90%] text-left dark:tooltip-primary"
+              data-tip="{{ host.title }}"
+            >
+              <div id="host-name">{{ host.title }}</div>
+            </td>
             <td>
               {% if host.extensions.state == 0 %}
               <div class="badge badge-success pb-0.5">UP</div>
@@ -82,7 +85,6 @@
               <div class="badge badge-neutral pb-0.5">MAINTAIN</div>
               {% endif %}
             </td>
-            <td>{{ host.extensions.connected_devices }}</td>
             <td>-</td>
           </tr>
           {% endfor %}
@@ -105,5 +107,12 @@
 <script src="{{ url_for('static', filename='js/home.js') }}"></script>
 <script src="{{ url_for('static', filename='utils/handleExpandMap.js') }}"></script>
 <script src="{{ url_for('static', filename='utils/handleSelectChange.js') }}"></script>
-
+<script>
+  const hostNameElements = document.querySelectorAll("#host-name");
+  for (const hostNameElement of hostNameElements) {
+    const hostTitle = hostNameElement.textContent;
+    const limitedTitle = limitLength(hostTitle, 20);
+    hostNameElement.textContent = limitedTitle;
+  }
+</script>
 {% endblock %}

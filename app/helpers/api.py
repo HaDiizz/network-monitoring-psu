@@ -54,7 +54,7 @@ def host_down_handler():
                                 last_time_down=datetime.datetime.now(),
                                 minutes=0,
                             )
-                            
+
                             new_host_list.save()
                             host.host_list.append(new_host_list)
                             count_down = host.count + 1
@@ -71,7 +71,7 @@ def host_down_handler():
                         last_host_list_id = host_list_ids[-1]
                         host_list = models.HostList.objects(
                             id=last_host_list_id.id, last_state=-1).first()
-                        
+
                         if not host_list:
                             new_host_list = models.HostList(
                                 state=int(state),
@@ -84,7 +84,7 @@ def host_down_handler():
                             )
 
                             new_host_list.save()
-                            
+
                             host.host_list.append(new_host_list)
                             count_down = host.count + 1
                             print(count_down)
@@ -176,6 +176,21 @@ def host_down_handler():
                             groups=groups
                         )
                         new_host.save()
+            return response['value']
+        else:
+            return []
+    except Exception as ex:
+        return None
+
+
+def get_host_markers():
+    try:
+        response = requests.get("http://localhost:3000/api/hosts")
+        response = response.json()
+        if response:
+            for item in response['value']:
+                if not current_user.is_authenticated:
+                    del item['extensions']['attributes']['ipaddress']
             return response['value']
         else:
             return []
