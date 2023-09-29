@@ -18,5 +18,5 @@ class ReportForm(FlaskForm):
             self.issue_category.choices.append((category.category_name, category.category_name))
 
 class ReportFilterForm(FlaskForm):
-    status = SelectField("Status", choices=[('ALL', 'ALL'), ('PENDING', 'PENDING'), ('CHECKING', 'CHECKING'), ('APPROVED', 'APPROVED'), ('REJECTED', 'REJECTED')], render_kw={'class': 'select select-bordered w-full max-w-xs'})
+    status = SelectField("Status", choices=[('ALL', 'ALL'), ('PENDING', 'PENDING'), ('CHECKING', 'CHECKING'), ('COMPLETED', 'COMPLETED'), ('REJECTED', 'REJECTED')], render_kw={'class': 'select select-bordered w-full max-w-xs'})
     search = SubmitField("ค้นหา", render_kw={'class': 'btn bg-primary hover:bg-secondary dark:bg-neutral text-white'})
