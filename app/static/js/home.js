@@ -41,17 +41,17 @@ $(document).ready(function () {
     }
   });
 });
-$(document).ready(function () {
-  $(".tabs a").click(function () {
-    var tab_id = $(this).attr("data-tab");
+// $(document).ready(function () {
+//   $(".tabs a").click(function () {
+//     var tab_id = $(this).attr("data-tab");
 
-    $(".tabs a").removeClass("tab-active");
-    $(".tab-content").removeClass("current");
+//     $(".tabs a").removeClass("tab-active");
+//     $(".tab-content").removeClass("current");
 
-    $(this).addClass("tab-active");
-    $("#" + tab_id).addClass("current");
-  });
-});
+//     $(this).addClass("tab-active");
+//     $("#" + tab_id).addClass("current");
+//   });
+// });
 
 var osmLayer = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
@@ -111,8 +111,38 @@ L.control
   })
   .addTo(map);
 
-function showHostModal(host) {
+async function showHostModal(host) {
   const modal = document.getElementById("host-modal");
+  const modalInfo = document.getElementById("host-info");
+  const hostId = host.title;
+
+  await fetch(`/get-host/${hostId}`)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data); //!  ค่าที่ส่งมาจาก Backend
+      const graphDiv = document.createElement("div");
+      graphDiv.id = "host-plotly-graph";
+      modal.querySelector("#host-graph-detail").appendChild(graphDiv);
+
+      const dataGraph = [
+        {
+          x: data[0],
+          y: data[1],
+          type: "scatter",
+          mode: "lines+markers",
+          name: "Host Data",
+        },
+      ];
+
+      const layout = {
+        title: "Host Graph",
+        xaxis: { title: "X-axis" },
+        yaxis: { title: "Y-axis" },
+      };
+
+      Plotly.newPlot("host-plotly-graph", dataGraph, layout);
+    });
+  modalInfo.style.display = "inherit";
   modal.querySelector("#host-title").innerHTML = `${host.title}`;
   modal.querySelector("#host-info-detail").innerHTML = `
     <div class="flex flex-col gap-5">
@@ -131,32 +161,9 @@ function showHostModal(host) {
         }
       </div>
       <div class="flex-row">
-        <span class="font-semibold">Connections</span>
-        <span>:</span>
-        <span>${host.extensions.connected_devices}</span>
-      </div>
-      <div class="flex-row">
         <span class="font-semibold">Availability</span>
         <span>:</span>
         <span>100%</span>
-      </div>
-      <div class="flex-row">
-        <span class="font-semibold">Floor</span>
-        <span>:</span>
-        ${
-          host.extensions.attributes.labels.floor
-            ? `<span>${host.extensions.attributes.labels.floor}</span>`
-            : "-"
-        }
-        </div>
-        <div class="flex-row">
-        <span class="font-semibold">Room</span>
-        <span>:</span>
-        ${
-          host.extensions.attributes.labels.room
-            ? `<span>${host.extensions.attributes.labels.room}</span>`
-            : "-"
-        }
       </div>
     </div>`;
 

@@ -1,24 +1,7 @@
 {% extends "/layouts/base.html" %} {% block content %}
 <div class="admin-container">
   {% include "/layouts/messageSection.html" %}
-  <dialog id="host-modal" class="modal">
-    <form method="dialog" class="modal-box">
-      <h3 class="font-bold text-lg" id="host-title"></h3>
-      <div class="modal-tabs tabs pt-5">
-        <a class="tab tab-lifted tab-active" data-tab="host-info">Info</a>
-        <a class="tab tab-lifted" data-tab="host-graph">Graph</a>
-      </div>
-      <div id="host-info" class="modal-section tab-content current">
-        <p id="host-info-detail" class="py-4"></p>
-      </div>
-      <div id="host-graph" class="modal-section tab-content">
-        <p id="host-graph-detail" class="py-4"></p>
-      </div>
-    </form>
-    <form method="dialog" class="modal-backdrop">
-      <button>close</button>
-    </form>
-  </dialog>
+  {% include "/layouts/hostModal.html" %}
   <div class="page-tabs tabs">
     <a class="tab tab-lifted tab-active" data-tab="host">Host</a>
     <a class="tab tab-lifted" data-tab="service">Service</a>

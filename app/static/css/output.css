@@ -4169,3 +4169,11 @@ details.collapse summary::-webkit-details-marker {
 .overflow-x-scroll {
   overflow-x: scroll;
 }
+
+.max-w-5xl {
+  max-width: 64rem/* 1024px */;
+}
+
+.w-11\/12 {
+  width: 91.666667%;
+}
