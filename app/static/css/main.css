@@ -240,3 +240,11 @@ div.dataTables_wrapper div.dataTables_filter {
 #back-to-up:hover {
 	transform: translateY(-22%);
 }
+
+/* Graph Plotly */
+#host-graph-detail {
+  display: grid;
+}
+#host-plotly-graph {
+  place-self: center;
+}

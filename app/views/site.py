@@ -58,7 +58,6 @@ def get_host(host_id):
                     times_list.append(time_str)
 
             for item in query_host_list:
-                print(item)
                 created_date = item["created_date"]
                 day = created_date.day
                 month = created_date.month
@@ -69,7 +68,6 @@ def get_host(host_id):
             for i in times_list:
                 status_list.append(1)
 
-            
             for item in data_filter:
                 time_add = item["created_date"]
                 time_hour = time_add.hour
@@ -81,13 +79,10 @@ def get_host(host_id):
                 start_time = time_hour + time_minutes
                 end_time = start_time + time_down
 
-
-
                 for i in range(start_time, end_time + 1):
                     status_list[i] = 0
 
-            if data_filter :
-                print("it's work")
+            if data_filter:
                 my_datetime = datetime.datetime.now()
                 hour = int(my_datetime.strftime("%H"))
                 minute = int(my_datetime.strftime("%M"))
@@ -99,22 +94,16 @@ def get_host(host_id):
                 for i in range(start_time, end_time):
                     status_list[i] = ""
 
-            if not data_filter :
-                print(len(query_host_list))
-                if len(query_host_list) != 0 :
-                    
-                    last_state = query_host_list[len(query_host_list)-1]["last_state"]
-                    if last_state == -1 :
+            if not data_filter:
+                if len(query_host_list) != 0:
+
+                    last_state = query_host_list[len(
+                        query_host_list)-1]["last_state"]
+                    if last_state == -1:
                         for i in range(0, 144):
                             status_list[i] = 0
-                    
-                        
-                        
-                    
-                    
 
-            if not data_filter :
-                print("it's work 2")
+            if not data_filter:
                 my_datetime = datetime.datetime.now()
                 hour = int(my_datetime.strftime("%H"))
                 minute = int(my_datetime.strftime("%M"))
@@ -128,7 +117,6 @@ def get_host(host_id):
 
             x_values = times_list
             y_values = status_list
-            print(y_values)
 
             return jsonify(x_values, y_values)
         else:

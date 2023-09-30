@@ -119,7 +119,6 @@ async function showHostModal(host) {
   await fetch(`/get-host/${hostId}`)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data); //!  ค่าที่ส่งมาจาก Backend
       const graphDiv = document.createElement("div");
       graphDiv.id = "host-plotly-graph";
       modal.querySelector("#host-graph-detail").appendChild(graphDiv);
@@ -129,15 +128,15 @@ async function showHostModal(host) {
           x: data[0],
           y: data[1],
           type: "scatter",
-          mode: "lines+markers",
-          name: "Host Data",
+          mode: "lines",
+          name: "Host Status",
         },
       ];
 
       const layout = {
-        title: "Host Graph",
-        xaxis: { title: "X-axis" },
-        yaxis: { title: "Y-axis" },
+        title: "Host Status",
+        xaxis: { title: "Times" },
+        yaxis: { title: "Status" },
       };
 
       Plotly.newPlot("host-plotly-graph", dataGraph, layout);
