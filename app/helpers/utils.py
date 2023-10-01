@@ -147,37 +147,84 @@ def get_day_in_month(month, year):
 
 def get_all_quarter_data(month, year):
     quarter_month = {}
+    many_month = 3
+    current_date = datetime.datetime.now()
+    month_now = int( current_date.strftime("%m"))
+    day_now = int(current_date.strftime("%d"))
+    print(day_now)
+
     for i in range(1, 4):
         if i == 1:
             num_days = get_day_in_month(month, year)
-            first_month = {str(i)+"-"+str(month): {"date": str(i)+"-" +
-                                                   str(month), 'sla': 100} for i in range(1, num_days + 1)}
+            
+            if month == month_now :
+               first_month = {str(i)+"-"+str(month): {"date": str(i)+"-" +
+                                                   str(month), 'sla': 100} for i in range(1, day_now + 1)} 
+               many_month = 1
+               break
+            else :
+                first_month = {str(i)+"-"+str(month): {"date": str(i)+"-" +
+                                                    str(month), 'sla': 100} for i in range(1, num_days + 1)}
+            
         elif i == 2:
             if month + 1 == 13:
                 num_days = get_day_in_month(1, year + 1)
-                second_month = {str(i)+"-"+str(1): {"date": str(i)+"-" +
-                                                    str(1), 'sla': 100} for i in range(1, num_days + 1)}
+                if 1 == month_now :
+                    second_month = {str(i)+"-"+str(1): {"date": str(i)+"-" +
+                                                    str(1), 'sla': 100} for i in range(1, day_now + 1)} 
+                    many_month = 2
+                    break
+                else :
+                    second_month = {str(i)+"-"+str(1): {"date": str(i)+"-" +
+                                                        str(1), 'sla': 100} for i in range(1, num_days + 1)}
             else:
                 num_days = get_day_in_month(month + 1, year)
-                second_month = {str(i)+"-"+str(month + 1): {"date": str(i)+"-" +
-                                                            str(month + 1), 'sla': 100} for i in range(1, num_days + 1)}
+                if month + 1 == month_now :
+                    second_month = {str(i)+"-"+str(month + 1): {"date": str(i)+"-" +
+                                                   str(month + 1), 'sla': 100} for i in range(1, day_now + 1)} 
+                    many_month = 2
+                    break
+                else :
+                    second_month = {str(i)+"-"+str(month + 1): {"date": str(i)+"-" +
+                                                   str(month + 1), 'sla': 100} for i in range(1, num_days + 1)}
 
         elif i == 3:
             if month + 2 == 13:
                 num_days = get_day_in_month(1, year + 1)
-                third_month = {str(i)+"-"+str(1): {"date": str(i)+"-" +
-                                                   str(1), 'sla': 100} for i in range(1, num_days + 1)}
+                if  1 == month_now :
+                    third_month = {str(i)+"-"+str(1): {"date": str(i)+"-" +
+                                                    str(1), 'sla': 100} for i in range(1, day_now + 1)}
+                   
+                    break
+                else :
+                    third_month = {str(i)+"-"+str(1): {"date": str(i)+"-" +
+                                                  str(1), 'sla': 100} for i in range(1, num_days + 1)}
             elif month + 2 == 14:
                 num_days = get_day_in_month(2, year + 1)
-                third_month = {str(i)+"-"+str(2): {"date": str(i)+"-" +
+                if  2 == month_now :
+                    third_month = {str(i)+"-"+str(2): {"date": str(i)+"-" +
+                                                    str(2), 'sla': 100} for i in range(1, day_now + 1)}
+                    break
+                else :
+                    third_month = {str(i)+"-"+str(2): {"date": str(i)+"-" +
                                                    str(2), 'sla': 100} for i in range(1, num_days + 1)}
             else:
                 num_days = get_day_in_month(month + 2, year)
-                third_month = {str(i)+"-"+str(month + 2): {"date": str(i)+"-" +
-                                                           str(month + 2), 'sla': 100} for i in range(1, num_days + 1)}
-
-    quarter_month = {**first_month, **second_month, **
-                     third_month}
+                if month + 2 == month_now :
+                    third_month = {str(i)+"-"+str(month + 2): {"date": str(i)+"-" +
+                                                   str(month + 2), 'sla': 100} for i in range(1, day_now + 1)} 
+                    break
+                else :
+                    third_month = {str(i)+"-"+str(month + 2): {"date": str(i)+"-" +
+                                                   str(month + 2), 'sla': 100} for i in range(1, num_days + 1)}
+    if many_month == 1:
+        quarter_month = first_month
+    elif many_month == 2:
+        quarter_month = {**first_month, **second_month}
+    else :
+        quarter_month = {**first_month, **second_month, **
+                        third_month}
+    #print(quarter_month)
     return quarter_month
 
 
@@ -210,7 +257,7 @@ def get_day_data(selected_month, selected_year):
         for key in quarter_month_dict:
             if key in data_dict:
                 quarter_month_dict[key]['sla'] = data_dict[key]['sla']
-
+        
         return quarter_month_dict
 
 
