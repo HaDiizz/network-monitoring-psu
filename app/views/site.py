@@ -69,18 +69,36 @@ def get_host(host_id):
                 status_list.append(1)
 
             for item in data_filter:
+                last_state = item["last_state"]
                 time_add = item["created_date"]
-                time_hour = time_add.hour
-                time_minutes = time_add.minute
-                time_hour = time_hour * 6
-                time_minutes = int(time_minutes / 10)
-                time_down = int(item["minutes"] / 10)
+                if last_state != -1 :
+                    time_hour = time_add.hour
+                    time_minutes = time_add.minute
+                    time_hour = time_hour * 6
+                    time_minutes = int(time_minutes / 10)
+                    time_down = int(item["minutes"] / 10)
 
-                start_time = time_hour + time_minutes
-                end_time = start_time + time_down
+                    start_time = time_hour + time_minutes
+                    end_time = start_time + time_down
 
+                else :
+                    time_hour = time_add.hour
+                    time_minutes = time_add.minute
+                    time_hour = time_hour * 6
+                    time_minutes = int(time_minutes / 10)
+                    start_time = time_hour + time_minutes
+
+                    my_datetime = datetime.datetime.now()
+                    hour = int(my_datetime.strftime("%H"))
+                    minute = int(my_datetime.strftime("%M"))
+                    hour = hour * 6
+                    minute = int(minute / 10)
+                    end_time = hour + minute
+
+                    print(start_time,end_time)
                 for i in range(start_time, end_time + 1):
                     status_list[i] = 0
+                    
 
             if data_filter:
                 my_datetime = datetime.datetime.now()
@@ -88,9 +106,9 @@ def get_host(host_id):
                 minute = int(my_datetime.strftime("%M"))
                 hour = hour * 6
                 minute = int(minute / 10)
-                start_time = time_hour + time_minutes
+                start_time = hour + minute
                 end_time = len(status_list)
-
+                
                 for i in range(start_time, end_time):
                     status_list[i] = ""
 
@@ -102,7 +120,8 @@ def get_host(host_id):
                     if last_state == -1:
                         for i in range(0, 144):
                             status_list[i] = 0
-
+                            
+            
             if not data_filter:
                 my_datetime = datetime.datetime.now()
                 hour = int(my_datetime.strftime("%H"))
@@ -115,6 +134,7 @@ def get_host(host_id):
                 for i in range(start_time, end_time):
                     status_list[i] = ""
 
+            
             x_values = times_list
             y_values = status_list
 
