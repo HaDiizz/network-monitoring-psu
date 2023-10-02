@@ -99,39 +99,43 @@ L.control
   })
   .addTo(map);
 
-  async function showHostModal(host) {
-    const modal = document.getElementById("host-modal");
-    const modalInfo = document.getElementById("host-info");
-    const hostId = host.title;
-  
-    await fetch(`/get-host/${hostId}`)
-      .then((response) => response.json())
-      .then((data) => {
-        const graphDiv = document.createElement("div");
-        graphDiv.id = "host-plotly-graph";
-        modal.querySelector("#host-graph-detail").appendChild(graphDiv);
-  
-        const dataGraph = [
-          {
-            x: data[0],
-            y: data[1],
-            type: "scatter",
-            mode: "lines",
-            name: "Host Status",
-          },
-        ];
-  
-        const layout = {
-          title: "Host Status",
-          xaxis: { title: "Times" },
-          yaxis: { title: "Status" },
-        };
-  
-        Plotly.newPlot("host-plotly-graph", dataGraph, layout);
-      });
-    modalInfo.style.display = "inherit";
-    modal.querySelector("#host-title").innerHTML = `${host.title}`;
-    modal.querySelector("#host-info-detail").innerHTML = `
+async function showHostModal(host) {
+  const modal = document.getElementById("host-modal");
+  const modalInfo = document.getElementById("host-info");
+  const hostId = host.title;
+
+  await fetch(`/get-host/${hostId}`)
+    .then((response) => response.json())
+    .then((data) => {
+      const graphDiv = document.createElement("div");
+      graphDiv.id = "host-plotly-graph";
+      modal.querySelector("#host-graph-detail").appendChild(graphDiv);
+
+      const dataGraph = [
+        {
+          x: data[0],
+          y: data[1],
+          type: "scatter",
+          mode: "lines",
+          name: "Host Status",
+        },
+      ];
+
+      const layout = {
+        title: "Host Status",
+        xaxis: { title: "Times" },
+        yaxis: {
+          title: "Status",
+          tickvals: [1, 0],
+          ticktext: ["UP", "DOWN"],
+        },
+      };
+
+      Plotly.newPlot("host-plotly-graph", dataGraph, layout);
+    });
+  modalInfo.style.display = "inherit";
+  modal.querySelector("#host-title").innerHTML = `${host.title}`;
+  modal.querySelector("#host-info-detail").innerHTML = `
       <div class="flex flex-col gap-5">
         <div class="flex-row">
           <span class="font-semibold">Host name</span>
@@ -153,9 +157,9 @@ L.control
           <span>100%</span>
         </div>
       </div>`;
-  
-    modal.showModal();
-  }
+
+  modal.showModal();
+}
 
 fetch("/get-hosts")
   .then((response) => response.json())

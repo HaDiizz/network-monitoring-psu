@@ -4177,3 +4177,25 @@ details.collapse summary::-webkit-details-marker {
 .w-11\/12 {
   width: 91.666667%;
 }
+
+.bg-yellow-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(234 179 8 / var(--tw-bg-opacity));
+}
+
+.bg-yellow-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(250 204 21 / var(--tw-bg-opacity));
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-evenly {
+  justify-content: space-evenly;
+}
+
+.pt-1 {
+  padding-top: 0.25rem/* 4px */;
+}

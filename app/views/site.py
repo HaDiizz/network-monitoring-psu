@@ -95,7 +95,6 @@ def get_host(host_id):
                     minute = int(minute / 10)
                     end_time = hour + minute
 
-                    print(start_time,end_time)
                 for i in range(start_time, end_time + 1):
                     status_list[i] = 0
                     

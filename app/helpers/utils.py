@@ -151,7 +151,6 @@ def get_all_quarter_data(month, year):
     current_date = datetime.datetime.now()
     month_now = int( current_date.strftime("%m"))
     day_now = int(current_date.strftime("%d"))
-    print(day_now)
 
     for i in range(1, 4):
         if i == 1:
@@ -224,7 +223,6 @@ def get_all_quarter_data(month, year):
     else :
         quarter_month = {**first_month, **second_month, **
                         third_month}
-    #print(quarter_month)
     return quarter_month
 
 

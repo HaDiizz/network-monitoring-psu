@@ -136,7 +136,11 @@ async function showHostModal(host) {
       const layout = {
         title: "Host Status",
         xaxis: { title: "Times" },
-        yaxis: { title: "Status" },
+        yaxis: {
+          title: "Status",
+          tickvals: [1, 0],
+          ticktext: ["UP", "DOWN"],
+        },
       };
 
       Plotly.newPlot("host-plotly-graph", dataGraph, layout);

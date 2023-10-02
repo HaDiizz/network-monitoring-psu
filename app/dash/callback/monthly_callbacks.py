@@ -1,6 +1,7 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+from ... import models
 
 mock_host_monthly = [
     {
@@ -398,9 +399,11 @@ mock_host_monthly = [
 ]
 
 
-def get_color(sla):
-    if sla > 50:
+def get_color(sla, ok, warning, critical):
+    if sla >= ok:
         return "green"
+    elif sla >= warning and sla < ok:
+        return "#FACC15"
     else:
         return "red"
 
@@ -448,15 +451,21 @@ def calculate_cumulative_sla(data):
             record_count[key] = 1
     return cumulative_sla, record_count
 
+
 def monthly_callbacks(dash_host):
     @dash_host.callback(
         [dash.dependencies.Output('cards-row', 'children'),
+         dash.dependencies.Output('sla-percentage-detail', 'children'),
          dash.dependencies.Output('average-sla-per-year', 'children'),
          dash.dependencies.Output('sla-graph', 'figure')
-        ],
+         ],
         [dash.dependencies.Input('year-dropdown', 'value')]
     )
     def update_cards(selected_year):
+        sla_requirement = models.SLAConfig.objects(year=selected_year).first()
+        if sla_requirement is None:
+            sla_requirement = {"ok_status": 99.99,
+                               "warning_status": 99.5, "critical_status": 99}
         filtered_data = [
             item for item in mock_host_monthly if item['year'] == selected_year]
         cumulative_sla, record_count = calculate_cumulative_sla(filtered_data)
@@ -469,39 +478,74 @@ def monthly_callbacks(dash_host):
                         html.P(
                             f"SLA: {cumulative_sla.get((year, month), 0) / record_count.get((year, month), 1):.2f}%",
                             style={'font-size': '12px'}
-                            ),
+                        ),
                     ],
                         className="text-white justify-center text-center p-3")
                 ),
                 style={'width': '90px', 'height': '90px', 'background': get_color(
-                    cumulative_sla.get((year, month), 0) / record_count.get((year, month), 1))},
+                    cumulative_sla.get((year, month), 0) / record_count.get((year, month), 1), sla_requirement["ok_status"], sla_requirement["warning_status"], sla_requirement["critical_status"])},
                 className='p-5 text-center flex justify-center card place-self-center',
                 href=f"hosts/{year}/{month}"
             )
             for (year, month), cumulative_sla_value in cumulative_sla.items()
         ]
 
-        #Cal AVG OF SLA PER YEAR
-        average_sla_per_year = {year: cumulative_sla[year] / record_count[year] for year in cumulative_sla}
+        service_percentage = [
+            html.Div([
+                html.Div([
+                    html.Div([
+                        html.I(className="bx bxs-circle pt-1",
+                               style={"color": "green"}),
+                        html.Span(
+                            f"OK Status: {sla_requirement['ok_status']}%"),
+                    ], className="flex gap-5"),
+                    html.Div([
+                        html.I(className="bx bxs-circle pt-1",
+                               style={"color": "#FACC15"}),
+                        html.Span(
+                            f"WARNING Status: {sla_requirement['warning_status']}%"),
+                    ], className="flex gap-5"),
+                    html.Div([
+                        html.I(className="bx bxs-circle pt-1",
+                               style={"color": "red"}),
+                        html.Span(
+                            f"CRITICAL Status: {sla_requirement['critical_status']}%"),
+                    ], className="flex gap-5"),
+                ], className="grid gap-5"),
+                html.Div([
+                    html.A([
+                        "SLA Configuration",
+                        html.I(className="bx bxs-cog pt-1"),
+                    ],
+                        className="flex gap-5",
+                        style={"color": "#8D33FF"},
+                        href="/service-level-agreement"),
+                ]),
+            ], className="flex justify-between border m-5 gap-5", style={"padding": "2rem", "border-radius": "2rem"})
+        ]
+
+        # Cal AVG OF SLA PER YEAR
+        average_sla_per_year = {
+            year: cumulative_sla[year] / record_count[year] for year in cumulative_sla}
         total_sum = 0
         for value in average_sla_per_year.values():
             total_sum += value
 
-        sla_avg = "{:.{}f}".format((total_sum/len(average_sla_per_year)),2)
+        sla_avg = "{:.{}f}".format((total_sum/len(average_sla_per_year)), 2)
         #
 
         graph_figure = {
-        'data': [
-            {'x': [f"{get_month(month)} {year}" for year, month in cumulative_sla.keys()],
-             'y': [cumulative_sla_value / record_count.get((year, month), 1) for (year, month), cumulative_sla_value in cumulative_sla.items()],
-             'type': 'line',
-             'name': 'Average SLA'}
-        ],
-        'layout': {
-            'title': 'Average SLA by Month and Year',
-            'xaxis': {'title': 'Month and Year'},
-            'yaxis': {'title': 'Average SLA'}
+            'data': [
+                {'x': [f"{get_month(month)} {year}" for year, month in cumulative_sla.keys()],
+                 'y': [cumulative_sla_value / record_count.get((year, month), 1) for (year, month), cumulative_sla_value in cumulative_sla.items()],
+                 'type': 'line',
+                 'name': 'Average SLA'}
+            ],
+            'layout': {
+                'title': 'Average SLA by Month and Year',
+                'xaxis': {'title': 'Month and Year'},
+                'yaxis': {'title': 'Average SLA'}
+            }
         }
-    }
 
-        return cards, f"SLA Average in {selected_year} is {sla_avg}",graph_figure
+        return cards, service_percentage, f"SLA Average in {selected_year} is {sla_avg}", graph_figure

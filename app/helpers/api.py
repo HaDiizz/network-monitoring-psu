@@ -58,7 +58,6 @@ def host_down_handler():
                             new_host_list.save()
                             host.host_list.append(new_host_list)
                             count_down = host.count + 1
-                            print(count_down)
                             host.count = count_down
                             host.save()
                             time = datetime.datetime.now()
@@ -87,7 +86,6 @@ def host_down_handler():
 
                             host.host_list.append(new_host_list)
                             count_down = host.count + 1
-                            print(count_down)
                             host.count = count_down
                             host.save()
 

@@ -38,8 +38,9 @@ dash_host.layout = html.Div([
     ),
     html.Div(id='average-sla-per-year', className='text-left font-bold text-2xl', style={'margin-top': '3rem'}),
     html.Div(id='cards-row', className='dash_card'),
+    html.Div(id='sla-percentage-detail', className='text-left', style={'margin-top': '2rem'}),
         html.Div([
-        html.Div(dcc.Graph(id='sla-graph'), className='pt-5') 
+        html.Div(dcc.Graph(id='sla-graph'), className='pt-2') 
     ], className='grid grid-cols-1'),
 ], className='')
 
