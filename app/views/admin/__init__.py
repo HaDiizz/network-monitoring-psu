@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 from ... import acl
-from ...helpers.api import host_list, service_list, host_group, host_group_list, service_group_list
+from ...helpers.api import host_list, service_list, host_group, host_group_list, service_group_list, maintain_host_list
 from ...helpers.utils import location_list
 import os
 
@@ -27,6 +27,7 @@ def index():
     services = web_service
     host_groups = host_group_list()
     service_groups = service_group_list()
+    maintain_hosts = maintain_host_list()
     psu_core_network_group = host_group(api_hostgroup_url=PSU_CORE_NETWORK)
     psu_hatyai_campus_network = host_group(api_hostgroup_url=PSU_HATYAI_CAMPUS_NETWORK)
     psu_hat_yai_wireless = host_group(api_hostgroup_url=PSU_HAT_YAI_WIRELESS)
@@ -52,8 +53,9 @@ def index():
                 host_state = "DOWN"
             elif host_last_state == 2:
                 host_state = "UNREACH"
-            else:
-                host_state = "MAINTAIN"
+            for maintain_host in maintain_hosts:
+                if host["id"] == maintain_host["id"]:
+                    host_state = "MAINTAIN"
             if host_state not in host_summary:
                 host_summary[host_state] = 0
             host_summary[host_state] += 1

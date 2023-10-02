@@ -301,12 +301,10 @@ def host_group(api_hostgroup_url):
     except Exception as ex:
         return None
 
-def maintain_host():
+def maintain_host_list():
     try:
         with httpx.Client() as client:
-            params = {
-                #                "filter": "(name eq 'maintain') and (type eq 'boolean')" # for testing only
-            }
+            params = {}
             response = client.get(
                 f"{os.environ['IN_DOWNTIME']}",
                 headers=HEADERS,
@@ -315,7 +313,6 @@ def maintain_host():
             if response.status_code == 200:
                 response = response.json()
                 if response:
-                    # print("response : ", response)
                     return response['value']
             else:
                 return []

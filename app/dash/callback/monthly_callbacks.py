@@ -519,7 +519,7 @@ def monthly_callbacks(dash_host):
                     ],
                         className="flex gap-5",
                         style={"color": "#8D33FF"},
-                        href="/service-level-agreement"),
+                        href="/admin/service-level-agreement"),
                 ]),
             ], className="flex justify-between border m-5 gap-5", style={"padding": "2rem", "border-radius": "2rem"})
         ]
