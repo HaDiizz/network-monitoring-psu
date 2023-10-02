@@ -19,7 +19,7 @@ HEADERS = {
 url = 'https://notify-api.line.me/api/notify'
 line_noti_token = os.environ['LINE_NOTI_TOKEN']
 headers = {'content-type': 'application/x-www-form-urlencoded',
-           'Authorization': 'Bearer ' + line_noti_token}
+        'Authorization': 'Bearer ' + line_noti_token}
 
 
 def host_down_handler():
@@ -295,6 +295,27 @@ def host_group(api_hostgroup_url):
             if response.status_code == 200:
                 response = response.json()
                 if response:
+                    return response['value']
+            else:
+                return []
+    except Exception as ex:
+        return None
+
+def maintain_host():
+    try:
+        with httpx.Client() as client:
+            params = {
+                #                "filter": "(name eq 'maintain') and (type eq 'boolean')" # for testing only
+            }
+            response = client.get(
+                f"{os.environ['IN_DOWNTIME']}",
+                headers=HEADERS,
+                params=params
+            )
+            if response.status_code == 200:
+                response = response.json()
+                if response:
+                    # print("response : ", response)
                     return response['value']
             else:
                 return []
