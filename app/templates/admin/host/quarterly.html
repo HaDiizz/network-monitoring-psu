@@ -69,21 +69,22 @@
       class="grid grid-cols-1 xl:grid-cols-7 lg:grid-cols-7 md:grid-cols-7 sm:grid-cols-1 gap-5 pb-8"
     >
       {% for date in day_data if day_data[date]["date"].endswith('-' +
-      month_number) %} {% if day_data[date]["sla"] >= 90 %}
+      month_number) %} {% if day_data[date]["sla"] >= sla_status["ok_status"] %}
       <div class="card shadow-xl bg-green-600 text-white">
         <div class="place-self-center m-5 text-center font-bold">
           <span class="text-xl">{{ day_data[date]["sla"] }}%</span>
           <p>{{ day_data[date]["date"] }}</p>
         </div>
       </div>
-      {% elif day_data[date]["sla"] < 90 and day_data[date]["sla"] >= 50 %}
+      {% elif day_data[date]["sla"] < sla_status["ok_status"] and
+      day_data[date]["sla"] >= sla_status["warning_status"] %}
       <div class="card shadow-xl bg-yellow-400 text-white">
         <div class="place-self-center m-5 text-center font-bold">
           <span class="text-xl">{{ day_data[date]["sla"] }}%</span>
           <p>{{ day_data[date]["date"] }}</p>
         </div>
       </div>
-      {% elif day_data[date]["sla"] < 50 %}
+      {% else %}
       <div class="card shadow-xl bg-red-600 text-white">
         <div class="place-self-center m-5 text-center font-bold">
           <span class="text-xl">{{ day_data[date]["sla"] }}%</span>

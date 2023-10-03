@@ -2,6 +2,7 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from ... import models
+from ...helpers.utils import sla_status_list
 
 mock_host_monthly = [
     {
@@ -464,8 +465,7 @@ def monthly_callbacks(dash_host):
     def update_cards(selected_year):
         sla_requirement = models.SLAConfig.objects(year=selected_year).first()
         if sla_requirement is None:
-            sla_requirement = {"ok_status": 99.99,
-                               "warning_status": 99.5, "critical_status": 99}
+            sla_requirement = sla_status_list()
         filtered_data = [
             item for item in mock_host_monthly if item['year'] == selected_year]
         cumulative_sla, record_count = calculate_cumulative_sla(filtered_data)

@@ -3,7 +3,8 @@ from app.views.admin import admin_module
 from ... import acl
 from ...dash.host_monthly import dash_host
 import calendar
-from ...helpers.utils import get_day_data, get_quarter_data
+from ...helpers.utils import get_day_data, get_quarter_data, sla_status_list
+from ... import models
 
 
 @admin_module.route("/hosts")
@@ -15,6 +16,14 @@ def host():
 @admin_module.route("/hosts/<int:year>/<string:month>")
 @acl.roles_required("admin")
 def host_quarterly(year, month):
+    sla_requirement = models.SLAConfig.objects(year=year).first()
+    sla_status = sla_status_list()
+    if sla_requirement:
+        sla_status = {
+        "ok_status": sla_requirement["ok_status"],
+        "warning_status": sla_requirement["warning_status"],
+        "critical_status": sla_requirement["critical_status"]
+        }
     avg_sla, host_all_count, host_name, host_sla, host_ip, host_count, month_name = get_quarter_data(
         int(month), int(year))
     day_data = get_day_data(int(month), int(year))
@@ -27,4 +36,4 @@ def host_quarterly(year, month):
             months[month_name_str] = str(month_number)
     host_data = {host_name[i]: {"host_name": host_name[i], "host_sla": host_sla[i],
                                 "host_ip": host_ip[i], "host_count": host_count[i]} for i in range(len(host_name))}
-    return render_template("/admin/host/quarterly.html", title="Host Quarterly", month_name=month_name, host_data=host_data, host_all_count=host_all_count, avg_sla=round(avg_sla, 2), day_data=day_data, months=months,)
+    return render_template("/admin/host/quarterly.html", title="Host Quarterly", month_name=month_name, host_data=host_data, host_all_count=host_all_count, avg_sla=round(avg_sla, 2), day_data=day_data, months=months, sla_status=sla_status)
