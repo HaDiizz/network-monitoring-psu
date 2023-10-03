@@ -3,7 +3,7 @@ from ... import acl
 from ...helpers.api import host_list, service_list, host_group, host_group_list, service_group_list, maintain_host_list
 from ...helpers.utils import location_list
 import os
-
+from app import caches
 admin_module = Blueprint("admin", __name__, url_prefix="/admin")
 
 from app.views.admin.service import *
@@ -21,6 +21,7 @@ AD_SERVICE_GROUP = f"{os.environ['AD_SERVICE_GROUP']}"
 
 @admin_module.route("/overview")
 @acl.roles_required("admin")
+@caches.cache.cached(timeout=3600, key_prefix='overview')
 def index():
     hosts = host_list()
     web_service = service_list(api_service_url=WEB_SERVICE_GROUP)
