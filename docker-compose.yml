@@ -3,6 +3,8 @@ services:
     mongodb:
         image: mongo
         container_name: nwms-mongodb
+        environment:
+            MONGO_INITDB_DATABASE: nwms_psu
         volumes:
             - ../deployment/nwms/mongodb/data/db:/data/db
             - /etc/localtime:/etc/localtime:ro
