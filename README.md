@@ -1,13 +1,13 @@
-***To create a virtual environment named pyvenv***
+***To create a virtual environment named venv***
 
 ```bash
-python -m venv pyvenv
+python -m venv venv
 ```
 
 ***To activate a virtual environment ***
 
 ```bash
-pyvenv\scripts\activate
+venv\scripts\activate
 ```
 
 ***To create a requirements.txt file for a Flask project, follow these steps:***
