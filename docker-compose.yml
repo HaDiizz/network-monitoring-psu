@@ -4,7 +4,7 @@ services:
         image: mongo
         container_name: nwms-mongodb
         volumes:
-            - ../deployment/sadhu/mongodb/data/db:/data/db
+            - ../deployment/nwms/mongodb/data/db:/data/db
             - /etc/localtime:/etc/localtime:ro
         restart: always
         ports:
