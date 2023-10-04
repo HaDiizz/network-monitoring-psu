@@ -1,0 +1,43 @@
+version: '3'
+services:
+    mongodb:
+        image: mongo
+        container_name: nwms-mongodb
+        volumes:
+            - ../deployment/sadhu/mongodb/data/db:/data/db
+            - /etc/localtime:/etc/localtime:ro
+        restart: always
+        ports:
+            - 27017:27017
+        networks:
+            - default
+        logging:
+            options:
+                max-size: "10m"
+                max-file: "3"
+    web:
+        build: .
+        image: nwms-image
+        container_name: nwms-web
+        volumes:
+            - ../deployment:/deployment
+            - /etc/localtime:/etc/localtime:ro
+        ports:
+            - 8000:8000
+        links:
+            - mongodb
+        networks:
+            - default
+        restart: always
+        environment:
+            NWMS_SETTINGS: /app/.env
+        command:
+            /venv/bin/gunicorn app:server -w 2 --bind 0.0.0.0:8000 -R --log-level debug
+        logging:
+            options:
+                max-size: "10m"
+                max-file: "3"
+    
+
+networks:
+    default:
