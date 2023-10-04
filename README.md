@@ -45,3 +45,9 @@ docker build -t nwms-image .
 ```bash
 docker-compose up -d
 ```
+
+***docker-compose force recreate***
+
+```bash
+docker-compose up -d --build --force-recreate
+```
