@@ -33,3 +33,15 @@ pip install -r requirements.txt
 ```bash
 flask --app app.py run --debug
 ```
+
+***build nwms-image***
+
+```bash 
+docker build -t nwms-image .
+```
+
+***docker-compose***
+
+```bash
+docker-compose up -d
+```
