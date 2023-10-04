@@ -12,3 +12,4 @@ __pycache__
 /app/dash/__pycache__
 /app/dash/callback/__pycache__
 /app/helpers/__pycache__
+nwms-production.cfg

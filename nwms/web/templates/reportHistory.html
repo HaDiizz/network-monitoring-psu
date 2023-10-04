@@ -1,0 +1,69 @@
+{% extends "./layouts/base.html" %} {% block content %}
+
+<h1 class="text-4xl font-bold pb-5">ประวัติรายงานปัญหา</h1>
+<div class="text-sm breadcrumbs pb-5">
+    <ul>
+      <li><a href="/report">Report Issue</a></li>
+      <li>History</li>
+    </ul>
+  </div>
+{% include "/layouts/messageSection.html" %}
+
+<div class="flex flex-col lg:flex-row md:flex-row gap-5">
+  <div class="w-full bg-light-primary rounded-md dark:bg-dark-primary">
+    <div class="table-responsive p-3 pt-5">
+      <table id="report-table" class="display" style="width: 100%">
+        <thead>
+          <tr>
+            <th>เวลาที่แจ้ง</th>
+            <th>หัวข้อ</th>
+            <th>รายละเอียด</th>
+            <th>สถานะ</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for report in reports %}
+          <tr>
+            <td>{{ report.created_date.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+            <td>{{ report["title"]}}</td>
+            <td>
+              <div class="truncate-text" data-content="{{ report['detail'] }}">
+                {{ report["detail"] }}
+              </div>
+            </td>
+            <td>
+              {% if report["status"] == 'PENDING' %}
+              <div class="badge badge-warning pb-0.5">
+                {{ report["status"] }}
+              </div>
+              {% elif report["status"] == 'CHECKING' %}
+              <div class="badge badge-info pb-0.5">{{ report["status"] }}</div>
+              {% elif report["status"] == 'COMPLETED' %}
+              <div class="badge badge-success pb-0.5">
+                {{ report["status"] }}
+              </div>
+              {% elif report["status"] == 'REJECTED' %}
+              <div class="badge badge-error pb-0.5">{{ report["status"] }}</div>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/reportTable.js') }}"></script>
+<script>
+  document.querySelectorAll(".truncate-text").forEach((element) => {
+    const content = element.dataset.content;
+    const maxLength = 50;
+
+    if (content.length > maxLength) {
+      element.textContent = content.slice(0, maxLength) + "...";
+    }
+  });
+</script>
+
+{% endblock %}

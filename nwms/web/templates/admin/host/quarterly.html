@@ -1,0 +1,126 @@
+{% extends "./layouts/base.html" %} {% block content %}
+<div class="admin-container">
+  <h1 class="text-4xl font-bold pb-8">{{ month_name }}</h1>
+  <div class="text-sm breadcrumbs pb-5">
+    <ul>
+      <li><a href="/admin/hosts">Host</a></li>
+      <li>{{ month_name }}</li>
+    </ul>
+  </div>
+  <div class="stats stats-vertical lg:stats-horizontal shadow w-full">
+    <div class="stat">
+      <div class="stat-title">SLA Availability</div>
+      <div class="stat-value text-indigo-500">{{ avg_sla }}%</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-title">Host Down Total</div>
+      <div class="stat-value text-error">{{ host_all_count }}</div>
+    </div>
+  </div>
+  <div class="pt-8 pb-8">
+    <div
+      class="w-full md:w-12/12 sm:w-12/12 bg-light-primary rounded-md dark:bg-dark-primary shadow-xl overflow-x-scroll"
+    >
+      <div class="table-responsive p-3 pt-5">
+        <table id="quarterly-table" class="display" style="width: 100%">
+          <thead>
+            <tr>
+              <th>Host Name</th>
+              <th>IP Address</th>
+              <th>จำนวนครั้งที่มีปัญหา</th>
+              <th>SLA Availability</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for host in host_data %}
+            <tr>
+              <td>{{ host_data[host]["host_name"] }}</td>
+              <td>{{ host_data[host]["host_ip"] }}</td>
+              <td>{{ host_data[host]["host_count"] }}</td>
+              <td>{{ host_data[host]["host_sla"] }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div class="flex justify-center pt-5 pb-5">
+    <ul
+      class="menu menu-horizontal bg-light-primary text-neutral-700 dark:bg-base-200 dark:text-white rounded-box"
+    >
+      {% for month_name, month_number in months.items() %}
+      <li>
+        <a href="#" class="scroll-link" data-target="{{ month_name | lower }}"
+          >{{ month_name }}</a
+        >
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div>
+    {% for month_name, month_number in months.items() %}
+    <h2 class="text-2xl font-bold pb-5" id="{{ month_name | lower }}">
+      {{ month_name }}
+    </h2>
+    <div
+      class="grid grid-cols-1 xl:grid-cols-7 lg:grid-cols-7 md:grid-cols-7 sm:grid-cols-1 gap-5 pb-8"
+    >
+      {% for date in day_data if day_data[date]["date"].endswith('-' +
+      month_number) %} {% if day_data[date]["sla"] >= sla_status["ok_status"] %}
+      <div class="card shadow-xl bg-green-600 text-white">
+        <div class="place-self-center m-5 text-center font-bold">
+          <span class="text-xl">{{ day_data[date]["sla"] }}%</span>
+          <p>{{ day_data[date]["date"] }}</p>
+        </div>
+      </div>
+      {% elif day_data[date]["sla"] < sla_status["ok_status"] and
+      day_data[date]["sla"] >= sla_status["warning_status"] %}
+      <div class="card shadow-xl bg-yellow-400 text-white">
+        <div class="place-self-center m-5 text-center font-bold">
+          <span class="text-xl">{{ day_data[date]["sla"] }}%</span>
+          <p>{{ day_data[date]["date"] }}</p>
+        </div>
+      </div>
+      {% else %}
+      <div class="card shadow-xl bg-red-600 text-white">
+        <div class="place-self-center m-5 text-center font-bold">
+          <span class="text-xl">{{ day_data[date]["sla"] }}%</span>
+          <p>{{ day_data[date]["date"] }}</p>
+        </div>
+      </div>
+      {% endif %} {% endfor %}
+    </div>
+    <div class="divider"></div>
+    {% endfor %}
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/quarterlyTable.js') }}"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const scrollLinks = document.querySelectorAll(".scroll-link");
+
+    scrollLinks.forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        const targetId = link.getAttribute("data-target");
+        const targetElement = document.getElementById(targetId);
+
+        if (targetElement) {
+          const offset = 90;
+          const targetOffset =
+            targetElement.getBoundingClientRect().top + window.scrollY - offset;
+
+          window.scrollTo({
+            top: targetOffset,
+            behavior: "smooth",
+          });
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

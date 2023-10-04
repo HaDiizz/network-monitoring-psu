@@ -1,0 +1,48 @@
+{% extends "/layouts/base.html" %} {% block content %}
+<div class="admin-container">
+  <h1 class="text-4xl font-bold pb-8">User Permission</h1>
+  <div class="overflow-x-auto pt-10">
+    <table id="user-table" class="display nowrap" style="width: 100%">
+      <thead>
+        <tr>
+          <th>ชื่อ</th>
+          <th>นามสกุล</th>
+          <th>อีเมล</th>
+          <th>สถานะ</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>{{ user.first_name }}</td>
+          <td>{{ user.last_name }}</td>
+          <td>{{ user.email }}</td>
+          {% if user.role == 'admin' %}
+          <td><div class="badge badge-error pb-1">ผู้ดูแลระบบ</div></td>
+          {% else %}
+          <td><div class="badge badge-success pb-1">ผู้ใช้</div></td>
+          {% endif %}
+          <td>
+            {% if current_user.id != user.id %} <input id="user-role-{{ user.id
+            }}" data-user-id="{{ user.id }}" type="checkbox" class="toggle
+            toggle-accent role-toggle" {% if user.role == 'admin' %}checked{%
+            endif %} /> {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>ชื่อ</th>
+          <th>นามสกุล</th>
+          <th>อีเมล</th>
+          <th>สถานะ</th>
+          <th>Action</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/userPermissionTable.js') }}"></script>
+{% endblock %}

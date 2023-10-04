@@ -1,0 +1,118 @@
+{% extends "/layouts/base.html" %} {% block content %}
+<div class="admin-container">
+  <h1 class="text-4xl font-bold pb-8">Report Management</h1>
+  {% include "/layouts/messageSection.html" %}
+  <div class="filter-section pb-10">
+    <form method="post">
+      {{ form.csrf_token }}
+      <div
+        class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-1 gap-5"
+      >
+        <div class="form-control items-center">
+          <div class="w-full max-w-xs">
+            <label class="label">
+              <span class="label-text">{{ form.status.label }}</span>
+            </label>
+            {{ form.status }}
+          </div>
+        </div>
+        <div class="form-control justify-center items-center pt-8">
+          <div class="w-full max-w-xs">{{ form.search() }}</div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="stats stats-vertical lg:stats-horizontal shadow w-full">
+    <div class="stat">
+      <div class="stat-title">Total</div>
+      <div class="stat-value text-indigo-500">{{ status_counts["TOTAL"] }}</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-title">Pending</div>
+      <div class="stat-value text-warning">{{ status_counts["PENDING"] }}</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Checking</div>
+      <div class="stat-value text-sky-500">{{ status_counts["CHECKING"] }}</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Completed</div>
+      <div class="stat-value text-success">{{ status_counts["COMPLETED"] }}</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-title">Rejected</div>
+      <div class="stat-value text-error">{{ status_counts["REJECTED"] }}</div>
+    </div>
+  </div>
+  <div class="overflow-x-auto pt-10">
+    <table id="report-table" class="display nowrap" style="width: 100%">
+      <thead>
+        <tr>
+          <th>วันที่รายงาน</th>
+          <th>เรื่อง</th>
+          <th>ประเภท</th>
+          <th>สถานะ</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for report in reports %}
+        <tr>
+          <td>{{ report.created_date.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+          <td>{{ report.title }}</td>
+          <td>
+            <div class="truncate-text" data-content="{{ report.category }}">
+              {{ report.category }}
+            </div>
+          </td>
+
+          <td>
+            {% if report.status == 'PENDING' %}
+            <div class="badge badge-warning pb-0.5">{{ report.status }}</div>
+            {% elif report.status == 'CHECKING' %}
+            <div class="badge badge-info pb-0.5">{{ report.status }}</div>
+            {% elif report.status == 'COMPLETED' %}
+            <div class="badge badge-success pb-0.5">{{ report.status }}</div>
+            {% elif report.status == 'REJECTED' %}
+            <div class="badge badge-error pb-0.5">{{ report.status }}</div>
+            {% endif %}
+          </td>
+          <td>
+            <div class="text-center cursor-pointer">
+              <a href="/admin/reports/{{ report.id }}" id="btn-report-detail">
+                <i
+                  class="bx bx-search-alt-2 text-indigo-500"
+                  style="font-size: 25px"
+                ></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>วันที่รายงาน</th>
+          <th>เรื่อง</th>
+          <th>ประเภท</th>
+          <th>สถานะ</th>
+          <th>Action</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/reportTable.js') }}"></script>
+<script>
+  document.querySelectorAll(".truncate-text").forEach((element) => {
+    const content = element.dataset.content;
+    const maxLength = 50;
+
+    if (content.length > maxLength) {
+      element.textContent = content.slice(0, maxLength) + "...";
+    }
+  });
+</script>
+{% endblock %}
