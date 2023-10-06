@@ -399,6 +399,401 @@ mock_host_monthly = [
     },
 ]
 
+mock_service_monthly = [
+    {
+        "_id": 1,
+        "service_id": 1,
+        "month": 1,
+        "year": 2021,
+        "sla": 90.8
+    },
+    {
+        "_id": 2,
+        "service_id": 2,
+        "month": 1,
+        "year": 2021,
+        "sla": 40.5
+    },
+    {
+        "_id": 3,
+        "service_id": 1,
+        "month": 2,
+        "year": 2021,
+        "sla": 80.5
+    },
+    {
+        "_id": 4,
+        "service_id": 1,
+        "month": 3,
+        "year": 2021,
+        "sla": 75.2
+    },
+    {
+        "_id": 5,
+        "service_id": 1,
+        "month": 4,
+        "year": 2021,
+        "sla": 88.1
+    },
+    {
+        "_id": 6,
+        "service_id": 1,
+        "month": 5,
+        "year": 2021,
+        "sla": 92.4
+    },
+    {
+        "_id": 7,
+        "service_id": 1,
+        "month": 6,
+        "year": 2021,
+        "sla": 85.7
+    },
+    {
+        "_id": 8,
+        "service_id": 1,
+        "month": 7,
+        "year": 2021,
+        "sla": 90.2
+    },
+    {
+        "_id": 9,
+        "service_id": 1,
+        "month": 8,
+        "year": 2021,
+        "sla": 81.5
+    },
+    {
+        "_id": 10,
+        "service_id": 1,
+        "month": 9,
+        "year": 2021,
+        "sla": 89.8
+    },
+    {
+        "_id": 11,
+        "service_id": 1,
+        "month": 10,
+        "year": 2021,
+        "sla": 78.9
+    },
+    {
+        "_id": 12,
+        "service_id": 1,
+        "month": 11,
+        "year": 2021,
+        "sla": 92.2
+    },
+    {
+        "_id": 13,
+        "service_id": 1,
+        "month": 12,
+        "year": 2021,
+        "sla": 84.1
+    },
+    {
+        "_id": 14,
+        "service_id": 1,
+        "month": 1,
+        "year": 2022,
+        "sla": 87.4
+    },
+    {
+        "_id": 15,
+        "service_id": 1,
+        "month": 2,
+        "year": 2022,
+        "sla": 79.6
+    },
+    {
+        "_id": 16,
+        "service_id": 1,
+        "month": 3,
+        "year": 2022,
+        "sla": 93.1
+    },
+    {
+        "_id": 17,
+        "service_id": 1,
+        "month": 4,
+        "year": 2022,
+        "sla": 80.9
+    },
+    {
+        "_id": 19,
+        "service_id": 2,
+        "month": 1,
+        "year": 2022,
+        "sla": 50.4
+    },
+    {
+        "_id": 20,
+        "service_id": 2,
+        "month": 2,
+        "year": 2022,
+        "sla": 42.3
+    },
+    {
+        "_id": 21,
+        "service_id": 2,
+        "month": 3,
+        "year": 2022,
+        "sla": 53.1
+    },
+    {
+        "_id": 22,
+        "service_id": 2,
+        "month": 4,
+        "year": 2022,
+        "sla": 43.8
+    },
+    {
+        "_id": 23,
+        "service_id": 2,
+        "month": 5,
+        "year": 2022,
+        "sla": 51.5
+    },
+    {
+        "_id": 24,
+        "service_id": 2,
+        "month": 6,
+        "year": 2022,
+        "sla": 44.7
+    },
+    {
+        "_id": 25,
+        "service_id": 2,
+        "month": 7,
+        "year": 2022,
+        "sla": 52.4
+    },
+    {
+        "_id": 26,
+        "service_id": 2,
+        "month": 8,
+        "year": 2022,
+        "sla": 45.6
+    },
+    {
+        "_id": 27,
+        "service_id": 2,
+        "month": 9,
+        "year": 2022,
+        "sla": 53.3
+    },
+    {
+        "_id": 28,
+        "service_id": 2,
+        "month": 10,
+        "year": 2022,
+        "sla": 46.5
+    },
+    {
+        "_id": 29,
+        "service_id": 2,
+        "month": 11,
+        "year": 2022,
+        "sla": 54.2
+    },
+    {
+        "_id": 30,
+        "service_id": 2,
+        "month": 12,
+        "year": 2022,
+        "sla": 47.4
+    },
+    {
+        "_id": 31,
+        "service_id": 2,
+        "month": 1,
+        "year": 2023,
+        "sla": 55.1
+    },
+    {
+        "_id": 32,
+        "service_id": 2,
+        "month": 2,
+        "year": 2023,
+        "sla": 48.3
+    },
+    {
+        "_id": 33,
+        "service_id": 2,
+        "month": 3,
+        "year": 2023,
+        "sla": 56
+    },
+    {
+        "_id": 34,
+        "service_id": 2,
+        "month": 4,
+        "year": 2023,
+        "sla": 49.2
+    },
+    {
+        "_id": 35,
+        "service_id": 2,
+        "month": 5,
+        "year": 2023,
+        "sla": 56.9
+    },
+    {
+        "_id": 36,
+        "service_id": 3,
+        "month": 1,
+        "year": 2021,
+        "sla": 95.1
+    },
+    {
+        "_id": 37,
+        "service_id": 3,
+        "month": 2,
+        "year": 2021,
+        "sla": 86.9
+    },
+    {
+        "_id": 38,
+        "service_id": 3,
+        "month": 3,
+        "year": 2021,
+        "sla": 97.2
+    },
+    {
+        "_id": 39,
+        "service_id": 3,
+        "month": 4,
+        "year": 2021,
+        "sla": 88.7
+    },
+    {
+        "_id": 40,
+        "service_id": 3,
+        "month": 5,
+        "year": 2021,
+        "sla": 98.3
+    },
+    {
+        "_id": 41,
+        "service_id": 3,
+        "month": 6,
+        "year": 2021,
+        "sla": 89.6
+    },
+    {
+        "_id": 42,
+        "service_id": 3,
+        "month": 7,
+        "year": 2021,
+        "sla": 99.4
+    },
+    {
+        "_id": 43,
+        "service_id": 3,
+        "month": 8,
+        "year": 2021,
+        "sla": 90.5
+    },
+    {
+        "_id": 44,
+        "service_id": 3,
+        "month": 9,
+        "year": 2021,
+        "sla": 87.5
+    },
+    {
+        "_id": 45,
+        "service_id": 3,
+        "month": 10,
+        "year": 2021,
+        "sla": 66.4
+    },
+    {
+        "_id": 46,
+        "service_id": 3,
+        "month": 11,
+        "year": 2021,
+        "sla": 25.6
+    },
+    {
+        "_id": 47,
+        "service_id": 3,
+        "month": 12,
+        "year": 2021,
+        "sla": 53.3
+    },
+    {
+        "_id": 48,
+        "service_id": 3,
+        "month": 1,
+        "year": 2022,
+        "sla": 78.7
+    },
+    {
+        "_id": 49,
+        "service_id": 3,
+        "month": 2,
+        "year": 2022,
+        "sla": 93.2
+    },
+    {
+        "_id": 50,
+        "service_id": 3,
+        "month": 3,
+        "year": 2022,
+        "sla": 87.8
+    },
+    {
+        "_id": 51,
+        "service_id": 3,
+        "month": 4,
+        "year": 2022,
+        "sla": 94.1
+    },
+    {
+        "_id": 52,
+        "service_id": 3,
+        "month": 5,
+        "year": 2022,
+        "sla": 78.9
+    },
+    {
+        "_id": 53,
+        "service_id": 3,
+        "month": 6,
+        "year": 2022,
+        "sla": 97
+    },
+    {
+        "_id": 54,
+        "service_id": 1,
+        "month": 6,
+        "year": 2023,
+        "sla": 68
+    },
+    {
+        "_id": 55,
+        "service_id": 1,
+        "month": 7,
+        "year": 2023,
+        "sla": 90
+    },
+    {
+        "_id": 56,
+        "service_id": 1,
+        "month": 9,
+        "year": 2023,
+        "sla": 23
+    },
+    {
+        "_id": 57,
+        "service_id": 1,
+        "month": 9,
+        "year": 2023,
+        "sla": 45
+    },
+]
+
 
 def get_color(sla, ok, warning, critical):
     if sla >= ok:
@@ -453,8 +848,8 @@ def calculate_cumulative_sla(data):
     return cumulative_sla, record_count
 
 
-def monthly_callbacks(dash_host):
-    @dash_host.callback(
+def monthly_callbacks(dash_app, selection):
+    @dash_app.callback(
         [dash.dependencies.Output('cards-row', 'children'),
          dash.dependencies.Output('sla-percentage-detail', 'children'),
          dash.dependencies.Output('average-sla-per-year', 'children'),
@@ -466,8 +861,13 @@ def monthly_callbacks(dash_host):
         sla_requirement = models.SLAConfig.objects(year=selected_year).first()
         if sla_requirement is None:
             sla_requirement = sla_status_list()
-        filtered_data = [
-            item for item in mock_host_monthly if item['year'] == selected_year]
+        if selection == "host":
+            filtered_data = [
+                item for item in mock_host_monthly if item['year'] == selected_year]
+        else:
+            filtered_data = [
+                item for item in mock_service_monthly if item['year'] == selected_year]
+        
         cumulative_sla, record_count = calculate_cumulative_sla(filtered_data)
 
         cards = [
@@ -485,7 +885,7 @@ def monthly_callbacks(dash_host):
                 style={'width': '90px', 'height': '90px', 'background': get_color(
                     cumulative_sla.get((year, month), 0) / record_count.get((year, month), 1), sla_requirement["ok_status"], sla_requirement["warning_status"], sla_requirement["critical_status"])},
                 className='p-5 text-center flex justify-center card place-self-center',
-                href=f"hosts/{year}/{month}"
+                href = f"hosts/{year}/{month}" if selection == "host" else f"services/{year}/{month}"
             )
             for (year, month), cumulative_sla_value in cumulative_sla.items()
         ]

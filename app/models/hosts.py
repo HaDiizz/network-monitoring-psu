@@ -9,7 +9,7 @@ class HostList(me.Document):
     remark = me.StringField(default="")
     last_time_up = me.DateTimeField(required=True)
     last_time_down = me.DateTimeField()
-    minutes = me.IntField(required=True)
+    minutes = me.FloatField(required=True)
     created_date = me.DateTimeField(
         required=True, default=datetime.datetime.now)
     updated_date = me.DateTimeField(

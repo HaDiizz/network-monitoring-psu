@@ -8,13 +8,13 @@ from .callback import monthly_callbacks
 
 
 
-dash_host = dash.Dash(__name__, server=server,
-                      url_base_pathname='/admin/hosts/',
+dash_service = dash.Dash(__name__, server=server,
+                      url_base_pathname='/admin/services/',
                       external_stylesheets=['../static/css/dash/main.css']
                       )
 
 for view_func in server.view_functions:
-    if view_func.startswith(dash_host.config.url_base_pathname):
+    if view_func.startswith(dash_service.config.url_base_pathname):
         server.view_functions[view_func] = login_required(
             server.view_functions[view_func])
 
@@ -24,8 +24,8 @@ def generate_year_options():
     year_options = [{'label': str(year), 'value': year} for year in range(2023 - 2, current_year + 1)] #! Delete -2 this is for test function
     return year_options
 
-dash_host.layout = html.Div([
-    html.H1("Host Monthly", className='text-4xl font-bold', style={'padding-bottom': '3rem'}),
+dash_service.layout = html.Div([
+    html.H1("Service Monthly", className='text-4xl font-bold', style={'padding-bottom': '3rem'}),
     dcc.Dropdown(
         id='year-dropdown',
         options=[
@@ -45,4 +45,4 @@ dash_host.layout = html.Div([
 ], className='')
 
 
-monthly_callbacks(dash_host, "host")
+monthly_callbacks(dash_service, "service")
