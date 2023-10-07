@@ -9,7 +9,8 @@ from .hosts import Host
 from .hosts import HostList
 from .oauth2 import OAuth2Token
 from .sla_config import SLAConfig
-# from .services import Service
+from .services import Service
+from .services import ServiceList
 
 def init_mongoengine(server):
     server.config['MONGODB_SETTINGS'] = {

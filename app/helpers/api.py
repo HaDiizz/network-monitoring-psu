@@ -22,6 +22,153 @@ headers = {'content-type': 'application/x-www-form-urlencoded',
         'Authorization': 'Bearer ' + line_noti_token}
 
 
+def service_down_handler(service_list):
+    try:
+        response = service_list()
+        now = datetime.datetime.now()
+        month = now.month
+        year = now.year
+        if response:
+            for item in response:
+                state = item['extensions']['state']
+                service_id = item['id']
+                title = item['title']
+                groups = []
+                for group_item in item['extensions']['groups']:
+                    groups.append(group_item)
+                if state == 2:
+                    service = models.Service.objects(
+                        service_id=service_id, month=month, year=year).first()
+                    if service:
+                        service_list_ids = service.service_list
+                        if not service_list_ids:
+                            new_service_list = models.ServiceList(
+                                state=int(state),
+                                last_state=-1,
+                                notified=False,
+                                remark="",
+                                last_time_up=datetime.datetime.now(),
+                                last_time_down=datetime.datetime.now(),
+                                minutes=0,
+                            )
+
+                            new_service_list.save()
+                            service.service_list.append(new_service_list)
+                            count_down = service.count + 1
+                            service.count = count_down
+                            service.save()
+                            time = datetime.datetime.now()
+                            format_time = time.strftime('%Y-%m-%d %H:%M')
+                            msg = "🔴" + "\nService : " + service_id + "\nState : " + \
+                                "Down" + "\nTime Down : " + format_time
+                            r = requests.post(
+                                url, headers=headers, data={'message': msg})
+                        last_service_list_id = service_list_ids[-1]
+                        service_list = models.ServiceList.objects(
+                            id=last_service_list_id.id, last_state=-1).first()
+
+                        if not service_list:
+                            new_service_list = models.ServiceList(
+                                state=int(state),
+                                last_state=-1,
+                                notified=False,
+                                remark="",
+                                last_time_up=datetime.datetime.now(),
+                                last_time_down=datetime.datetime.now(),
+                                minutes=0,
+                            )
+
+                            new_service_list.save()
+
+                            service.service_list.append(new_service_list)
+                            count_down = service.count + 1
+                            service.count = count_down
+                            service.save()
+
+                            time = datetime.datetime.now()
+                            format_time = time.strftime('%Y-%m-%d %H:%M')
+                            msg = "🔴" + "\nService : " + service_id + "\nState : " + \
+                                "Down" + "\nTime Down : " + format_time
+                            r = requests.post(
+                                url, headers=headers, data={'message': msg})
+                    else:
+                        new_service_list = models.ServiceList(
+                            state=int(state),
+                            last_state=-1,
+                            notified=False,
+                            remark="",
+                            last_time_up=datetime.datetime.now(),
+                            last_time_down=datetime.datetime.now(),
+                            minutes=0,
+                        )
+                        new_service_list.save()
+
+                        new_service = models.Service(
+                            service_id=service_id,
+                            name=title,
+                            month=month,
+                            year=year,
+                            count=1,
+                            availability=100,
+                            service_list=[
+                                new_service_list.id,
+                            ],
+                        )
+                        new_service.save()
+                elif state == 0:
+                    service = models.Service.objects(
+                        service_id=service_id, month=month, year=year).first()
+                    if service:
+                        service_list_ids = service.service_list
+                        if not service_list_ids:
+                            continue
+                        last_service_list_id = service_list_ids[-1]
+                        service_list = models.ServiceList.objects(
+                            id=last_service_list_id.id, last_state=-1).first()
+                        if service_list:
+                            last_time_down = service_list.last_time_down
+                            unix_timestamp = int(last_time_down.timestamp())
+                            minute = cal_min_down(unix_timestamp)
+                            service_list.last_state = 0
+                            service_list.minutes = minute
+                            service_list.save()
+
+                        if service_list:
+                            service = models.Service.objects(
+                                service_id=service_id, month=month, year=year).first()
+                            service_list_ids = []
+                            sum_min = 0
+
+                            for value in service.service_list:
+                                service_list_ids.append(value.id)
+
+                            query = models.ServiceList.objects(
+                                id__in=service_list_ids)
+                            matching_data = query.all()
+
+                            for data in matching_data:
+                                sum_min += data.minutes
+                            sla = float(cal_sla(month, year, sum_min))
+                            service.availability = sla
+                            service.save()
+                    else:
+                        new_service = models.Service(
+                            service_id=service_id,
+                            name=title,
+                            month=month,
+                            year=year,
+                            count=0,
+                            availability=100,
+                            groups=groups
+                        )
+                        new_service.save()
+            return response
+        else:
+            return []
+    except Exception as ex:
+        return None
+
+
 def host_down_handler():
     try:
         response = requests.get("http://localhost:3000/api/hosts")
@@ -144,19 +291,19 @@ def host_down_handler():
                         if host_list:
                             host = models.Host.objects(
                                 host_id=host_id, month=month, year=year).first()
-                            host_list_id = []
+                            host_list_ids = []
                             sum_min = 0
 
                             for value in host.host_list:
-                                host_list_id.append(value.id)
+                                host_list_ids.append(value.id)
 
                             query = models.HostList.objects(
-                                id__in=host_list_id)
+                                id__in=host_list_ids)
                             matching_data = query.all()
 
                             for data in matching_data:
                                 sum_min += data.minutes
-                            sla = int(cal_sla(month, year, sum_min))
+                            sla = float(cal_sla(month, year, sum_min))
                             host.availability = sla
                             host.save()
                     else:
@@ -221,25 +368,34 @@ def host_list():
         return None
 
 
-def service_list(api_service_url):
+def service_list():
     try:
+        service_groups = []
+        response_list = []
+        for group in service_group_list():
+            service_groups.append(group["id"])
+        
         with httpx.Client() as client:
             params = {
                 "columns": ['state', 'last_state', 'last_time_ok', 'last_time_critical', 'last_time_unknown', 'last_time_warning', 'last_state_change', 'labels', "groups", 'downtimes_with_extra_info', ],
             }
-
-            response = client.get(
-                f"{api_service_url}",
-                headers=HEADERS,
-                params=params
-            )
-
-            if response.status_code == 200:
-                response = response.json()
-                if response:
-                    return response['value']
-            else:
-                return []
+            for group_name in service_groups:
+                response = client.get(
+                    f"https://{os.environ['HOST_NAME']}/{os.environ['SITE_NAME']}/check_mk/api/1.0/domain-types/service/collections/all?query=%7B%22op%22%3A+%22%3E%3D%22%2C+%22left%22%3A+%22services.groups%22%2C+%22right%22%3A+%22{group_name}%22%7D",
+                    headers=HEADERS,
+                    params=params
+                )
+                if response.status_code == 200:
+                    response = response.json()
+                    if response:
+                        response_list.extend(response['value'])
+                else:
+                    return []
+            dict_of_objects = {}
+            for object in response_list:
+                dict_of_objects[object["id"]] = object
+            list_of_objects_without_duplicates = list(dict_of_objects.values())
+            return list_of_objects_without_duplicates
     except Exception as ex:
         return None
 
@@ -306,7 +462,25 @@ def maintain_host_list():
         with httpx.Client() as client:
             params = {}
             response = client.get(
-                f"{os.environ['IN_DOWNTIME']}",
+                f"{os.environ['HOSTS_IN_DOWNTIME']}",
+                headers=HEADERS,
+                params=params
+            )
+            if response.status_code == 200:
+                response = response.json()
+                if response:
+                    return response['value']
+            else:
+                return []
+    except Exception as ex:
+        return None
+
+def maintain_service_list():
+    try:
+        with httpx.Client() as client:
+            params = {}
+            response = client.get(
+                f"{os.environ['SERVICES_IN_DOWNTIME']}",
                 headers=HEADERS,
                 params=params
             )

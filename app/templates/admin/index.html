@@ -162,7 +162,7 @@
     </div>
   </div>
   <div id="service" class="page tab-content">
-    <div class="cards">
+    <div class="service-cards">
       <div class="card-single dark:bg-base-200 shadow-xl">
         <div>
           <h1 class="text-4xl">
@@ -197,6 +197,15 @@
             else %} - {% endif %}
           </h1>
           <span>WARN</span>
+        </div>
+      </div>
+      <div class="card-single dark:bg-base-200 shadow-xl">
+        <div>
+          <h1 class="text-4xl">
+            {% if service_summary["MAINTAIN"] %} {{ service_summary["MAINTAIN"] }} {%
+            else %} - {% endif %}
+          </h1>
+          <span>MAINTAIN</span>
         </div>
       </div>
       <div class="card-single dark:bg-base-200 shadow-xl">
@@ -238,7 +247,7 @@
       </div>
     </div>
     <div class="flex flex-col lg:flex-row md:flex-row gap-5">
-      <div class="w-full bg-light-primary rounded-md dark:bg-dark-primary">
+      <div class="w-full bg-light-primary rounded-md dark:bg-dark-primary shadow-xl overflow-x-scroll" id="elementContainerService">
         <div class="table-responsive p-3 pt-5">
           <table id="service-table" class="display" style="width: 100%">
             <thead>
@@ -272,7 +281,7 @@
                   {% elif service["extensions"]["state"] == 2 %}
                   <div class="badge badge-error pb-0.5">CRIT</div>
                   {% else %}
-                  <div class="badge badge-neutral pb-0.5">UNKNOWN</div>
+                  <div class="badge badge-primary pb-0.5">UNKNOWN</div>
                   {% endif %}
                 </td>
                 <td>-</td>

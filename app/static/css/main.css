@@ -92,6 +92,16 @@ div.dataTables_wrapper div.dataTables_filter {
   scrollbar-width: none;
 }
 
+#elementContainerService::-webkit-scrollbar {
+  display: none;
+}
+
+#elementContainerService {
+  overflow-x: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 .dataTables_paginate.paging_simple_numbers {
   width: 100%;
   display: grid;
@@ -176,6 +186,14 @@ div.dataTables_wrapper div.dataTables_filter {
   margin-bottom: 2rem;
 }
 
+.service-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(262px, 1fr));
+  grid-gap: 2rem;
+  margin: 0 auto;
+  margin-bottom: 2rem;
+}
+
 .card-single {
   display: flex;
   justify-content: space-between;
@@ -200,6 +218,9 @@ div.dataTables_wrapper div.dataTables_filter {
 .card-single:nth-child(5) {
   border-bottom: 10px solid rgb(70, 70, 70);
 }
+.card-single:nth-child(6) {
+  border-bottom: 10px solid rgb(102, 0, 255);
+}
 .card-single:hover:nth-child(1) {
   background: rgb(0, 191, 255);
 }
@@ -214,6 +235,9 @@ div.dataTables_wrapper div.dataTables_filter {
 }
 .card-single:hover:nth-child(5) {
   background: rgb(70, 70, 70);
+}
+.card-single:hover:nth-child(6) {
+  background: rgb(102, 0, 255);
 }
 
 .card-single:hover {

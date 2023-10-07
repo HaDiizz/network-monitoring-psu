@@ -198,9 +198,9 @@ $(document).ready(function () {
   $("#service-table_wrapper div.dataTables_filter").append(
     '<div class="join uppercase p-3 w-100" role="group">' +
       '<button id="btn-filter-ok-service" type="button" class="btn join-item filter-btn" data-status="OK"><i class="bx bxs-caret-up-circle text-green-500" style="font-size: 18px"></i><span class="pl-2">OK</span></button>' +
-      '<button id="btn-filter-warn" type="button" class="btn join-item filter-btn" data-status="WARN"><i class="bx bxs-caret-down-circle text-yellow-500" style="font-size: 18px"></i><span class="pl-2">WARN</span></button>' +
-      '<button id="btn-filter-crit-service" type="button" class="btn join-item filter-btn" data-status="CRIT"><i class="bx bxs-info-circle text-red-500" style="font-size: 18px"></i><span class="pl-2">CRIT</span></button>' +
-      '<button id="btn-filter-unknown-service" type="button" class="btn join-item filter-btn" data-status="UNKNOWN"><i class="bx bxs-minus-circle text-neutral-500" style="font-size: 18px"></i><span class="pl-2">UNKNOWN</span></button>' +
+      '<button id="btn-filter-warn" type="button" class="btn join-item filter-btn" data-status="WARN"><i class="bx bxs-info-circle text-yellow-500" style="font-size: 18px"></i><span class="pl-2">WARN</span></button>' +
+      '<button id="btn-filter-crit-service" type="button" class="btn join-item filter-btn" data-status="CRIT"><i class="bx bxs-caret-down-circle text-red-500" style="font-size: 18px"></i><span class="pl-2">CRIT</span></button>' +
+      '<button id="btn-filter-unknown-service" type="button" class="btn join-item filter-btn" data-status="UNKNOWN"><i class="bx bxs-minus-circle text-indigo-500" style="font-size: 18px"></i><span class="pl-2">UNKNOWN</span></button>' +
       '<button id="btn-filter-clear-service" type="button" class="btn join-item clear-btn">CLR</button>' +
       "</div>"
   );
