@@ -224,7 +224,7 @@ def sla_configuration():
     return render_template("/admin/slaConfiguration.html", title="SLA Requirements", sla_configs=sla_configs)
 
 
-@admin_module.route("/service-level-agreement/edit", methods=["POST"])
+@admin_module.route("/service-level-agreement/edit", methods=["POST", "GET"])
 @acl.roles_required("admin")
 def edit_sla_configuration():
     sla_configs = models.SLAConfig.objects()
@@ -240,8 +240,8 @@ def edit_sla_configuration():
         if year is None or year == '' or ok_status is None or ok_status == '' or warning_status is None or warning_status == '' or critical_status is None or critical_status == '':
             flash("กรุณากรอกข้อมูลให้ครบถ้วน", "error")
             return render_template("/admin/slaConfiguration.html", title="Issue Category", sla_configs=sla_configs)
-        duplicate_year = models.SLAConfig.objects(year=year)
-        if duplicate_year:
+        duplicate_year = models.SLAConfig.objects(year=year).first()
+        if duplicate_year.id != ObjectId(sla_config_id):
             flash(f"พบข้อมูลปีซ้ำซ้อน ({year})", "error")
             return render_template("/admin/slaConfiguration.html", title="SLA Requirements", sla_configs=sla_configs)
         if ok_status <= warning_status or warning_status >= ok_status or critical_status >= warning_status:
