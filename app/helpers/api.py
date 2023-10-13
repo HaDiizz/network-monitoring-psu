@@ -28,7 +28,7 @@ def service_down_handler(service_list):
         now = datetime.datetime.now()
         month = now.month
         year = now.year
-        if response:
+        if response:    
             for item in response:
                 state = item['extensions']['state']
                 service_id = item['id']
@@ -216,7 +216,8 @@ def host_down_handler():
 
                         last_host_list_id = host_list_ids[-1]
                         host_list = models.HostList.objects(
-                            id=last_host_list_id.id, last_state=-1).first()
+                            id=last_host_list_id.id, 
+                            last_state=-1).first()
 
                         if not host_list:
                             new_host_list = models.HostList(
@@ -242,6 +243,21 @@ def host_down_handler():
                                 "Down" + "\nTime Down : " + format_time
                             r = requests.post(
                                 url, headers=headers, data={'message': msg})
+                        else :
+                            time_down = host_list.last_time_down
+                            unix_timestamp = int(time_down.timestamp())
+                            minute = cal_min_down(unix_timestamp)
+
+                            if minute >= 1440 :
+                                print("Working")
+                                if host_list.last_state == -1:
+                                    print("It's fucking broken")
+                                    host_list.last_state = -2
+                                    host_list.minutes = minute
+                                    host_list.save()
+                                    msg = "🔴" + "\nHost : " + host_id + "\nไม่ต้องจ่ายเงิน"
+                                    r = requests.post(
+                                        url, headers=headers, data={'message': msg})
                     else:
                         new_host_list = models.HostList(
                             state=int(state),
@@ -278,8 +294,14 @@ def host_down_handler():
                         if not host_list_ids:
                             continue
                         last_host_list_id = host_list_ids[-1]
+
                         host_list = models.HostList.objects(
                             id=last_host_list_id.id, last_state=-1).first()
+                        
+                        if not host_list :
+                            host_list = models.HostList.objects(
+                            id=last_host_list_id.id, last_state=-2).first()
+
                         if host_list:
                             last_time_down = host_list.last_time_down
                             unix_timestamp = int(last_time_down.timestamp())
@@ -391,7 +413,7 @@ def service_list():
                         response_list.extend(response['value'])
                 else:
                     return []
-            dict_of_objects = {}
+            dict_of_objects = {}    
             for object in response_list:
                 dict_of_objects[object["id"]] = object
             list_of_objects_without_duplicates = list(dict_of_objects.values())

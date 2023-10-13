@@ -386,7 +386,7 @@ mock_host_monthly = [
     {
         "_id": 56,
         "host_id": 1,
-        "month": 9,
+        "month": 8,
         "year": 2023,
         "sla": 92
     },
@@ -397,6 +397,7 @@ mock_host_monthly = [
         "year": 2023,
         "sla": 95
     },
+
 ]
 
 mock_service_monthly = [
