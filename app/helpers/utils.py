@@ -278,11 +278,18 @@ def get_quarter_data(selected_month, selected_year):
     host_sla_first_month = []
     host_sla_second_month = []
     host_sla_third_month = []
+    host_sla_sum_first_month = 0
+    host_sla_sum_second_month = 0
+    host_sla_sum_third_month = 0
     host_ip = []
     host_count = []
     host_count_first_month = []
     host_count_second_month = []
     host_count_third_month = []
+    host_count_sum_first_month = 0
+    host_count_sum_second_month = 0
+    host_count_sum_third_month = 0
+    
 
     if end_month > 12:
         print("1")
@@ -367,13 +374,42 @@ def get_quarter_data(selected_month, selected_year):
             sla = sla / len(matching_hosts)
             host_sla.append(sla)
             host_count.append(count_down)
-       
-        
+
+        #! sum SLA and Host count down per down
+        host_count_sum_first_month = sum(host_count_first_month)
+        host_count_sum_second_month = sum(host_count_second_month)
+        host_count_sum_third_month = sum(host_count_third_month)
+        if len(host_sla_first_month) > 0 :
+            host_sla_sum_first_month = sum(host_sla_first_month) / len(host_sla_first_month)
+        if len(host_sla_second_month) > 0 :
+            host_sla_sum_second_month = sum(host_sla_second_month) / len(host_sla_second_month)
+        if len(host_sla_third_month) > 0 :
+            host_sla_sum_third_month = sum(host_sla_third_month) / len(host_sla_third_month)
+
+
 
     if avg_sla != 0:
         avg_sla = avg_sla / count
     card_title = get_name_month(selected_month, selected_year)
     print(host_name)    
     print("\n" , host_count)
-    return avg_sla, host_all_count, host_name, host_sla, host_ip, host_count, card_title, host_sla_first_month, host_sla_second_month, host_sla_third_month, host_count_first_month, host_count_second_month, host_count_third_month,
-     
+    # return avg_sla, host_all_count, host_name, host_sla, host_ip, host_count, card_title, host_sla_first_month, host_sla_second_month, 
+    return (
+        avg_sla,
+        host_all_count,
+        host_name, host_sla,
+        host_ip, host_count,
+        card_title,
+        host_sla_first_month,
+        host_sla_second_month,
+        host_sla_third_month,
+        host_count_first_month,
+        host_count_second_month,
+        host_count_third_month,
+        host_count_sum_first_month,
+        host_count_sum_second_month,
+        host_count_sum_third_month,
+        host_sla_sum_first_month,
+        host_sla_sum_second_month,
+        host_sla_sum_third_month
+    )
