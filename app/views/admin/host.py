@@ -37,6 +37,20 @@ def host_quarterly(year, month):
     host_data = {host_name[i]: {"host_name": host_name[i], "host_sla": host_sla[i],
                                 "host_ip": host_ip[i], "host_count": host_count[i]} for i in range(len(host_name))}
     
+    host_data_first_month = {host_name[i]: {"host_name": host_name[i], "host_sla": host_sla_first_month[i],
+                                "host_ip": host_ip[i], "host_count": host_count_first_month[i]} for i in range(len(host_name))} 
+    
+    if len(host_sla_second_month) == 0 :
+        host_data_second_month = {}
+    else :
+        host_data_second_month = {host_name[i]: {"host_name": host_name[i], "host_sla": host_sla_second_month[i],
+                                    "host_ip": host_ip[i], "host_count": host_count_second_month[i]} for i in range(len(host_name))} 
+    if len(host_sla_third_month) == 0 :
+        host_data_third_month = {}
+    else :
+        host_data_third_month = {host_name[i]: {"host_name": host_name[i], "host_sla": host_sla_third_month[i],
+                                    "host_ip": host_ip[i], "host_count": host_count_third_month[i]} for i in range(len(host_name))} 
+    
     # table_data = {
     #     "quarterly": {
     #         "host_data": host_data
@@ -48,7 +62,6 @@ def host_quarterly(year, month):
     #     }
     # }
     
-    print('host_data', host_data)
     
     # print('host_sla_first_month', host_sla_first_month)
     
