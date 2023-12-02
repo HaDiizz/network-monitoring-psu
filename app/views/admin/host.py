@@ -36,4 +36,20 @@ def host_quarterly(year, month):
             months[month_name_str] = str(month_number)
     host_data = {host_name[i]: {"host_name": host_name[i], "host_sla": host_sla[i],
                                 "host_ip": host_ip[i], "host_count": host_count[i]} for i in range(len(host_name))}
-    return render_template("/admin/host/quarterly.html", title="Host Quarterly", month_name=month_name, host_data=host_data, host_all_count=host_all_count, avg_sla=round(avg_sla, 2), day_data=day_data, months=months, sla_status=sla_status)
+    
+    # table_data = {
+    #     "quarterly": {
+    #         "host_data": host_data
+    #         "avg_sla": avg_sla,
+    #         "host_all_count": host_all_count,
+    #     },
+    #     "first_month": {
+    #         "host_data": host_sla_first_month
+    #     }
+    # }
+    
+    print('host_data', host_data)
+    
+    # print('host_sla_first_month', host_sla_first_month)
+    
+    return render_template("/admin/host/quarterly.html", title="Host Quarterly", month_name=month_name, host_data=host_data, host_all_count=host_all_count, avg_sla=round(avg_sla, 2), day_data=day_data, months=months, sla_status=sla_status, host_sla_first_month=host_sla_first_month, host_sla_second_month=host_sla_second_month, host_sla_third_month=host_sla_third_month, host_count_first_month=host_count_first_month, host_count_second_month=host_count_second_month, host_count_third_month=host_count_third_month, host_count_sum_first_month=host_count_sum_first_month, host_count_sum_second_month=host_count_sum_second_month, host_count_sum_third_month=host_count_sum_third_month, host_sla_sum_first_month=host_sla_sum_first_month, host_sla_sum_second_month=host_sla_sum_second_month, host_sla_sum_third_month=host_sla_sum_third_month)
