@@ -13,7 +13,7 @@ from app.views.admin.management import *
 
 @admin_module.route("/overview")
 @acl.roles_required("admin")
-@caches.cache.cached(timeout=3600, key_prefix='overview')
+# @caches.cache.cached(timeout=3600, key_prefix='overview')
 def index():
     hosts = host_list()
     services = service_list()
