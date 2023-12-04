@@ -105,7 +105,14 @@
             <i class="bx bx-home nav_icon"></i>
             <span class="nav_name">Home</span>
           </a>
-
+          <a
+            id="down-hosts-link"
+            href="{{ url_for('admin.downHosts') }}"
+            class="nav_link active"
+          >
+            <i class="bx bx-calendar-check nav_icon"></i>
+            <span class="nav_name">Down Hosts</span>
+          </a>
           <div id="ddl-host-service" class="nav_dropdown">
             <a class="nav_link">
               <i class="bx bx-line-chart nav_icon"></i>

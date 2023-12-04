@@ -1,0 +1,106 @@
+{% extends "/layouts/base.html" %} {% block content %}
+<div class="admin-container">
+  <h1 class="text-4xl font-bold pb-8">Down hosts for over 24 hours</h1>
+
+  <form id="searchForm" action="{{ url_for('admin.downHosts') }}" method="POST">
+    <div class="flex flex-col w-full lg:flex-row gap-5">
+      <div class="grid w-full flex-grow pb-5">
+        <label class="label">
+          <span class="label-text">Start Month</span>
+        </label>
+        <input
+          class="w-full"
+          type="month"
+          name="monthPickerStart"
+          id="monthPickerStart"
+          value="{{ monthPickerStart }}"
+        />
+      </div>
+      <div class="divider lg:divider-horizontal">TO</div>
+      <div class="grid w-full flex-grow pb-5">
+        <label class="label">
+          <span class="label-text">End Month</span>
+        </label>
+        <input
+          class="w-full"
+          type="month"
+          name="monthPickerEnd"
+          id="monthPickerEnd"
+          value="{{ monthPickerEnd }}"
+        />
+      </div>
+    </div>
+    <div class="flex justify-center md:justify-end pt-4">
+      <button
+        type="button"
+        id="submitButton"
+        class="btn bg-primary hover:bg-secondary dark:bg-neutral text-white w-full md:w-auto"
+      >
+        Search <i class="bx bx-search"></i>
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const currentDate = new Date();
+
+    const formattedDate = currentDate.toISOString().slice(0, 7);
+    const monthPickerStart = document.getElementById("monthPickerStart");
+    const monthPickerEnd = document.getElementById("monthPickerEnd");
+
+    const form = document.getElementById("searchForm");
+    const submitButton = document.getElementById("submitButton");
+
+    document.getElementById("monthPickerEnd").value = formattedDate;
+
+    function handleStartPickerChange() {
+      const selectedValue = monthPickerStart.value;
+
+      if (selectedValue > formattedDate) {
+        monthPickerStart.value = formattedDate;
+      }
+
+      monthPickerEnd.disabled = !selectedValue;
+
+      if (selectedValue) {
+        monthPickerEnd.min = selectedValue;
+        monthPickerEnd.style.cursor = "pointer";
+        monthPickerEnd.style.opacity = "1";
+        document.getElementById("monthPickerEnd").value = formattedDate;
+      }
+      if (!selectedValue) {
+        monthPickerEnd.style.cursor = "not-allowed";
+        monthPickerEnd.style.opacity = "0.3";
+      }
+      monthPickerStart.max = formattedDate;
+      monthPickerEnd.max = formattedDate;
+    }
+
+    monthPickerStart.addEventListener("input", handleStartPickerChange);
+    monthPickerEnd.addEventListener("input", () => {
+      const selectedStartValue = monthPickerStart.value;
+      const selectedEndValue = monthPickerEnd.value;
+      if (selectedEndValue < selectedStartValue) {
+        monthPickerEnd.value = formattedDate;
+      }
+    });
+
+    handleStartPickerChange();
+
+    submitButton.addEventListener("click", function () {
+      const formData = new FormData(form);
+
+      fetch(form.action, {
+        method: form.method,
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {})
+        .catch((error) => {});
+    });
+  });
+</script>
+
+{% endblock %}

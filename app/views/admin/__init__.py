@@ -72,3 +72,14 @@ def index():
 @admin_module.route("/test")
 def test():
     return jsonify(service_down_handler(service_list))
+
+@admin_module.route("/down-hosts", methods=["GET", "POST"])
+@acl.roles_required("admin")
+def downHosts():
+    monthPickerStart = ""
+    monthPickerEnd = ""
+    if request.method == 'POST':
+        monthPickerStart = request.form.get('monthPickerStart')
+        monthPickerEnd = request.form.get('monthPickerEnd')
+        print("Picker Month3", monthPickerStart, monthPickerEnd)
+    return render_template("/admin/downHosts.html", title="Down hosts")
