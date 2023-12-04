@@ -36,7 +36,6 @@ def host_quarterly(year, month):
             months[month_name_str] = str(month_number)
     host_data = {host_name[i]: {"host_name": host_name[i], "host_sla": '{:.4f}'.format(round( host_sla[i], 8)),
                                 "host_ip": host_ip[i], "host_count": host_count[i]} for i in range(len(host_name))}
-    
     host_data_first_month = {host_name[i]: {"host_name": host_name[i], "host_sla": '{:.4f}'.format(round( host_sla_first_month[i], 8)),
                                 "host_ip": host_ip[i], "host_count": host_count_first_month[i]} for i in range(len(host_name))} 
     
