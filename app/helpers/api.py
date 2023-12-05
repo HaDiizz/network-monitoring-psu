@@ -514,3 +514,43 @@ def maintain_service_list():
                 return []
     except Exception as ex:
         return None
+    
+def service_is_down():
+    try:
+        with httpx.Client() as client:
+            param = {
+                "columns": [ 'host_name', 'state', 'host_groups'],
+                "query": '{"op": "!=", "left": "state", "right": "0"}',
+            }
+            response = client.get(
+                f"{API_URL}/domain-types/service/collections/all"
+            )
+            if response.status_code == 200:
+                response = response.json()
+                if response:
+                    return response['value']
+            else:
+                return []
+    except Exception as ex:
+        return None
+    
+
+def host_is_down():
+    try:
+        with httpx.Client() as client:
+            param = {
+                "columns": ['name', 'state', 'last_state', 'last_time_up', 'last_time_down', 'last_time_unreachable', 'last_state_change', 'labels', "groups", 'address', ],
+                "query": '{"op": "!=", "left": "state", "right": "0"}',
+            }
+            response = client.get(
+                f"{API_URL}/domain-types/host/collections/all"
+            )
+            if response.status_code == 200:
+                response = response.json()
+                if response:
+                    return response['value']
+            else:
+                return []
+    except Exception as ex:
+        return None
+    
