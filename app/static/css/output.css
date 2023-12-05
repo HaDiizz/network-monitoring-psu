@@ -4476,3 +4476,51 @@ details.collapse summary::-webkit-details-marker {
       justify-content: flex-end;
   }
 }
+
+.stat-figure {
+  grid-column-start: 2;
+  grid-row: span 3 / span 3;
+  grid-row-start: 1;
+  place-self: center;
+  justify-self: end;
+}
+
+.text-secondary {
+  color: #456A8D;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.stroke-current {
+  stroke: currentColor;
+}
+
+.w-8 {
+  width: 2rem/* 32px */;
+}
+
+.h-8 {
+  height: 2rem/* 32px */;
+}
+
+.stroke-current {
+  stroke: currentColor;
+}
+
+.stat-desc {
+  grid-column-start: 1;
+  white-space: nowrap;
+  font-size: 0.75rem/* 12px */;
+  line-height: 1rem/* 16px */;
+  color: hsl(var(--bc) / 0.6);
+}
+
+.font-extrabold {
+  font-weight: 800;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}

@@ -4,6 +4,7 @@ from ...helpers.api import host_list, service_list, host_group, host_group_list,
 from ...helpers.utils import location_list
 from ...helpers.utils import get_host_down_over
 from app import caches
+import datetime
 
 admin_module = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -79,17 +80,21 @@ def test():
 def downHosts():
     monthPickerStart = ""
     monthPickerEnd = ""
+    current_date = datetime.datetime.now()
+    current_month = current_date.month
+    current_year = current_date.year
+    formatted_date = f"{current_year}-{current_month:02d}"
+    monthPickerStart = formatted_date
+    monthPickerEnd = formatted_date
+    start_year, start_month = map(int, formatted_date.split('-'))
+    end_year, end_month = map(int, formatted_date.split('-'))
+    host_data_down_over24, count_host_data_name, all_count_down = get_host_down_over(start_month, start_year, end_month, end_year)
     if request.method == 'POST':
         monthPickerStart = request.form.get('monthPickerStart')
         monthPickerEnd = request.form.get('monthPickerEnd')
 
         start_year, start_month = map(int, monthPickerStart.split('-'))
         end_year, end_month = map(int, monthPickerEnd.split('-'))
-        print(start_month , start_year)
-        print(end_month , end_year)
         host_data_down_over24, count_host_data_name, all_count_down = get_host_down_over(start_month, start_year, end_month, end_year)
-        # !host_data_down ข้อมูลของ host ที่ down เกิน 24 ชั่วโมง
-        # !count_host_data_name จำนวนของ host ที่ down เกิน 24 ชั่วโมง ไม่นับชื่อซ้ำ
-        #! all_count_down จำนวนทั้งหมดที่ down เกิน 24 ชั่วโมง
 
-    return render_template("/admin/downHosts.html", title="Down hosts")
+    return render_template("/admin/downHosts.html", title="Down hosts", monthPickerStart=monthPickerStart, monthPickerEnd=monthPickerEnd, host_down_list=host_data_down_over24, all_count_down=all_count_down)

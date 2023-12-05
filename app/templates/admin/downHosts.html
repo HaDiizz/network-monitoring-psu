@@ -30,9 +30,9 @@
         />
       </div>
     </div>
-    <div class="flex justify-center md:justify-end pt-4">
+    <div class="flex justify-center md:justify-end pt-4 pb-5">
       <button
-        type="button"
+        type="submit"
         id="submitButton"
         class="btn bg-primary hover:bg-secondary dark:bg-neutral text-white w-full md:w-auto"
       >
@@ -40,7 +40,69 @@
       </button>
     </div>
   </form>
+  <div class="flex justify-center md:justify-start">
+    <div class="stats items-center shadow-lg w-full md:w-auto">
+      <div class="stat">
+        <div class="stat-figure text-secondary">
+          <i
+            class="bx bx-trending-down inline-block stroke-current text-red-500"
+            style="font-size: 2.5rem"
+          ></i>
+        </div>
+        <div class="stat-title font-extrabold uppercase text-indigo-500">Total</div>
+        <div class="stat-value">{{ all_count_down }}</div>
+        <div class="stat-desc">
+          Host down over 24h {% if monthPickerStart == monthPickerEnd %}
+          in<span class="text-indigo-500 font-bold"> {{ monthPickerEnd }}</span> {% else %}
+          between<span class="text-indigo-500 font-bold"> {{ monthPickerStart }} to {{ monthPickerEnd }}</span> {%
+          endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pt-8 pb-8">
+    <div
+      class="w-full md:w-12/12 sm:w-12/12 bg-light-primary rounded-md dark:bg-dark-primary shadow-xl overflow-x-scroll"
+    >
+      <div class="table-responsive p-3 pt-5">
+        <table id="host-down-table" class="display" style="width: 100%">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Host Name</th>
+              <th>Last Time Up</th>
+              <th>Last Time Down</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for key, host in host_down_list.items() %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ host["host_name"] }}</td>
+              <td>{{ host["host_last_time_up"].strftime('%A, %B %d, %Y %I:%M %p') }}</td>
+              <td>{{ host["host_last_time_down"].strftime('%A, %B %d, %Y %I:%M %p') }}</td>
+              {% set hours = host['host_minutes'] // 60 %}
+              {% set minutes = host['host_minutes'] % 60 %}
+              <td>{{ '{:02} hours {:02} minutes'.format(hours, minutes) }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
+
+<script>
+  $(document).ready(function () {
+    $("#host-down-table").DataTable({
+      order: [[0, "asc"]],
+      dom: "Bfrtip",
+      buttons: ["copy", "csv", "excel", "print", "colvis"],
+    });
+  });
+</script>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -53,24 +115,31 @@
     const form = document.getElementById("searchForm");
     const submitButton = document.getElementById("submitButton");
 
-    document.getElementById("monthPickerEnd").value = formattedDate;
+    if (monthPickerEnd.value === "") {
+      document.getElementById("monthPickerEnd").value = formattedDate;
+    }
 
     function handleStartPickerChange() {
-      const selectedValue = monthPickerStart.value;
+      const selectedStartValue = monthPickerStart.value;
+      const selectedEndValue = monthPickerEnd.value;
 
-      if (selectedValue > formattedDate) {
+      if (selectedStartValue > selectedEndValue) {
+        monthPickerEnd.value = formattedDate
+      }
+
+      if (selectedStartValue > formattedDate) {
         monthPickerStart.value = formattedDate;
       }
 
-      monthPickerEnd.disabled = !selectedValue;
+      monthPickerEnd.disabled = !selectedStartValue;
 
-      if (selectedValue) {
-        monthPickerEnd.min = selectedValue;
+      if (selectedStartValue) {
+        monthPickerEnd.min = selectedStartValue;
         monthPickerEnd.style.cursor = "pointer";
         monthPickerEnd.style.opacity = "1";
-        document.getElementById("monthPickerEnd").value = formattedDate;
+        //document.getElementById("monthPickerEnd").value = formattedDate;
       }
-      if (!selectedValue) {
+      if (!selectedStartValue) {
         monthPickerEnd.style.cursor = "not-allowed";
         monthPickerEnd.style.opacity = "0.3";
       }
@@ -88,7 +157,7 @@
     });
 
     handleStartPickerChange();
-
+    /*
     submitButton.addEventListener("click", function () {
       const formData = new FormData(form);
 
@@ -100,6 +169,7 @@
         .then((data) => {})
         .catch((error) => {});
     });
+    */
   });
 </script>
 
