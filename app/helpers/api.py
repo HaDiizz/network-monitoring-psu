@@ -249,9 +249,7 @@ def host_down_handler():
                             minute = cal_min_down(unix_timestamp)
 
                             if minute >= 1440 :
-                                print("Working")
                                 if host_list.last_state == -1:
-                                    print("It's fucking broken")
                                     host_list.last_state = -2
                                     host_list.minutes = minute
                                     host_list.save()

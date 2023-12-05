@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, jsonify
 from ... import acl
 from ...helpers.api import host_list, service_list, host_group, host_group_list, service_group_list, maintain_host_list, maintain_service_list, service_down_handler
 from ...helpers.utils import location_list
+from ...helpers.utils import get_host_down_over
 from app import caches
 
 admin_module = Blueprint("admin", __name__, url_prefix="/admin")
@@ -72,3 +73,23 @@ def index():
 @admin_module.route("/test")
 def test():
     return jsonify(service_down_handler(service_list))
+
+@admin_module.route("/down-hosts", methods=["GET", "POST"])
+@acl.roles_required("admin")
+def downHosts():
+    monthPickerStart = ""
+    monthPickerEnd = ""
+    if request.method == 'POST':
+        monthPickerStart = request.form.get('monthPickerStart')
+        monthPickerEnd = request.form.get('monthPickerEnd')
+
+        start_year, start_month = map(int, monthPickerStart.split('-'))
+        end_year, end_month = map(int, monthPickerEnd.split('-'))
+        print(start_month , start_year)
+        print(end_month , end_year)
+        host_data_down_over24, count_host_data_name, all_count_down = get_host_down_over(start_month, start_year, end_month, end_year)
+        # !host_data_down ข้อมูลของ host ที่ down เกิน 24 ชั่วโมง
+        # !count_host_data_name จำนวนของ host ที่ down เกิน 24 ชั่วโมง ไม่นับชื่อซ้ำ
+        #! all_count_down จำนวนทั้งหมดที่ down เกิน 24 ชั่วโมง
+
+    return render_template("/admin/downHosts.html", title="Down hosts")

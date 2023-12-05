@@ -1,6 +1,7 @@
 @import url("./loader.css");
 @import url("./variables.css");
 @import url("./navigation.css");
+@import url("./monthPicker.css");
 
 * {
   box-sizing: border-box;
