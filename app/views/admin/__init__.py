@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, jsonify
 from ... import acl
-from ...helpers.api import host_list, service_list, host_group, host_group_list, service_group_list, maintain_host_list, maintain_service_list, service_down_handler
+from ...helpers.api import host_list, service_list, host_group, host_group_list, service_group_list, maintain_host_list, maintain_service_list, service_down_handler, service_is_down, host_is_down
 from ...helpers.utils import location_list
 from ...helpers.utils import get_host_down_over
 from app import caches
@@ -73,7 +73,11 @@ def index():
 
 @admin_module.route("/test")
 def test():
-    return jsonify(service_down_handler(service_list))
+    service_down_list = service_is_down()
+    # ! ถ้าอยากดูข้อมูล service_down_list ให้ uncomment
+    # return jsonify(service_is_down())
+    # return jsonify(host_is_down())
+    return jsonify(service_down_handler(service_down_list))
 
 @admin_module.route("/down-hosts", methods=["GET", "POST"])
 @acl.roles_required("admin")
