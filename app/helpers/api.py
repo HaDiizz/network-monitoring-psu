@@ -556,3 +556,24 @@ def host_is_down():
     except Exception as ex:
         return None
     
+    
+def ap_aruba():
+    try:
+        with httpx.Client() as client:
+            params = {
+                "query": '{"op":"=","left":"hosts.name","right":"Aruba-Controller"}',
+                "columns": [ 'name', 'state', 'groups','services_with_info',],
+            }
+            response = client.get(
+                f"{API_URL}/domain-types/host/collections/all",
+                headers=HEADERS,
+                params=params
+            )
+            if response.status_code == 200:
+                response = response.json()
+                if response:
+                    return response['value']
+            else:
+                return []
+    except Exception as ex:
+        return None
