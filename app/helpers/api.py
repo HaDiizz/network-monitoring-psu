@@ -557,11 +557,11 @@ def host_is_down():
         return None
     
     
-def ap_aruba():
+def check_access_point():
     try:
         with httpx.Client() as client:
             params = {
-                "query": '{"op":"=","left":"hosts.name","right":"Aruba-Controller"}',
+                "query": '{"op":"or", "expr": [{"op":"=","left":"hosts.name","right":"WLC"}, {"op":"=","left":"hosts.name","right":"Aruba-Controller"} ]}',
                 "columns": [ 'name', 'state', 'groups','services_with_info',],
             }
             response = client.get(
