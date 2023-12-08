@@ -11,6 +11,8 @@ from .oauth2 import OAuth2Token
 from .sla_config import SLAConfig
 from .services import Service
 from .services import ServiceList
+from .accesspoints import AccessPoint
+from .accesspoints import AccessPointList
 
 def init_mongoengine(server):
     server.config['MONGODB_SETTINGS'] = {

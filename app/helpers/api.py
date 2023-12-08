@@ -22,6 +22,151 @@ headers = {'content-type': 'application/x-www-form-urlencoded',
         'Authorization': 'Bearer ' + line_noti_token}
 
 
+def ap_down_handler(ap_list):
+    try:
+        response = ap_list()
+        now = datetime.datetime.now()
+        month = now.month
+        year = now.year
+        if response:    
+            for item in response:
+                state = item['state']
+                ap_name = item['ap_name']
+                lat = item['lat']
+                lng = item['lng']
+                group = item['group']
+                if state == 2:
+                    accessPoint = models.AccessPoint.objects(
+                        name=ap_name, month=month, year=year).first()
+                    if accessPoint:
+                        accessPoint_list_ids = accessPoint.ap_list
+                        if not accessPoint_list_ids:
+                            new_ap_list = models.AccessPointList(
+                                state=int(state),
+                                last_state=-1,
+                                notified=False,
+                                remark="",
+                                last_time_up=datetime.datetime.now(),
+                                last_time_down=datetime.datetime.now(),
+                                minutes=0,
+                            )
+
+                            new_ap_list.save()
+                            accessPoint.ap_list.append(new_ap_list)
+                            count_down = accessPoint.count + 1
+                            accessPoint.count = count_down
+                            accessPoint.save()
+                            time = datetime.datetime.now()
+                            format_time = time.strftime('%Y-%m-%d %H:%M')
+                            msg = "🔴" + "\nAccessPoint : " + ap_name + "\nState : " + \
+                                "Down" + "\nTime Down : " + format_time
+                            r = requests.post(
+                                url, headers=headers, data={'message': msg})
+                        last_accessPoint_list_id = accessPoint_list_ids[-1]
+                        accessPoint_list = models.AccessPointList.objects(
+                            id=last_accessPoint_list_id.id, last_state=-1).first()
+
+                        if not accessPoint_list:
+                            new_accessPoint_list = models.AccessPointList(
+                                state=int(state),
+                                last_state=-1,
+                                notified=False,
+                                remark="",
+                                last_time_up=datetime.datetime.now(),
+                                last_time_down=datetime.datetime.now(),
+                                minutes=0,
+                            )
+
+                            new_accessPoint_list.save()
+
+                            accessPoint.ap_list.append(new_accessPoint_list)
+                            count_down = accessPoint.count + 1
+                            accessPoint.count = count_down
+                            accessPoint.save()
+
+                            time = datetime.datetime.now()
+                            format_time = time.strftime('%Y-%m-%d %H:%M')
+                            msg = "🔴" + "\nAccessPoint : " + ap_name + "\nState : " + \
+                                "Down" + "\nTime Down : " + format_time
+                            r = requests.post(
+                                url, headers=headers, data={'message': msg})
+                    else:
+                        new_accessPoint_list = models.AccessPointList(
+                            state=int(state),
+                            last_state=-1,
+                            notified=False,
+                            remark="",
+                            last_time_up=datetime.datetime.now(),
+                            last_time_down=datetime.datetime.now(),
+                            minutes=0,
+                        )
+                        new_accessPoint_list.save()
+
+                        new_accessPoint = models.AccessPoint(
+                            name=ap_name,
+                            month=month,
+                            year=year,
+                            count=1,
+                            availability=100,
+                            ap_list=[
+                                new_accessPoint_list.id,
+                            ],
+                            group=group
+                        )
+                        new_accessPoint.save()
+                elif state == 0:
+                    accessPoint = models.AccessPoint.objects(
+                        name=ap_name, month=month, year=year).first()
+                    if accessPoint:
+                        accessPoint_list_ids = accessPoint.ap_list
+                        if not accessPoint_list_ids:
+                            continue
+                        last_accessPoint_list_id = accessPoint_list_ids[-1]
+                        accessPoint_list = models.AccessPointList.objects(
+                            id=last_accessPoint_list_id.id, last_state=-1).first()
+                        if accessPoint_list:
+                            last_time_down = accessPoint_list.last_time_down
+                            unix_timestamp = int(last_time_down.timestamp())
+                            minute = cal_min_down(unix_timestamp)
+                            accessPoint_list.last_state = 0
+                            accessPoint_list.minutes = minute
+                            accessPoint_list.save()
+
+                        if accessPoint_list:
+                            accessPoint = models.AccessPoint.objects(
+                                name=ap_name, month=month, year=year).first()
+                            accessPoint_list_ids = []
+                            sum_min = 0
+
+                            for value in accessPoint.ap_list:
+                                accessPoint_list_ids.append(value.id)
+
+                            query = models.AccessPointList.objects(
+                                id__in=accessPoint_list_ids)
+                            matching_data = query.all()
+
+                            for data in matching_data:
+                                sum_min += data.minutes
+                            sla = float(cal_sla(month, year, sum_min))
+                            accessPoint.availability = sla
+                            accessPoint.save()
+                    else:
+                        new_accessPoint = models.AccessPoint(
+                            name=ap_name,
+                            month=month,
+                            year=year,
+                            count=0,
+                            availability=100,
+                            group=group
+                        )
+                        new_accessPoint.save()
+            return response
+        else:
+            return []
+    except Exception as ex:
+        return None
+
+
 def service_down_handler(service_list):
     try:
         # response = service_list()
@@ -562,6 +707,7 @@ def check_access_point():
         with httpx.Client() as client:
             params = {
                 "query": '{"op":"or", "expr": [{"op":"=","left":"hosts.name","right":"WLC"}, {"op":"=","left":"hosts.name","right":"Aruba-Controller"} ]}',
+                # "query": '{"op":"=","left":"hosts.name","right":"Aruba-Controller"}',
                 "columns": [ 'name', 'state', 'groups','services_with_info',],
             }
             response = client.get(

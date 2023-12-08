@@ -20,8 +20,7 @@ def status_list():
         'COMPLETED',
         'REJECTED',
     ]
-
-
+    
 @caches.cache.cached(timeout=3600, key_prefix='location_list')
 def location_list():
     return models.Location.objects().order_by("name")
@@ -507,5 +506,43 @@ def get_host_down_over(start_month, start_year, end_month, end_year) :
             all_count_down
     )
     
+
+def get_all_ap_list(ap_prop):
+    get_ap_list = ap_prop
+    ap_list = []
+    location_data = []
+    for location in location_list():
+        location_data.append({
+            "location_id": location.location_id,
+            "lat": location.lat,
+            "lng": location.lng,
+        })
+    for item in get_ap_list:
+        for item in item["extensions"]["services_with_info"]:
+            if item[0].startswith("AP"):
+                ap_name = item[0].split()[1]
+                found_location = False
+                default_lat = 7.0088136
+                default_lng = 100.498062
+                for location in location_data:
+                    if location["location_id"] in ap_name:
+                        ap_list.append({
+                            "ap_name": item[0],
+                            "state": item[1],
+                            "lat": location["lat"],
+                            "lng": location["lng"],
+                            "group": location["location_id"]
+                        })
+                        found_location = True
+                        break
+                if not found_location :
+                    ap_list.append({
+                        "ap_name": item[0],
+                        "state": item[1],
+                        "lat": default_lat,
+                        "lng": default_lng,
+                        "group": ""
+                    })
+    return ap_list
 
 

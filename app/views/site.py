@@ -3,8 +3,8 @@ from .. import forms
 from flask_login import login_user, login_required, logout_user, current_user
 from .. import models
 import mongoengine as me
-from ..helpers.utils import location_list
-from ..helpers.api import host_list, get_host_markers
+from ..helpers.utils import location_list, get_all_ap_list
+from ..helpers.api import host_list, get_host_markers, check_access_point
 from .. import oauth2
 import datetime
 
@@ -28,9 +28,13 @@ def index():
     return render_template("index.html", title="หน้าหลัก", location_list=location_list(), host_list=hosts)
 
 
-@module.route('/get-hosts')
+@module.route('/get-aps')
 def get_hosts():
-    return jsonify(get_host_markers())
+    get_ap_data = check_access_point()
+    result = get_all_ap_list(get_ap_data)
+
+    # return jsonify(get_host_markers())
+    return jsonify(result)
 
 
 @module.route('/get-host/<string:host_id>')

@@ -267,9 +267,9 @@ div.dataTables_wrapper div.dataTables_filter {
 }
 
 /* Graph Plotly */
-#host-graph-detail {
+#ap-graph-detail {
   display: grid;
 }
-#host-plotly-graph {
+#ap-plotly-graph {
   place-self: center;
 }

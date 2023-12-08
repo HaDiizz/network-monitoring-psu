@@ -40,12 +40,23 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='node_modules/leaflet.locatecontrol/dist/L.Control.Locate.min.css') }}"
     />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='node_modules/leaflet.markercluster/dist/MarkerCluster.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css') }}"
+    />
 
     <script src="{{ url_for('static', filename='node_modules/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='node_modules/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ url_for('static', filename='src/dataTable/buttons_datatables.min.js') }}"></script>
     <script src="{{ url_for('static', filename='node_modules/leaflet/dist/leaflet.js') }}"></script>
     <script src="{{ url_for('static', filename='node_modules/leaflet.locatecontrol/dist/L.Control.Locate.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='node_modules/leaflet.markercluster/dist/leaflet.markercluster-src.js') }}"></script>
+    <script src="{{ url_for('static', filename='node_modules/leaflet.markercluster/dist/leaflet.markercluster.js') }}"></script>
+    <!-- <script src="{{ url_for('static', filename='node_modules/leaflet.markercluster/src/MarkerCluster.js') }}"></script> -->
     <script src="https://cdn.plot.ly/plotly-2.26.0.min.js" charset="utf-8"></script>
     <script src="{{ url_for('static', filename='utils/handleLimitLength.js') }}"></script>
   

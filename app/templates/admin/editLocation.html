@@ -19,6 +19,12 @@
       <div id="map"></div>
     </div>
     <div class="form-control w-full pb-3">
+      <label for="{{ form.location_id.id }}" class="label">
+        <span class="label-text">{{ form.location_id.label }}</span>
+      </label>
+      {{ form.location_id() }}
+    </div>
+    <div class="form-control w-full pb-3">
       <label for="{{ form.name.id }}" class="label">
         <span class="label-text">{{ form.name.label }}</span>
       </label>

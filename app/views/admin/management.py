@@ -6,7 +6,7 @@ from ... import acl
 from ... import models
 from ... import forms
 from ...helpers.utils import status_list
-
+import mongoengine as me
 
 @admin_module.route("/locations")
 @acl.roles_required("admin")
@@ -32,46 +32,53 @@ def delete_location(location_id):
 def create_location():
     form = forms.LocationForm()
     if request.method == 'POST':
+        location_id = request.form.get('location_id')
         name = request.form.get('name')
         lat = request.form.get('lat')
         lng = request.form.get('lng')
-        if name == '' or lat == '' or lng == '':
+        if name == '' or lat == '' or lng == '' or location_id == '':
             flash("กรุณาใส่ข้อมูลให้ครบถ้วน", "error")
             return render_template("/admin/createLocation.html", title="Create Location", form=form)
-        existing_location = models.Location.objects(name=name).first()
+        existing_location = models.Location.objects.filter(me.Q(name=name) | me.Q(location_id=location_id)).first()
         if existing_location:
             flash("ชื่อสถานที่นี้มีอยู่แล้ว", "error")
             return render_template("/admin/createLocation.html", title="Create Location", form=form)
         location = models.Location(
+            location_id=location_id,
             name=name,
             lat=round(float(lat), 6),
             lng=round(float(lng), 6),
         )
         location.save()
+        form.location_id.data = ""
         form.name.data = ""
+        form.lat.data = ""
+        form.lng.data = ""
         flash("เพิ่มข้อมูลสำเร็จ", "success")
     return render_template("/admin/createLocation.html", title="Create Location", form=form)
 
 
-@admin_module.route("/locations/edit/<string:location_id>", methods=["GET", "POST"])
+@admin_module.route("/locations/edit/<string:location_id_prop>", methods=["GET", "POST"])
 @acl.roles_required("admin")
-def edit_location(location_id):
-    location = models.Location.objects.with_id(location_id)
+def edit_location(location_id_prop):
+    location = models.Location.objects.with_id(location_id_prop)
     if not location:
         flash('ไม่พบข้อมูลที่ต้องการ', 'error')
         return redirect(url_for('admin.location'))
     form = forms.LocationForm(obj=location)
     if request.method == 'POST':
+        location_id = request.form.get('location_id')
         name = request.form.get('name')
         lat = request.form.get('lat')
         lng = request.form.get('lng')
-        if name == '' or lat == '' or lng == '':
+        if name == '' or lat == '' or lng == '' or location_id == '':
             flash("กรุณาใส่ข้อมูลให้ครบถ้วน", "error")
             return render_template("/admin/editLocation.html", title="Edit Location", form=form)
-        existing_location = models.Location.objects(name=name).first()
-        if existing_location and existing_location.id != ObjectId(location_id):
+        existing_location = models.Location.objects.filter(me.Q(name=name) | me.Q(location_id=location_id)).first()
+        if existing_location and existing_location.id != ObjectId(location_id_prop):
             flash("ชื่อสถานที่นี้มีอยู่แล้ว", "error")
             return render_template("/admin/editLocation.html", title="Edit Location", form=form)
+        location.location_id = location_id
         location.name = name
         location.lat = round(float(lat), 6)
         location.lng = round(float(lng), 6)
