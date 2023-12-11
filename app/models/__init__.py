@@ -7,6 +7,7 @@ from .reports import Report
 from .categories import Category
 from .hosts import Host
 from .hosts import HostList
+from .hosts import HostDown
 from .oauth2 import OAuth2Token
 from .sla_config import SLAConfig
 from .services import Service

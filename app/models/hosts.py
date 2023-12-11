@@ -2,6 +2,11 @@ import mongoengine as me
 import datetime
 
 
+class HostDown(me.Document):
+    host_id = me.StringField(required=True)
+    last_time_down = me.DateTimeField()
+
+
 class HostList(me.Document):
     state = me.IntField(required=True)
     last_state = me.IntField(required=True)
@@ -39,10 +44,6 @@ class Host(me.Document):
     updated_date = me.DateTimeField(
         required=True, default=datetime.datetime.now, auto_now=True
     )
-
-    class HostDown(me.Document):
-        host_id = me.StringField(required=True)
-        last_time_down = me.DateTimeField()
 
     def save(self, *args, **kwargs):
         self.updated_date = datetime.datetime.now
