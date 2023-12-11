@@ -40,6 +40,10 @@ class Host(me.Document):
         required=True, default=datetime.datetime.now, auto_now=True
     )
 
+    class HostDown(me.Document):
+        host_id = me.StringField(required=True)
+        last_time_down = me.DateTimeField()
+
     def save(self, *args, **kwargs):
         self.updated_date = datetime.datetime.now
         return super(Host, self).save(*args, **kwargs)
