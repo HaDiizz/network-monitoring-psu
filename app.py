@@ -6,6 +6,6 @@ scheduler = BackgroundScheduler()
 
 if __name__ == '__main__':
     with server.app_context():
-        scheduler.add_job(host_down_handler, 'interval', seconds=30)
+        scheduler.add_job(host_down_handler, 'interval', seconds=10)
         scheduler.start()
         server.run(debug=True)

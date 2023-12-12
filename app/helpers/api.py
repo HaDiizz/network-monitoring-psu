@@ -737,14 +737,21 @@ def get_host_down(response, month, year, hostdown_in_db, hostdown_now) :
                 if host:
                         last_id = []
                         host_list_ids = host.host_list
-                        for i in host_list_ids :
-                            last_id.append(i)
-                        serach_id = last_id[-1]
                         
-                        print(serach_id)
+                        # if not host.host_list:
+                        #     continue
+
+                        # else :
+                            
+                        #     serach_id = host_list_ids[-1]
                         
+                        #     host_list = models.HostList.objects(
+                        #         id=serach_id.id).first()
+                            
+                        #     if host_list.state == 1 :
+                        #         print()
+
                         if not host_list_ids:
-                            print("if not 1")
                             new_host_list = models.HostList(
                                 state=int(state),
                                 last_state=-1,
@@ -754,30 +761,28 @@ def get_host_down(response, month, year, hostdown_in_db, hostdown_now) :
                                 last_time_down=datetime.datetime.now(),
                                 minutes=0,
                             )
-                            print("EEEEEE")
+                            
                             new_host_list.save()
                             host.host_list.append(new_host_list)
                             count_down = host.count + 1
                             host.count = count_down
                             host.save()
                             
-                            print("QQQQQ")
+                            
                             time = datetime.datetime.now()
                             format_time = time.strftime('%Y-%m-%d %H:%M')
                             msg = "🔴" + "\nHost : " + host_id + "\nState : " + \
                                 "Down" + "\nTime Down : " + format_time
                             r = requests.post(
                                 url, headers=headers, data={'message': msg})
-                            print("1")
-                            print(format_time, host_id)
-                            print(headers)
+                            
                         last_host_list_id = host_list_ids[-1]
                         host_list = models.HostList.objects(
                             id=last_host_list_id.id, 
                             last_state=-1).first()
 
                         if not host_list:
-                            print("if not 2")
+                            
                             new_host_list = models.HostList(
                                 state=int(state),
                                 last_state=-1,
@@ -801,9 +806,7 @@ def get_host_down(response, month, year, hostdown_in_db, hostdown_now) :
                                 "Down" + "\nTime Down : " + format_time
                             r = requests.post(
                                 url, headers=headers, data={'message': msg})
-                            print("2")
-                            print(format_time, host_id)
-                            print(headers)
+                            
                         else :
                             print("else")
                             time_down = host_list.last_time_down
@@ -848,6 +851,13 @@ def get_host_down(response, month, year, hostdown_in_db, hostdown_now) :
                         ],
                     )
                     new_host.save()
+
+                    time = datetime.datetime.now()
+                    format_time = time.strftime('%Y-%m-%d %H:%M')
+                    msg = "🔴" + "\nHost : " + host_id + "\nState : " + \
+                        "Down" + "\nTime Down : " + format_time
+                    r = requests.post(
+                        url, headers=headers, data={'message': msg})
 
     #Start Here
     all_host = models.HostDown.objects.all()   
