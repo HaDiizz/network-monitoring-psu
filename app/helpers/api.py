@@ -703,7 +703,6 @@ def get_host_all(response, month, year) :
                             groups=groups
                         )
                         new_host.save()
-    print("It's Working !!!")
 
 def get_host_down(response, month, year, hostdown_in_db, hostdown_now) :
     
@@ -738,18 +737,6 @@ def get_host_down(response, month, year, hostdown_in_db, hostdown_now) :
                         last_id = []
                         host_list_ids = host.host_list
                         
-                        # if not host.host_list:
-                        #     continue
-
-                        # else :
-                            
-                        #     serach_id = host_list_ids[-1]
-                        
-                        #     host_list = models.HostList.objects(
-                        #         id=serach_id.id).first()
-                            
-                        #     if host_list.state == 1 :
-                        #         print()
 
                         if not host_list_ids:
                             new_host_list = models.HostList(
@@ -808,7 +795,7 @@ def get_host_down(response, month, year, hostdown_in_db, hostdown_now) :
                                 url, headers=headers, data={'message': msg})
                             
                         else :
-                            print("else")
+                            
                             time_down = host_list.last_time_down
                             unix_timestamp = int(time_down.timestamp())
                             minute = cal_min_down(unix_timestamp)
@@ -821,9 +808,7 @@ def get_host_down(response, month, year, hostdown_in_db, hostdown_now) :
                                     msg = "🔴" + "\nHost : " + host_id + "\nไม่ต้องจ่ายเงิน"
                                     r = requests.post(
                                         url, headers=headers, data={'message': msg})
-                                    print("3")
-                                    print(format_time, host_id)
-                                    print(headers)
+                        
                             if minute >= 1440 :
                                 host_list.minutes = minute
                 else:
