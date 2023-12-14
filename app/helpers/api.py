@@ -1600,3 +1600,25 @@ def check_access_point():
                 return []
     except Exception as ex:
         return None
+    
+def access_point_is_down():
+    try:
+        with httpx.Client() as client:
+            params = {
+                "query": '{"op": "and", "expr": [{"op":"or", "expr": [{"op":"=","left":"services.host_name","right":"WLC"}, {"op":"=","left":"services.host_name","right":"Aruba-Controller"} ]},{"op": "!=", "left": "services.state", "right":"0"}]}',
+                "columns": [ 'host_name', 'state','description'],
+            }
+            response = client.get(
+                f"{API_URL}/domain-types/service/collections/all",
+                headers=HEADERS,
+                params=params
+            )
+            if response.status_code == 200:
+                response = response.json()
+                if response:
+                    return response['value']
+            else:
+                return []
+    except Exception as ex:
+        return None
+    
