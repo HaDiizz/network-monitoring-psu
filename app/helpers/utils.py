@@ -435,77 +435,6 @@ def search_month_another_year (start_month, start_year, end_month, end_year):
         
         return query
 
-def get_host_down_over24h(start_month, start_year, end_month, end_year) :
-
-    host_data_down_over24 = {}
-    host_down_over = []
-    host_list_id = []
-    host_data_name = []
-    host_data_minutes = []
-    host_data_last_time_down = []
-    host_data_last_time_up = []
-    unique_count_host_data_name = 0 
-    all_count_down = 0
-
-    if start_year == end_year :
-        query = search_month_same_year (start_month, start_year, end_month)
-        host = query.all()
-
-        if host :
-            for hosts in host:
-                for value in hosts.host_list:
-                    if value.last_state == -2:
-                        host_list_id.append(value.id)
-                        host_data_name.append(hosts.host_id)
-                    
-
-            query = models.HostList.objects(id__in=host_list_id)
-            for host_data in query :
-                host_data_minutes.append(host_data.minutes)
-                host_data_last_time_down.append(host_data.last_time_down)
-                host_data_last_time_up.append(host_data.last_time_up)
-            
-            
-            host_data_down_over24 = {i: {"host_name": host_data_name[i], "host_minutes": host_data_minutes[i],
-                                "host_last_time_down": host_data_last_time_down[i], "host_last_time_up": host_data_last_time_up[i]} for i in range(len(host_data_name))}
-            
-            unique_host_data_name = set(host_data_name)
-            unique_count_host_data_name = len(unique_host_data_name)
-            all_count_down = len(host_data_name)
-
-    else :
-        query = search_month_another_year (start_month, start_year, end_month, end_year)
-        host = query.all()
-
-        if host :
-            for hosts in host:
-                for value in hosts.host_list:
-                    if value.last_state == -2:
-                        host_list_id.append(value.id)
-                        host_data_name.append(hosts.host_id)
-                    
-
-            query = models.HostList.objects(id__in=host_list_id)
-            for host_data in query :
-                host_data_minutes.append(host_data.minutes)
-                host_data_last_time_down.append(host_data.last_time_down)
-                host_data_last_time_up.append(host_data.last_time_up)
-            
-            
-            host_data_down_over24 = {i: {"host_name": host_data_name[i], "host_minutes": host_data_minutes[i],
-                                "host_last_time_down": host_data_last_time_down[i], "host_last_time_up": host_data_last_time_up[i]} for i in range(len(host_data_name))}
-            
-            unique_host_data_name = set(host_data_name)
-            unique_count_host_data_name = len(unique_host_data_name)
-            all_count_down = len(host_data_name)
-
-
-    return (
-            host_data_down_over24,
-            unique_count_host_data_name,
-            all_count_down
-    )
-
 def get_host_down_select_time(start_month, start_year, end_month, end_year, select_time) :
 
     host_data_down_select = {}
@@ -526,9 +455,22 @@ def get_host_down_select_time(start_month, start_year, end_month, end_year, sele
             for hosts in host:
                 for value in hosts.host_list:
                     if value.last_state == 0:
-                        if int(value.minutes / 60) == select_time :
-                            host_list_id.append(value.id)
-                            host_data_name.append(hosts.host_id)
+
+                        if select_time >= 15 and  select_time < 60 :
+                            if value.minutes >= select_time and value.minutes < select_time * 2 :
+                                host_list_id.append(value.id)
+                                host_data_name.append(hosts.host_id)    
+
+                        elif select_time == 60 :
+                            if value.minutes >= select_time and value.minutes < 180 :
+                                host_list_id.append(value.id)
+                                host_data_name.append(hosts.host_id)
+
+                        elif select_time >= 180 :
+                            if value.minutes >= select_time and value.minutes < select_time * 2 :
+                                host_list_id.append(value.id)
+                                host_data_name.append(hosts.host_id)      
+
                     
 
             query = models.HostList.objects(id__in=host_list_id)
@@ -553,9 +495,21 @@ def get_host_down_select_time(start_month, start_year, end_month, end_year, sele
             for hosts in host:
                 for value in hosts.host_list:
                     if value.last_state == 0:
-                        if int(value.minutes / 60) == select_time :
-                            host_list_id.append(value.id)
-                            host_data_name.append(hosts.host_id)
+
+                        if select_time >= 15 and  select_time < 60 :
+                            if value.minutes >= select_time and value.minutes < select_time * 2 :
+                                host_list_id.append(value.id)
+                                host_data_name.append(hosts.host_id)    
+
+                        elif select_time == 60 :
+                            if value.minutes >= select_time and value.minutes < 180 :
+                                host_list_id.append(value.id)
+                                host_data_name.append(hosts.host_id)
+
+                        elif select_time >= 180 :
+                            if value.minutes >= select_time and value.minutes < select_time * 2 :
+                                host_list_id.append(value.id)
+                                host_data_name.append(hosts.host_id)    
                     
 
             query = models.HostList.objects(id__in=host_list_id)
