@@ -2,10 +2,15 @@ import mongoengine as me
 import datetime
 
 
+class AccessPointDown(me.Document):
+    accessPoint_id = me.StringField(required=True)
+    last_time_down = me.DateTimeField()
+
+
 class AccessPointList(me.Document):
     state = me.IntField(required=True)
     last_state = me.IntField(required=True)
-    notified = me.BooleanField(required=True)
+    # notified = me.BooleanField(required=True)
     remark = me.StringField(default="")
     last_time_up = me.DateTimeField(required=True)
     last_time_down = me.DateTimeField()
@@ -22,7 +27,8 @@ class AccessPointList(me.Document):
 
 
 class AccessPoint(me.Document):
-    ap_list = me.ListField(me.ReferenceField(AccessPointList, lazy=True))
+    accessPoint_id = me.StringField(required=True)
+    accessPoint_list = me.ListField(me.ReferenceField(AccessPointList, lazy=True))
     group = me.StringField()
     name = me.StringField(required=True)
     month = me.IntField(required=True)

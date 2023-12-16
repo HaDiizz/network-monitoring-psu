@@ -4,7 +4,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 from .. import models
 import mongoengine as me
 from ..helpers.utils import location_list, get_all_ap_list
-from ..helpers.api import host_list, get_host_markers, check_access_point
+from ..helpers.api import host_list, get_host_markers, check_access_point, access_point_list
 from .. import oauth2
 import datetime
 
@@ -30,7 +30,7 @@ def index():
 
 @module.route('/get-aps')
 def get_hosts():
-    get_ap_data = check_access_point()
+    get_ap_data = access_point_list()
     result = get_all_ap_list(get_ap_data)
 
     # return jsonify(get_host_markers())

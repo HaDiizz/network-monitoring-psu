@@ -590,31 +590,34 @@ def get_all_ap_list(ap_prop):
             "lng": location.lng,
         })
     for item in get_ap_list:
-        for item in item["extensions"]["services_with_info"]:
-            if item[0].startswith("AP"):
-                ap_name = item[0].split()[1]
-                found_location = False
-                default_lat = 7.0088136
-                default_lng = 100.498062
-                for location in location_data:
-                    if location["location_id"] in ap_name:
-                        ap_list.append({
-                            "ap_name": item[0],
-                            "state": item[1],
-                            "lat": location["lat"],
-                            "lng": location["lng"],
-                            "group": location["location_id"]
-                        })
-                        found_location = True
-                        break
-                if not found_location :
+        if item["extensions"]["description"].startswith("AP"):
+            name = item["extensions"]["description"].split()[1]
+            state = int(item["extensions"]["state"])
+            accessPoint_id = item["id"]
+            found_location = False
+            default_lat = 7.0088136
+            default_lng = 100.498062
+            for location in location_data:
+                if name.startswith(location["location_id"]):
                     ap_list.append({
-                        "ap_name": item[0],
-                        "state": item[1],
-                        "lat": default_lat,
-                        "lng": default_lng,
-                        "group": ""
+                        "accessPoint_id": accessPoint_id,
+                        "name": name,
+                        "state": state,
+                        "lat": location["lat"],
+                        "lng": location["lng"],
+                        "group": location["location_id"]
                     })
+                    found_location = True
+                    break
+            if not found_location :
+                ap_list.append({
+                    "accessPoint_id": accessPoint_id,
+                    "name": name,
+                    "state": state,
+                    "lat": default_lat,
+                    "lng": default_lng,
+                    "group": ""
+                })
     return ap_list
 
 

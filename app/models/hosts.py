@@ -36,9 +36,9 @@ class Host(me.Document):
     year = me.IntField(required=True)
     count = me.IntField(required=True)
     availability = me.FloatField(required=True)
-    # coordinates = me.GeoPointField(required=True)
-    # floor = me.StringField(required=True)
-    # room = me.StringField(required=True)
+    coordinates = me.GeoPointField(required=True)
+    floor = me.StringField(required=True, default="")
+    room = me.StringField(required=True, default="")
     created_date = me.DateTimeField(
         required=True, default=datetime.datetime.now)
     updated_date = me.DateTimeField(

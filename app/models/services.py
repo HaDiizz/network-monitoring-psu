@@ -2,10 +2,15 @@ import mongoengine as me
 import datetime
 
 
+class ServiceDown(me.Document):
+    service_id = me.StringField(required=True)
+    last_time_down = me.DateTimeField()
+
+
 class ServiceList(me.Document):
     state = me.IntField(required=True)
     last_state = me.IntField(required=True)
-    notified = me.BooleanField(required=True)
+    # notified = me.BooleanField(required=True)
     remark = me.StringField(default="")
     last_time_up = me.DateTimeField(required=True)
     last_time_down = me.DateTimeField()

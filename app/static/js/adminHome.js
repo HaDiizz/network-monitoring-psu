@@ -102,7 +102,7 @@ L.control
   async function showAPModal(ap) {
     const modal = document.getElementById("ap-modal");
     const modalInfo = document.getElementById("ap-info");
-    const apName = ap.ap_name;
+    const apName = ap.name;
   
     // await fetch(`/get-ap/${apName}`)
     //   .then((response) => response.json())
@@ -134,13 +134,13 @@ L.control
     //     Plotly.newPlot("ap-plotly-graph", dataGraph, layout);
     //   });
     modalInfo.style.display = "inherit";
-    modal.querySelector("#ap-title").innerHTML = `${ap.ap_name}`;
+    modal.querySelector("#ap-title").innerHTML = `${ap.name}`;
     modal.querySelector("#ap-info-detail").innerHTML = `
       <div class="flex flex-col gap-5">
         <div class="flex-row">
           <span class="font-semibold">AP name</span>
           <span>:</span>
-          <span>${ap.ap_name}</span>
+          <span>${ap.name}</span>
         </div>
         <div class="flex-row">
           <span class="font-semibold">AP status</span>
@@ -174,7 +174,7 @@ L.control
         markerClusterGroup.addLayer(markerData);
   
         markerData.bindPopup(
-          `AP Name: ${ap.ap_name}<br/> 
+          `AP Name: ${ap.name}<br/> 
           <div class="pt-2 flex justify-center"><a onclick='showAPModal(${JSON.stringify(
             ap
           )})' style="text-decoration: none" type="button" class="text-indigo-500 cursor-pointer">
