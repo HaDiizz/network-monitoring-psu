@@ -37,8 +37,7 @@ def accessPoint_down_handler():
         get_ap_data = access_point_list()
         response = get_all_ap_list(get_ap_data)
         accessPoint = models.AccessPoint.objects(month=month, year=year).first()
-
-        if not accessPoint :
+        if not accessPoint or accessPoint is None :
             if response :
                 get_accessPoint_all(response, month, year)
         
