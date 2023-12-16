@@ -30,6 +30,24 @@
         />
       </div>
     </div>
+    <div class="form-control w-full pb-5">
+      <label class="label">
+        <span class="label-text">Select Time</span>
+      </label>
+      <select class="select select-bordered" name="selectTimeOver" id="selectTimeOver">
+        <option disabled>Select Time</option>
+        <option value="15" {{ 'selected' if selectTimeOver == 15 else '' }}>15 Minutes</option>
+        <option value="30" {{ 'selected' if selectTimeOver == 30 else '' }}>30 Minutes</option>
+        <option value="60" {{ 'selected' if selectTimeOver == 60 else '' }}>1 Hour</option>
+        <option value="180" {{ 'selected' if selectTimeOver == 180 else '' }}>3 Hours</option>
+        <option value="360" {{ 'selected' if selectTimeOver == 360 else '' }}>6 Hours</option>
+        <option value="720" {{ 'selected' if selectTimeOver == 720 else '' }}>12 Hours</option>
+        <option value="1440" {{ 'selected' if selectTimeOver == 1440 else '' }}>24 Hours</option>
+        <option value="2880" {{ 'selected' if selectTimeOver == 2880 else '' }}>48 Hours</option>
+        <option value="4320" {{ 'selected' if selectTimeOver == 4320 else '' }}>72 Hours</option>
+        <option value="10080" {{ 'selected' if selectTimeOver == 10080 else '' }}>1 Week</option>
+      </select>
+    </div>
     <div class="flex justify-center md:justify-end pt-4 pb-5">
       <button
         type="submit"
@@ -49,13 +67,20 @@
             style="font-size: 2.5rem"
           ></i>
         </div>
-        <div class="stat-title font-extrabold uppercase text-indigo-500">Total</div>
+        <div class="stat-title font-extrabold uppercase text-indigo-500">
+          Total
+        </div>
         <div class="stat-value">{{ all_count_down }}</div>
         <div class="stat-desc">
-          Host down over 24h {% if monthPickerStart == monthPickerEnd %}
-          in<span class="text-indigo-500 font-bold"> {{ monthPickerEnd }}</span> {% else %}
-          between<span class="text-indigo-500 font-bold"> {{ monthPickerStart }} to {{ monthPickerEnd }}</span> {%
-          endif %}
+          Host down over 24h {% if monthPickerStart == monthPickerEnd %} in<span
+            class="text-indigo-500 font-bold"
+          >
+            {{ monthPickerEnd }}</span
+          >
+          {% else %} between<span class="text-indigo-500 font-bold">
+            {{ monthPickerStart }} to {{ monthPickerEnd }}</span
+          >
+          {% endif %}
         </div>
       </div>
     </div>
@@ -80,10 +105,16 @@
             <tr>
               <td>{{ loop.index }}</td>
               <td>{{ host["host_name"] }}</td>
-              <td>{{ host["host_last_time_up"].strftime('%A, %B %d, %Y %I:%M %p') }}</td>
-              <td>{{ host["host_last_time_down"].strftime('%A, %B %d, %Y %I:%M %p') }}</td>
-              {% set hours = host['host_minutes'] // 60 %}
-              {% set minutes = host['host_minutes'] % 60 %}
+              <td>
+                {{ host["host_last_time_up"].strftime('%A, %B %d, %Y %I:%M %p')
+                }}
+              </td>
+              <td>
+                {{ host["host_last_time_down"].strftime('%A, %B %d, %Y %I:%M
+                %p') }}
+              </td>
+              {% set hours = host['host_minutes'] // 60 %} {% set minutes =
+              host['host_minutes'] % 60 %}
               <td>{{ '{:02} hours {:02} minutes'.format(hours, minutes) }}</td>
             </tr>
             {% endfor %}
@@ -124,7 +155,7 @@
       const selectedEndValue = monthPickerEnd.value;
 
       if (selectedStartValue > selectedEndValue) {
-        monthPickerEnd.value = formattedDate
+        monthPickerEnd.value = formattedDate;
       }
 
       if (selectedStartValue > formattedDate) {

@@ -55,7 +55,7 @@ def accessPoint_down_handler():
         else:
             return []
     except Exception as ex:
-        print("Error: ", ex)
+        print("AccessPoint error: ", ex)
         return None
 
 
@@ -449,7 +449,7 @@ def service_down_handler():
         else:
             return []
     except Exception as ex:
-        print("Error: ", ex)
+        print("Service error: ", ex)
         return None
 
 
@@ -842,7 +842,7 @@ def host_down_handler():
         else:
             return []
     except Exception as ex:
-        print("Error: ", ex)
+        print("Host error: ", ex)
         return None
 
 
