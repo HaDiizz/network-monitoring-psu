@@ -43,17 +43,17 @@ html {
   cursor: pointer;
 }
 
-#map {
+#map-ap, #map-host, #map {
   height: 650px;
   z-index: 12;
 }
 
-#mapContainer {
+#mapContainer, #mapContainerHost, #mapContainerAP {
   max-height: 706px;
 }
 
 /* TableComponent */
-#host-table_filter {
+#host-table_filter, #accessPoint-table_filter, #service-table_filter {
   width: 100%;
   padding-top: 1rem;
 }
@@ -87,7 +87,7 @@ div.dataTables_wrapper div.dataTables_filter {
   display: none;
 }
 
-#elementContainer {
+#elementContainer, #elementContainerAP, #elementContainerHost {
   overflow-x: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -107,6 +107,33 @@ div.dataTables_wrapper div.dataTables_filter {
   width: 100%;
   display: grid;
   justify-content: center;
+}
+
+#btn-filter-ok-ap,
+#btn-filter-crit-ap,
+#btn-filter-warn-ap,
+#btn-filter-unknown-ap,
+#btn-filter-clear-ap
+{
+  padding: 5px 7px; 
+}
+
+#btn-filter-ok-ap span,
+#btn-filter-crit-ap span,
+#btn-filter-warn-ap span,
+#btn-filter-unknown-ap span,
+#btn-filter-clear-ap span
+{
+  font-size: 10px;
+}
+
+#btn-filter-ok-ap i,
+#btn-filter-crit-ap i,
+#btn-filter-warn-ap i,
+#btn-filter-unknown-ap i,
+#btn-filter-clear-ap i
+{
+  font-size: 14px;
 }
 
 /* Dark/Light Mode Switch */
@@ -179,7 +206,7 @@ div.dataTables_wrapper div.dataTables_filter {
   padding-bottom: 2rem;
 }
 
-.cards {
+.host-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-gap: 2rem;
@@ -189,7 +216,15 @@ div.dataTables_wrapper div.dataTables_filter {
 
 .service-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(262px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(154px, 1fr));
+  grid-gap: 2rem;
+  margin: 0 auto;
+  margin-bottom: 2rem;
+}
+
+.accessPoint-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(154px, 1fr));
   grid-gap: 2rem;
   margin: 0 auto;
   margin-bottom: 2rem;
@@ -202,6 +237,13 @@ div.dataTables_wrapper div.dataTables_filter {
   transition: 0.3s;
   padding: 2rem;
   border-radius: 20px;
+}
+
+.service-cards .card-single div span,
+.accessPoint-cards .card-single div span,
+.host-cards .card-single div span
+{
+  font-size: 12px;
 }
 
 .card-single:nth-child(1) {

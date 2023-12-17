@@ -4,7 +4,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 from .. import models
 import mongoengine as me
 from ..helpers.utils import location_list, get_all_ap_list
-from ..helpers.api import host_list, get_host_markers, check_access_point, access_point_list
+from ..helpers.api import host_list, get_host_markers, access_point_list
 from .. import oauth2
 import datetime
 
@@ -21,11 +21,14 @@ def account_context():
 def index():
     if current_user.is_authenticated:
         if current_user.role == 'admin':
-            return redirect('/admin/overview')
-    hosts = host_list()
-    if not hosts:
-        hosts = []
-    return render_template("index.html", title="หน้าหลัก", location_list=location_list(), host_list=hosts)
+            return redirect('/admin/overview/access-point')
+    response = access_point_list()
+    if response is None:
+        response = []
+    accessPoints = get_all_ap_list(response)
+    if not accessPoints:
+        accessPoints = []
+    return render_template("index.html", title="หน้าหลัก", location_list=location_list(), access_point_list=accessPoints)
 
 
 @module.route('/get-aps')

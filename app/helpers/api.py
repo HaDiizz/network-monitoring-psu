@@ -42,8 +42,42 @@ def accessPoint_down_handler():
                 get_accessPoint_all(response, month, year)
         
         else :
-            get_ap_down_data = access_point_is_down()
-            response = get_all_ap_list(get_ap_down_data)
+            ap_data_list = []
+            get_ap_data = access_point_is_down()
+            for item in get_ap_data:
+                if item["extensions"]["description"].startswith("AP"):
+                    host_name =  item["extensions"]["host_name"]
+                    state = int(item["extensions"]["state"])
+                    if host_name == "WLC":
+                        ap_data_list.append({
+                            "id": host_name,
+                            "extensions": {
+                                "services_with_info":[
+                                    [ item["extensions"]["description"], state, '', f"Accesspoint: online" ]
+                                ]
+                            }
+                        })
+                    else:
+                        group_suffix = item['extensions'].get('description')[-3:]
+                        if group_suffix[-1] == 'A':
+                            group_prefix = item['extensions'].get('description')[:-2]
+                        else:
+                            group_prefix = item['extensions'].get('description')[:-3]
+
+                        ap_data_list.append({
+                            "id": host_name,
+                            "extensions": {
+                                "services_with_info": [
+                                    [
+                                        item["extensions"]["description"],
+                                        state,
+                                        '',
+                                        f"Status: up, Group: { 'Dorm10' if group_prefix == 'DRM10' else 'Dorm11' if group_prefix == 'DRM11' else 'Dorm12' if group_prefix == 'DRM12' else 'Dorm13' if group_prefix == 'DRM13' else 'Dorm14' if group_prefix == 'DRM14' else 'Dorm15' if group_prefix == 'DRM15' else 'Dorm1' if group_prefix == 'DRM1' else 'default'}"
+                                    ]
+                                ]
+                            }
+                        })
+            response = get_all_ap_list(ap_data_list)
             if response :
                 accessPoint_in_db = []
                 accessPoint_now = []
@@ -1402,6 +1436,7 @@ def service_is_down():
             else:
                 return []
     except Exception as ex:
+        print("service_is_down", ex)
         return None
     
 
@@ -1424,15 +1459,15 @@ def host_is_down():
             else:
                 return []
     except Exception as ex:
+        print("host_is_down", ex)
         return None
     
     
-def check_access_point():
+def access_point_list():
     try:
         with httpx.Client() as client:
-            params = {
+            params = { 
                 "query": '{"op":"or", "expr": [{"op":"=","left":"hosts.name","right":"WLC"}, {"op":"=","left":"hosts.name","right":"Aruba-Controller"} ]}',
-                # "query": '{"op":"=","left":"hosts.name","right":"Aruba-Controller"}',
                 "columns": [ 'name', 'state', 'groups','services_with_info',],
             }
             response = client.get(
@@ -1447,14 +1482,15 @@ def check_access_point():
             else:
                 return []
     except Exception as ex:
+        print("access_point_list", ex)
         return None
     
 def access_point_is_down():
     try:
         with httpx.Client() as client:
-            params = {
-                "query": '{"op": "and", "expr": [{"op":"or", "expr": [{"op":"=","left":"services.host_name","right":"WLC"}, {"op":"=","left":"services.host_name","right":"Aruba-Controller"} ]},{"op": "=", "left": "services.state", "right":"2"}]}',
-                "columns": [ 'host_name', 'state','description'],
+            params = { 
+                    "query": '{"op": "and", "expr": [{"op":"or", "expr": [{"op":"=","left":"services.host_name","right":"WLC"}, {"op":"=","left":"services.host_name","right":"Aruba-Controller"} ]},{"op": "=", "left": "services.state", "right":"2"}]}',
+                    "columns": [ 'host_name', 'state', 'description'],
             }
             response = client.get(
                 f"{API_URL}/domain-types/service/collections/all",
@@ -1468,26 +1504,27 @@ def access_point_is_down():
             else:
                 return []
     except Exception as ex:
+        print("access_point_is_down", ex)
         return None
     
-def access_point_list():
-    try:
-        with httpx.Client() as client:
-            params = {
-                "query": '{"op": "and", "expr": [{"op":"or", "expr": [{"op":"=","left":"services.host_name","right":"WLC"}, {"op":"=","left":"services.host_name","right":"Aruba-Controller"} ]}]}',
-                "columns": [ 'host_name', 'state','description'],
-            }
-            response = client.get(
-                f"{API_URL}/domain-types/service/collections/all",
-                headers=HEADERS,
-                params=params
-            )
-            if response.status_code == 200:
-                response = response.json()
-                if response:
-                    return response['value']
-            else:
-                return []
-    except Exception as ex:
-        return None
+# def access_point_list():
+#     try:
+#         with httpx.Client() as client:
+#             params = {
+#                 "query": '{"op": "and", "expr": [{"op":"or", "expr": [{"op":"=","left":"services.host_name","right":"WLC"}, {"op":"=","left":"services.host_name","right":"Aruba-Controller"} ]}]}',
+#                 "columns": [ 'host_name', 'state', 'description'],
+#             }
+#             response = client.get(
+#                 f"{API_URL}/domain-types/service/collections/all",
+#                 headers=HEADERS,
+#                 params=params
+#             )
+#             if response.status_code == 200:
+#                 response = response.json()
+#                 if response:
+#                     return response['value']
+#             else:
+#                 return []
+#     except Exception as ex:
+#         return None
     

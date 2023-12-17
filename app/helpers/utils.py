@@ -533,8 +533,19 @@ def get_host_down_select_time(start_month, start_year, end_month, end_year, sele
             all_count_down
     )   
 
+DORM_LIST = [
+    "Dorm10", 
+    "Dorm11",
+    "Dorm12",
+    "Dorm13",
+    "Dorm14",
+    "Dorm15",
+]
+
 def get_all_ap_list(ap_prop):
     get_ap_list = ap_prop
+    if get_ap_list is None:
+        get_ap_list = []
     ap_list = []
     location_data = []
     for location in location_list():
@@ -543,35 +554,126 @@ def get_all_ap_list(ap_prop):
             "lat": location.lat,
             "lng": location.lng,
         })
-    for item in get_ap_list:
-        if item["extensions"]["description"].startswith("AP"):
-            name = item["extensions"]["description"].split()[1]
-            state = int(item["extensions"]["state"])
-            accessPoint_id = item["id"]
-            found_location = False
-            default_lat = 7.0088136
-            default_lng = 100.498062
-            for location in location_data:
-                if name.startswith(location["location_id"]):
+    for data in get_ap_list:
+        for item in data["extensions"]["services_with_info"]:
+            if item[0].startswith("AP"):
+                name = item[0].split()[1]
+                state = int(item[1])
+                accessPoint_id = data["id"] + ":" + item[0]
+                found_location = False
+                default_lat = 7.0088136
+                default_lng = 100.498062
+                group_data = None
+                for location in location_data:
+                    if item[3] and "Group" in item[3]:
+                        group_data = item[3].split(", ")[1].split(": ")[1]
+                        if group_data == "Dorm10" and location["location_id"] == "DRM10":
+                            ap_list.append({
+                                "accessPoint_id": accessPoint_id,
+                                "name": name,
+                                "state": state,
+                                "lat": location["lat"],
+                                "lng": location["lng"],
+                                "group": location["location_id"]
+                            })
+                            found_location = True
+                            break
+                        elif group_data == "Dorm11" and location["location_id"] == "DRM11":
+                            ap_list.append({
+                                "accessPoint_id": accessPoint_id,
+                                "name": name,
+                                "state": state,
+                                "lat": location["lat"],
+                                "lng": location["lng"],
+                                "group": location["location_id"]
+                            })
+                            found_location = True
+                            break
+                        elif group_data == "Dorm12" and location["location_id"] == "DRM12":
+                            ap_list.append({
+                                "accessPoint_id": accessPoint_id,
+                                "name": name,
+                                "state": state,
+                                "lat": location["lat"],
+                                "lng": location["lng"],
+                                "group": location["location_id"]
+                            })
+                            found_location = True
+                            break
+                        elif group_data == "Dorm13" and location["location_id"] == "DRM13":
+                            ap_list.append({
+                                "accessPoint_id": accessPoint_id,
+                                "name": name,
+                                "state": state,
+                                "lat": location["lat"],
+                                "lng": location["lng"],
+                                "group": location["location_id"]
+                            })
+                            found_location = True
+                            break
+                        elif group_data == "Dorm14" and location["location_id"] == "DRM14":
+                            ap_list.append({
+                                "accessPoint_id": accessPoint_id,
+                                "name": name,
+                                "state": state,
+                                "lat": location["lat"],
+                                "lng": location["lng"],
+                                "group": location["location_id"]
+                            })
+                            found_location = True
+                            break
+                        elif group_data == "Dorm15" and location["location_id"] == "DRM15":
+                            ap_list.append({
+                                "accessPoint_id": accessPoint_id,
+                                "name": name,
+                                "state": state,
+                                "lat": location["lat"],
+                                "lng": location["lng"],
+                                "group": location["location_id"]
+                            })
+                            found_location = True
+                            break
+                        elif name.startswith(location["location_id"]) and group_data not in DORM_LIST:
+                                ap_list.append({
+                                    "accessPoint_id": accessPoint_id,
+                                    "name": name,
+                                    "state": state,
+                                    "lat": location["lat"],
+                                    "lng": location["lng"],
+                                    "group": location["location_id"]
+                                })
+                                found_location = True
+                                break
+                        
+                    if data["id"] == "WLC" and name.startswith("DRM15") and location["location_id"].startswith("DRM15"):
+                        ap_list.append({
+                            "accessPoint_id": accessPoint_id,
+                            "name": name,
+                            "state": state,
+                            "lat": location["lat"],
+                            "lng": location["lng"],
+                            "group": location["location_id"]
+                        })
+                    elif data["id"] == "WLC" and name.startswith(location["location_id"]):
+                        ap_list.append({
+                            "accessPoint_id": accessPoint_id,
+                            "name": name,
+                            "state": state,
+                            "lat": location["lat"],
+                            "lng": location["lng"],
+                            "group": location["location_id"]
+                        })
+                        found_location = True
+                        break
+                if not found_location :
                     ap_list.append({
                         "accessPoint_id": accessPoint_id,
                         "name": name,
                         "state": state,
-                        "lat": location["lat"],
-                        "lng": location["lng"],
-                        "group": location["location_id"]
+                        "lat": default_lat,
+                        "lng": default_lng,
+                        "group": ""
                     })
-                    found_location = True
-                    break
-            if not found_location :
-                ap_list.append({
-                    "accessPoint_id": accessPoint_id,
-                    "name": name,
-                    "state": state,
-                    "lat": default_lat,
-                    "lng": default_lng,
-                    "group": ""
-                })
     return ap_list
 
 

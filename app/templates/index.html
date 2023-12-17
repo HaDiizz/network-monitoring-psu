@@ -1,5 +1,5 @@
-{% extends "./layouts/base.html" %} {% block content %} 
-{% include "/layouts/hostModal.html" %}
+{% extends "./layouts/base.html" %} {% block content %} {% include
+"/layouts/hostModal.html" %}
 <div class="form-control w-full pb-4 max-w-xs">
   <label class="label">
     <span class="label-text">สถานที่</span>
@@ -39,32 +39,32 @@
     id="elementContainer"
   >
     <div class="table-responsive p-3 pt-5">
-      <table id="host-table" class="display" style="width: 100%">
+      <table id="accessPoint-table" class="display" style="width: 100%">
         <thead>
           <tr>
-            <th>Host Name</th>
+            <th>AP Name</th>
             <th>Status</th>
             <th>Availability</th>
           </tr>
         </thead>
         <tbody>
-          {% for host in host_list %}
+          {% for accessPoint in access_point_list %}
           <tr>
             <td
               class="tooltip tooltip-right w-[90%] text-left dark:tooltip-primary"
-              data-tip="{{ host.title }}"
+              data-tip="{{ accessPoint.name }}"
             >
-              <div id="host-name">{{ host.title }}</div>
+              <div>{{ accessPoint.name }}</div>
             </td>
             <td>
-              {% if host.extensions.state == 0 %}
-              <div class="badge badge-success pb-0.5">UP</div>
-              {% elif host.extensions.state == 1 %}
-              <div class="badge badge-error pb-0.5">DOWN</div>
-              {% elif host.extensions.state == 2 %}
-              <div class="badge badge-warning pb-0.5">UNREACH</div>
+              {% if accessPoint.state == 0 %}
+              <div class="badge badge-success pb-0.5">OK</div>
+              {% elif accessPoint.state == 1 %}
+              <div class="badge badge-warning pb-0.5">WARN</div>
+              {% elif accessPoint.state == 2 %}
+              <div class="badge badge-error pb-0.5">CRIT</div>
               {% else %}
-              <div class="badge badge-neutral pb-0.5">MAINTAIN</div>
+              <div class="badge badge-neutral pb-0.5">UNKNOWN</div>
               {% endif %}
             </td>
             <td>-</td>
@@ -94,12 +94,4 @@
 <script src="{{ url_for('static', filename='js/home.js') }}"></script>
 <script src="{{ url_for('static', filename='utils/handleExpandMap.js') }}"></script>
 <script src="{{ url_for('static', filename='utils/handleSelectChange.js') }}"></script>
-<script>
-  const hostNameElements = document.querySelectorAll("#host-name");
-  for (const hostNameElement of hostNameElements) {
-    const hostTitle = hostNameElement.textContent;
-    const limitedTitle = limitLength(hostTitle, 20);
-    hostNameElement.textContent = limitedTitle;
-  }
-</script>
 {% endblock %}

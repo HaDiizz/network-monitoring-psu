@@ -4524,3 +4524,16 @@ details.collapse summary::-webkit-details-marker {
 .uppercase {
   text-transform: uppercase;
 }
+
+.rounded-lg {
+  border-radius: 0.5rem/* 8px */;
+}
+
+.pb-7 {
+  padding-bottom: 1.75rem/* 28px */;
+}
+
+.bg-indigo-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(99 102 241 / var(--tw-bg-opacity));
+}

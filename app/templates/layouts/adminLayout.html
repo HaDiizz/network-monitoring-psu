@@ -42,7 +42,7 @@
         </ul>
       </div>
     </div>
-    <a href="{{ url_for('admin.index') }}" class="header_logo dark:text-white"
+    <a href="{{ url_for('admin.access_point_dashboard') }}" class="header_logo dark:text-white"
       >Network Monitoring System</a
     >
 
@@ -81,7 +81,7 @@
 <div class="nav dark:bg-base-200" id="navbar">
   <nav class="nav_container">
     <div>
-      <a href="{{ url_for('admin.index') }}" class="nav_link pb-10"
+      <a href="{{ url_for('admin.access_point_dashboard') }}" class="nav_link pb-10"
         ><img
           src="{{ url_for('static', filename='/images/psu.png') }}"
           alt="logo"
@@ -99,7 +99,7 @@
 
           <a
             id="home-link"
-            href="{{ url_for('admin.index') }}"
+            href="{{ url_for('admin.access_point_dashboard') }}"
             class="nav_link active"
           >
             <i class="bx bx-home nav_icon"></i>
