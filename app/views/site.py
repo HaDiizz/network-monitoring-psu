@@ -37,31 +37,31 @@ def get_hosts():
     return jsonify(result)
 
 
-@module.route('/get-host/<string:host_id>')
-def get_host(host_id):
+@module.route('/get-ap/<string:accessPoint_id>')
+def get_accessPoint(accessPoint_id):
     try:
         times_list = []
         status_list = []
         data_filter = []
-        host_list_ids = []
+        accessPoint_list_ids = []
         now = datetime.datetime.now()
         selected_month = now.month
         selected_year = now.year
         selected_date = now.day
-        host = models.Host.objects(
-            host_id=host_id, month=selected_month, year=selected_year).first()
-        if host:
-            for host in host.host_list:
-                host_list_ids.append(host["id"])
-            query = models.HostList.objects(id__in=host_list_ids)
-            query_host_list = query.all()
+        accessPoint = models.AccessPoint.objects(
+            accessPoint_id=accessPoint_id, month=selected_month, year=selected_year).first()
+        if accessPoint:
+            for accessPoint in accessPoint.accessPoint_list:
+                accessPoint_list_ids.append(accessPoint["id"])
+            query = models.AccessPoint.objects(id__in=accessPoint_list_ids)
+            query_accessPoint_list = query.all()
 
             for hour in range(24):
                 for minute in range(0, 60, 10):
                     time_str = f"{hour:02d}:{minute:02d}"
                     times_list.append(time_str)
 
-            for item in query_host_list:
+            for item in query_accessPoint_list:
                 created_date = item["created_date"]
                 day = created_date.day
                 month = created_date.month
@@ -116,10 +116,10 @@ def get_host(host_id):
                     status_list[i] = ""
 
             if not data_filter:
-                if len(query_host_list) != 0:
+                if len(query_accessPoint_list) != 0:
 
-                    last_state = query_host_list[len(
-                        query_host_list)-1]["last_state"]
+                    last_state = query_accessPoint_list[len(
+                        query_accessPoint_list)-1]["last_state"]
                     if last_state == -1:
                         for i in range(0, 144):
                             status_list[i] = 0
@@ -143,7 +143,7 @@ def get_host(host_id):
 
             return jsonify(x_values, y_values)
         else:
-            return jsonify({"error": "Host not found"}), 404
+            return jsonify({"error": "AccessPoint not found"}), 404
     except Exception as ex:
         return jsonify({"error": str(ex)}), 500
 

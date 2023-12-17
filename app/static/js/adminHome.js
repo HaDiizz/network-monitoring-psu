@@ -99,43 +99,43 @@ L.control
   })
   .addTo(map);
 
-  async function showAPModal(ap) {
-    const modal = document.getElementById("ap-modal");
-    const modalInfo = document.getElementById("ap-info");
-    const apName = ap.name;
-  
-    // await fetch(`/get-ap/${apName}`)
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     const graphDiv = document.createElement("div");
-    //     graphDiv.id = "ap-plotly-graph";
-    //     modal.querySelector("#ap-graph-detail").appendChild(graphDiv);
-  
-    //     const dataGraph = [
-    //       {
-    //         x: data[0],
-    //         y: data[1],
-    //         type: "scatter",
-    //         mode: "lines",
-    //         name: "AP Status",
-    //       },
-    //     ];
-  
-    //     const layout = {
-    //       title: "AP Status",
-    //       xaxis: { title: "Times" },
-    //       yaxis: {
-    //         title: "Status",
-    //         tickvals: [1, 0],
-    //         ticktext: ["UP", "DOWN"],
-    //       },
-    //     };
-  
-    //     Plotly.newPlot("ap-plotly-graph", dataGraph, layout);
-    //   });
-    modalInfo.style.display = "inherit";
-    modal.querySelector("#ap-title").innerHTML = `${ap.name}`;
-    modal.querySelector("#ap-info-detail").innerHTML = `
+async function showAPModal(ap) {
+  const modal = document.getElementById("ap-modal");
+  const modalInfo = document.getElementById("ap-info");
+  const accessPoint_id = ap.accessPoint_id;
+
+  await fetch(`/get-ap/${accessPoint_id}`)
+    .then((response) => response.json())
+    .then((data) => {
+      const graphDiv = document.createElement("div");
+      graphDiv.id = "ap-plotly-graph";
+      modal.querySelector("#ap-graph-detail").appendChild(graphDiv);
+
+      const dataGraph = [
+        {
+          x: data[0],
+          y: data[1],
+          type: "scatter",
+          mode: "lines",
+          name: "AP Status",
+        },
+      ];
+
+      const layout = {
+        title: "AP Status",
+        xaxis: { title: "Times" },
+        yaxis: {
+          title: "Status",
+          tickvals: [1, 0],
+          ticktext: ["UP", "DOWN"],
+        },
+      };
+
+      Plotly.newPlot("ap-plotly-graph", dataGraph, layout);
+    });
+  modalInfo.style.display = "inherit";
+  modal.querySelector("#ap-title").innerHTML = `${ap.name}`;
+  modal.querySelector("#ap-info-detail").innerHTML = `
       <div class="flex flex-col gap-5">
         <div class="flex-row">
           <span class="font-semibold">AP name</span>
@@ -145,11 +145,7 @@ L.control
         <div class="flex-row">
           <span class="font-semibold">AP status</span>
           <span>:</span>
-          ${
-            ap.state === 0
-              ? "<span>UP</span>"
-              : "<span>DOWN</span>"
-          }
+          ${ap.state === 0 ? "<span>UP</span>" : "<span>DOWN</span>"}
         </div>
         <div class="flex-row">
           <span class="font-semibold">Availability</span>
@@ -157,36 +153,36 @@ L.control
           <span>-</span>
         </div>
       </div>`;
-  
-    modal.showModal();
-  }
-  
-  var markerClusterGroup = L.markerClusterGroup();
-  
-  fetch("/get-aps")
-    .then((response) => response.json())
-    .then((data) => {
-      if (!data) return;
-      data.forEach((ap) => {
-        var marker = ap.state === 1 ? redIcon : greenIcon;
-        var markerData = L.marker([ap.lat, ap.lng], { icon: marker });
-  
-        markerClusterGroup.addLayer(markerData);
-  
-        markerData.bindPopup(
-          `AP Name: ${ap.name}<br/> 
+
+  modal.showModal();
+}
+
+var markerClusterGroup = L.markerClusterGroup();
+
+fetch("/get-aps")
+  .then((response) => response.json())
+  .then((data) => {
+    if (!data) return;
+    data.forEach((ap) => {
+      var marker = ap.state === 2 ? redIcon : ap.state == 0 ? greenIcon : yellowIcon;
+      var markerData = L.marker([ap.lat, ap.lng], { icon: marker });
+
+      markerClusterGroup.addLayer(markerData);
+
+      markerData.bindPopup(
+        `AP Name: ${ap.name}<br/> 
           <div class="pt-2 flex justify-center"><a onclick='showAPModal(${JSON.stringify(
             ap
           )})' style="text-decoration: none" type="button" class="text-indigo-500 cursor-pointer">
             ดูรายละเอียด
           </a></div>`
-        );
-      });
-  
-      map.addLayer(markerClusterGroup);
-    })
-    .catch((error) => console.error("Error fetching markers:", error));
-  
+      );
+    });
+
+    map.addLayer(markerClusterGroup);
+  })
+  .catch((error) => console.error("Error fetching markers:", error));
+
 $(document).ready(function () {
   var table = $("#service-table").DataTable({
     dom: "Bfrtip",

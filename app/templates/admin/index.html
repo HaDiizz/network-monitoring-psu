@@ -305,6 +305,11 @@
     iconUrl: "{{ url_for('static', filename='images/red.png') }}",
     iconSize: [20, 20],
   });
+
+  var yellowIcon = new L.Icon({
+    iconUrl: "{{ url_for('static', filename='images/yellow.png') }}",
+    iconSize: [20, 20],
+  });
 </script>
 <script src="{{ url_for('static', filename='js/adminHome.js') }}"></script>
 <script src="{{ url_for('static', filename='utils/handleExpandMap.js') }}"></script>
