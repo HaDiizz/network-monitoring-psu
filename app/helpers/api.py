@@ -348,8 +348,6 @@ def get_accessPoint_down(response, month, year, accessPoint_down_in_db, accessPo
                                     # r = requests.post(
                                     #     url, headers=headers, data={'message': msg})
                                     
-                            if minute >= 1440 : # Update time when AccessPoint down over 24 hour
-                                accessPoint_list.minutes = minute
                         
                 else:
                     new_accessPoint_list = models.AccessPointList(
@@ -735,8 +733,7 @@ def get_service_down(response, month, year, servicedown_in_db, servicedown_now) 
                                     # r = requests.post(
                                     #     url, headers=headers, data={'message': msg})
                                     
-                            if minute >= 1440 : # Update time when Service down over 24 hour
-                                service_list.minutes = minute
+
                         
                 else:
                     new_service_list = models.ServiceList(
@@ -1139,8 +1136,6 @@ def get_host_down(response, month, year, hostdown_in_db, hostdown_now) :
                                     # r = requests.post(
                                     #     url, headers=headers, data={'message': msg})
                                     
-                            if minute >= 1440 : # Update time when Host down over 24 hour
-                                host_list.minutes = minute
                         
                 else:
                     new_host_list = models.HostList(
