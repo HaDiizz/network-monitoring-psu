@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 import httpx
 import datetime
-from .utils import cal_min_down, cal_sla, get_all_ap_list
+from .utils import cal_min_down, cal_sla, get_all_ap_list, get_daily_sla
 
 load_dotenv()
 
@@ -1278,10 +1278,14 @@ def host_list():
                     for item in response['value']:
                         if not current_user.is_authenticated or current_user.role != 'admin':
                             del item['extensions']['address']
+                        # availability = item['extensions'].get('availability', None)
+                        # if not availability:
+                        item['extensions']['availability'] = get_daily_sla(item["id"])
                     return response['value']
             else:
                 return []
     except Exception as ex:
+        print("host_list", ex)
         return None
 
 

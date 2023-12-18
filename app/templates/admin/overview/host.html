@@ -5,7 +5,7 @@
 
   <div class="flex justify-center pb-7">
     <ul
-      class="menu menu-horizontal bg-light-primary dark:bg-base-200 rounded-lg"
+      class="menu menu-horizontal bg-light-primary dark:bg-base-200 rounded-lg gap-4"
     >
       <li>
         <a
@@ -166,7 +166,7 @@
                   <div class="badge badge-neutral pb-0.5">MAINTAIN</div>
                   {% endif %}
                 </td>
-                <td>-</td>
+                <td>{{ host.extensions.availability }} %</td>
               </tr>
               {% endfor %}
             </tbody>

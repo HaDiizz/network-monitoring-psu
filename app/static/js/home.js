@@ -172,15 +172,23 @@ async function showAPModal(ap) {
   modal.showModal();
 }
 
-var markerClusterGroup = L.markerClusterGroup();
+var markerClusterGroup = L.markerClusterGroup({
+  disableClusteringAtZoom: 19
+});
 
 fetch("/get-aps")
   .then((response) => response.json())
   .then((data) => {
     if (!data) return;
-    data.forEach((ap) => {
+    data.forEach((ap, index) => {
       var marker = ap.state === 2 ? redIcon : ap.state == 0 ? greenIcon : yellowIcon;
-      var markerData = L.marker([ap.lat, ap.lng], { icon: marker });
+      var randomizedLat = ap.lat + (Math.random() - 0.5) * 0.00055;
+      var randomizedLng = ap.lng + (Math.random() - 0.5) * 0.00055;
+      // var row = Math.floor(index / 10);
+      // var col = index % 10;
+      // var randomizedLat = (ap.lat + (row * 0.0001)) - 0.005;
+      // var randomizedLng = (ap.lng + (col * 0.0001)) - 0.0003;
+      var markerData = L.marker([randomizedLat, randomizedLng], { icon: marker });
 
       markerClusterGroup.addLayer(markerData);
 

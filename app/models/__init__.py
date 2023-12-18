@@ -23,7 +23,7 @@ def init_mongoengine(server):
     'host': os.environ['MONGODB_HOST']
     }
     try:
-        me.connect(os.environ['MONGODB_NAME'], host=os.environ['MONGODB_HOST'])
+        me.connect(os.environ['MONGODB_NAME'], host=os.environ['MONGODB_HOST'], alias='default')
         print("Successfully connected to MongoDB!")
     except Exception as e:
         print("Failed to connect to MongoDB:", str(e))
