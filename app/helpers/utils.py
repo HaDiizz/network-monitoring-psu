@@ -678,40 +678,48 @@ def get_all_ap_list(ap_prop):
 
 
 def get_daily_sla(host_id) :
-    # print('host_id', host_id)
     host_list_ids = []
     minutes = 0
     current_datetime = datetime.datetime.now()
 
     host = models.Host.objects(
         host_id=host_id, month=current_datetime.month, year=current_datetime.year).first()
-    print(host)
-    if host.host_list and host.host_list is not None and host.host_list != [] :
-        for value in host.host_list:
-            host_list_ids.append(value.id)
+    if host:
 
-        query = models.HostList.objects(
-            id__in=host_list_ids)
-        matching_data = query.all()
+        print(host.host_id)
+        if host.host_list and host.host_list is not None and host.host_list != [] :
+            for value in host.host_list:
+                host_list_ids.append(value.id)
 
-        for data in matching_data :
+            query = models.HostList.objects(
+                id__in=host_list_ids)
+            matching_data = query.all()
 
-            timestamp = data.created_date
-            dt_object = datetime.strptime(str(timestamp), '%Y-%m-%dT%H:%M:%S.%f%z')
-            day = dt_object.day
+            for data in matching_data :
 
-            if day == current_datetime.day :
-                minutes += data.minutes
-        
-        if minutes == 0 :
-            return 100
+                timestamp = data.created_date
+                dt_object = datetime.datetime.strptime(str(timestamp), '%Y-%m-%d %H:%M:%S.%f')
+                day = dt_object.day
 
-        elif minutes >= 1440 :
-            return 0
+                if day == current_datetime.day :
+                    minutes += data.minutes
+            
+            if minutes == 0 :
+                return 100
+
+            elif minutes >= 1440 :
+                return 0
+            
+            else :
+                sla = ((1440 - minutes) / 1440) * 100
+                return sla
         
         else :
-            sla = ((1440 - minutes) / 1440) * 100
-            return sla
+            return 100
     
-    else :
-        return 100
+
+
+
+
+    
+    
