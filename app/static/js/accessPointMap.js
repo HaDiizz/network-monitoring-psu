@@ -62,28 +62,45 @@ async function showAPModal(ap) {
   modalInfo.style.display = "inherit";
   modal.querySelector("#ap-title").innerHTML = `${ap.name}`;
   modal.querySelector("#ap-info-detail").innerHTML = `
-            <div class="flex flex-col gap-5">
-              <div class="flex-row">
-                <span class="font-semibold">AP name</span>
-                <span>:</span>
-                <span>${ap.name}</span>
-              </div>
-              <div class="flex-row">
-                <span class="font-semibold">AP status</span>
-                <span>:</span>
-                ${ap.state === 0 ? "<span>UP</span>" : "<span>DOWN</span>"}
-              </div>
-              <div class="flex-row">
-                <span class="font-semibold">Availability</span>
-                <span>:</span>
-                <span>-</span>
-              </div>
-            </div>`;
+    <div class="container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class='uppercase'>Properties</th>
+            <th class='uppercase'>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Access Point Name</td>
+            <td>${ap.name}</td>
+          </tr>
+          <tr>
+            <td>Status</td>
+            <td>${
+              ap.state === 0
+                ? "<span class='text-green-500 font-bold'>OK</span>"
+                : ap.state === 1
+                ? "<span class='text-yellow-500 font-bold'>WARN</span>"
+                : ap.state === 2
+                ? "<span class='text-red-500 font-bold'>CRIT</span>"
+                : "<span class='text-neutral-500 font-bold'>UNKNOWN</span>"
+            }</td>
+          </tr>
+          <tr>
+            <td>Availability</td>
+            <td>${ap.availability ? `${ap.availability} %` : "-"}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>`;
 
   modal.showModal();
 }
 
-var markerClusterGroup = L.markerClusterGroup();
+var markerClusterGroup = L.markerClusterGroup({
+  disableClusteringAtZoom: 19,
+});
 
 fetch("/get-aps")
   .then((response) => response.json())
@@ -91,8 +108,18 @@ fetch("/get-aps")
     if (!data) return;
     data.forEach((ap) => {
       var marker =
-        ap.state === 2 ? redIcon : ap.state == 0 ? greenIcon : yellowIcon;
-      var markerData = L.marker([ap.lat, ap.lng], { icon: marker });
+        ap.state === 2
+          ? redIcon
+          : ap.state == 0
+          ? greenIcon
+          : ap.state == 1
+          ? yellowIcon
+          : slateIcon;
+      var randomizedLat = ap.lat + (Math.random() - 0.5) * 0.00055;
+      var randomizedLng = ap.lng + (Math.random() - 0.5) * 0.00055;
+      var markerData = L.marker([randomizedLat, randomizedLng], {
+        icon: marker,
+      });
 
       markerClusterGroup.addLayer(markerData);
 

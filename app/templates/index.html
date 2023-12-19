@@ -1,5 +1,5 @@
 {% extends "./layouts/base.html" %} {% block content %} {% include
-"/layouts/hostModal.html" %}
+"/layouts/accessPointModal.html" %}
 <div class="form-control w-full pb-4 max-w-xs">
   <label class="label">
     <span class="label-text">สถานที่</span>
@@ -67,7 +67,7 @@
               <div class="badge badge-neutral pb-0.5">UNKNOWN</div>
               {% endif %}
             </td>
-            <td>-</td>
+            <td>{{ accessPoint.availability }} %</td>
           </tr>
           {% endfor %}
         </tbody>
@@ -88,6 +88,11 @@
 
   var yellowIcon = new L.Icon({
     iconUrl: "{{ url_for('static', filename='images/yellow.png') }}",
+    iconSize: [20, 20],
+  });
+
+  var slateIcon = new L.Icon({
+    iconUrl: "{{ url_for('static', filename='images/slate.png') }}",
     iconSize: [20, 20],
   });
 </script>

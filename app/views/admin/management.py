@@ -104,7 +104,7 @@ def permission():
         return render_template("/admin/permission.html", title="Permission", users=users)
     except Exception as e:
         flash("ขออภัย มีข้อผิดพลาดเกิดขึ้น", "error")
-        return redirect("/admin/overview")
+        return redirect("/admin/overview/access-point")
 
 
 @admin_module.route("/reports", methods=["GET", "POST"])

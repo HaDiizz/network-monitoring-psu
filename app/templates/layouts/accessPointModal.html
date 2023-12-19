@@ -1,0 +1,22 @@
+<dialog id="ap-modal" class="modal">
+  <form method="dialog" class="modal-box w-11/12 max-w-5xl">
+    <h3 class="font-bold text-lg" id="ap-title"></h3>
+    <div class="modal-tabs tabs pt-5">
+      <a class="tab tab-lifted tab-active" data-tab="ap-info">Info</a>
+    </div>
+    <div id="ap-info" class="modal-section current">
+      <p id="ap-info-detail" class="py-4"></p>
+      <p id="ap-graph-detail" class="py-4 pr-2"></p>
+    </div>
+  </form>
+  <form method="dialog" class="modal-backdrop">
+    <button onclick="handleClose()">close</button>
+  </form>
+</dialog>
+
+<script>
+  function handleClose() {
+    const modal = document.getElementById("ap-info");
+    modal.style.display = "none";
+  }
+</script>

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, jsonify
 from ... import acl
-from ...helpers.api import host_list, service_list, host_group, host_group_list, service_group_list, maintain_host_list, maintain_service_list, service_down_handler, service_is_down, host_is_down, host_down_handler, accessPoint_down_handler, access_point_list
-from ...helpers.utils import location_list, get_host_down_select_time, get_all_ap_list
+from ...helpers.api import host_list, service_list, host_group, host_group_list, service_group_list, maintain_host_list, maintain_service_list, service_down_handler, service_is_down, host_is_down, host_down_handler, accessPoint_down_handler, access_point_list, get_all_service_list, access_point_list
+from ...helpers.utils import location_list, get_host_down_select_time, get_all_ap_list, get_ap_list_with_sla
 from app import caches
 import datetime
 
@@ -17,7 +17,7 @@ from app.views.admin.management import *
 # @caches.cache.cached(timeout=3600, key_prefix='overview')
 def index():
     hosts = host_list()
-    services = service_list("ALL")
+    services = get_all_service_list()
     host_groups = host_group_list()
     service_groups = service_group_list()
     maintain_hosts = maintain_host_list()
@@ -96,12 +96,12 @@ def index():
 
 @admin_module.route("/overview/access-point")
 @acl.roles_required("admin")
-# @caches.cache.cached(timeout=3600, key_prefix='overview')
+# @caches.cache.cached(timeout=3600, key_prefix='access_point_dashboard')
 def access_point_dashboard():
     accessPoints_resp = access_point_list()
     if accessPoints_resp is None:
         accessPoints_resp = []
-    accessPoints = get_all_ap_list(accessPoints_resp)
+    accessPoints = get_ap_list_with_sla(accessPoints_resp)
 
     accessPoint_summary = {}
     if accessPoints:
@@ -124,7 +124,7 @@ def access_point_dashboard():
 
 @admin_module.route("/overview/host")
 @acl.roles_required("admin")
-# @caches.cache.cached(timeout=3600, key_prefix='overview')
+@caches.cache.cached(timeout=3600, key_prefix='host_dashboard')
 def host_dashboard():
     hosts = host_list()
     host_groups = host_group_list()
@@ -156,9 +156,9 @@ def host_dashboard():
 
 @admin_module.route("/overview/service")
 @acl.roles_required("admin")
-# @caches.cache.cached(timeout=3600, key_prefix='overview')
+@caches.cache.cached(timeout=3600, key_prefix='service_dashboard')
 def service_dashboard():
-    services = service_list("ALL")
+    services = get_all_service_list()
     service_groups = service_group_list()
     maintain_services = maintain_service_list()
     

@@ -3,11 +3,11 @@ from .. import forms
 from flask_login import login_user, login_required, logout_user, current_user
 from .. import models
 import mongoengine as me
-from ..helpers.utils import location_list, get_all_ap_list
-from ..helpers.api import host_list, get_host_markers, access_point_list
+from ..helpers.utils import location_list, get_all_ap_list, get_ap_list_with_sla
+from ..helpers.api import host_list, get_host_markers, access_point_list, access_point_list
 from .. import oauth2
 import datetime
-
+from app import caches
 
 module = Blueprint('site', __name__)
 
@@ -18,6 +18,7 @@ def account_context():
 
 
 @module.route('/')
+# @caches.cache.cached(timeout=3600, key_prefix='index_user_page')
 def index():
     if current_user.is_authenticated:
         if current_user.role == 'admin':
@@ -25,16 +26,17 @@ def index():
     response = access_point_list()
     if response is None:
         response = []
-    accessPoints = get_all_ap_list(response)
+    accessPoints = get_ap_list_with_sla(response)
     if not accessPoints:
         accessPoints = []
     return render_template("index.html", title="หน้าหลัก", location_list=location_list(), access_point_list=accessPoints)
 
 
 @module.route('/get-aps')
+# @caches.cache.cached(timeout=3600, key_prefix='get-aps')
 def get_hosts():
     get_ap_data = access_point_list()
-    result = get_all_ap_list(get_ap_data)
+    result = get_ap_list_with_sla(get_ap_data)
 
     # return jsonify(get_host_markers())
     return jsonify(result)
@@ -168,7 +170,7 @@ def getLocations():
 def login():
     if current_user.is_authenticated:
         if current_user.role == 'admin':
-            return redirect('/admin/overview')
+            return redirect('/admin/overview/access-point')
         else:
             return redirect('/')
 

@@ -1,7 +1,6 @@
 {% extends "/layouts/base.html" %} {% block content %}
 <div class="admin-container">
-  {% include "/layouts/messageSection.html" %} {% include
-  "/layouts/hostModal.html" %}
+  {% include "/layouts/messageSection.html" %}
 
   <div class="flex justify-center pb-7">
     <ul
@@ -146,7 +145,7 @@
                   <div class="badge badge-primary pb-0.5">UNKNOWN</div>
                   {% endif %}
                 </td>
-                <td>-</td>
+                <td>{{ service["extensions"]["availability"] }} %</td>
               </tr>
               {% endfor %}
             </tbody>

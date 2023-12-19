@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 import httpx
 import datetime
-from .utils import cal_min_down, cal_sla, get_all_ap_list, get_daily_sla
+from .utils import cal_min_down, cal_sla, get_all_ap_list, get_host_daily_sla, get_service_daily_sla, get_accessPoint_daily_sla
 
 load_dotenv()
 
@@ -1252,6 +1252,7 @@ def get_host_markers():
         return None
 
 
+# @caches.cache.cached(timeout=3600, key_prefix='host_list')
 def host_list():
     try:
         with httpx.Client() as client:
@@ -1273,9 +1274,7 @@ def host_list():
                     for item in response['value']:
                         if not current_user.is_authenticated or current_user.role != 'admin':
                             del item['extensions']['address']
-                        # availability = item['extensions'].get('availability', None)
-                        # if not availability:
-                        item['extensions']['availability'] = get_daily_sla(item["id"])
+                        item['extensions']['availability'] = get_host_daily_sla(item["id"])
                     return response['value']
             else:
                 return []
@@ -1320,6 +1319,44 @@ def service_list(service_state_selector):
             list_of_objects_without_duplicates = list(dict_of_objects.values())
             return list_of_objects_without_duplicates
     except Exception as ex:
+        print('service_list', ex)
+        return None
+
+
+# @caches.cache.cached(timeout=3600, key_prefix='get_all_service_list')
+def get_all_service_list():
+    try:
+        service_groups = []
+        response_list = []
+        for group in service_group_list():
+            service_groups.append(group["id"])
+        
+        with httpx.Client() as client:
+            for group_name in service_groups:
+                params = {
+                    "columns": ['state', 'last_state', 'last_time_ok', 'last_time_critical', 'last_time_unknown', 'last_time_warning', 'last_state_change', 'labels', "groups", 'downtimes_with_extra_info', ],
+                }
+                query = f"%7B%22op%22%3A+%22%3E%3D%22%2C+%22left%22%3A+%22services.groups%22%2C+%22right%22%3A+%22{group_name}%22%7D"
+                response = client.get(
+                    f"https://{os.environ['HOST_NAME']}/{os.environ['SITE_NAME']}/check_mk/api/1.0/domain-types/service/collections/all?query={query}",
+                    headers=HEADERS,
+                    params=params
+                )
+                if response.status_code == 200:
+                    response = response.json()
+                    if response:
+                        for item in response['value']:
+                            item['extensions']['availability'] = get_service_daily_sla(item["id"])
+                        response_list.extend(response['value'])
+                else:
+                    return []
+            dict_of_objects = {}    
+            for object in response_list:
+                dict_of_objects[object["id"]] = object
+            list_of_objects_without_duplicates = list(dict_of_objects.values())
+            return list_of_objects_without_duplicates
+    except Exception as ex:
+        print('get_all_service_list', ex)
         return None
 
 
@@ -1380,6 +1417,7 @@ def host_group(api_hostgroup_url):
     except Exception as ex:
         return None
 
+
 def maintain_host_list():
     try:
         with httpx.Client() as client:
@@ -1397,6 +1435,7 @@ def maintain_host_list():
                 return []
     except Exception as ex:
         return None
+
 
 def maintain_service_list():
     try:
@@ -1416,6 +1455,7 @@ def maintain_service_list():
     except Exception as ex:
         return None
     
+
 def service_is_down():
     try:
         with httpx.Client() as client:
@@ -1483,7 +1523,8 @@ def access_point_list():
     except Exception as ex:
         print("access_point_list", ex)
         return None
-    
+
+ 
 def access_point_is_down():
     try:
         with httpx.Client() as client:

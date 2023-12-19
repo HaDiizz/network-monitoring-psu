@@ -542,6 +542,153 @@ DORM_LIST = [
     "Dorm15",
 ]
 
+
+@caches.cache.cached(timeout=3600, key_prefix='get_ap_list_with_sla')
+def get_ap_list_with_sla(ap_prop):
+    get_ap_list = ap_prop
+    if get_ap_list is None:
+        get_ap_list = []
+    ap_list = []
+    location_data = []
+    for location in location_list():
+        location_data.append({
+            "location_id": location.location_id,
+            "lat": location.lat,
+            "lng": location.lng,
+        })
+    for data in get_ap_list:
+        for item in data["extensions"]["services_with_info"]:
+            if item[0].startswith("AP"):
+                name = item[0].split()[1]
+                state = int(item[1])
+                accessPoint_id = data["id"] + ":" + item[0]
+                found_location = False
+                default_lat = 7.0088136
+                default_lng = 100.498062
+                group_data = None
+                for location in location_data:
+                    if item[3] and "Group" in item[3]:
+                        group_data = item[3].split(", ")[1].split(": ")[1]
+                        if group_data == "Dorm10" and location["location_id"] == "DRM10":
+                            ap_list.append({
+                                "accessPoint_id": accessPoint_id,
+                                "name": name,
+                                "state": state,
+                                "lat": location["lat"],
+                                "lng": location["lng"],
+                                "group": location["location_id"],
+                                "availability": get_accessPoint_daily_sla(accessPoint_id)
+                            })
+                            found_location = True
+                            break
+                        elif group_data == "Dorm11" and location["location_id"] == "DRM11":
+                            ap_list.append({
+                                "accessPoint_id": accessPoint_id,
+                                "name": name,
+                                "state": state,
+                                "lat": location["lat"],
+                                "lng": location["lng"],
+                                "group": location["location_id"],
+                                "availability": get_accessPoint_daily_sla(accessPoint_id)
+                            })
+                            found_location = True
+                            break
+                        elif group_data == "Dorm12" and location["location_id"] == "DRM12":
+                            ap_list.append({
+                                "accessPoint_id": accessPoint_id,
+                                "name": name,
+                                "state": state,
+                                "lat": location["lat"],
+                                "lng": location["lng"],
+                                "group": location["location_id"],
+                                "availability": get_accessPoint_daily_sla(accessPoint_id)
+                            })
+                            found_location = True
+                            break
+                        elif group_data == "Dorm13" and location["location_id"] == "DRM13":
+                            ap_list.append({
+                                "accessPoint_id": accessPoint_id,
+                                "name": name,
+                                "state": state,
+                                "lat": location["lat"],
+                                "lng": location["lng"],
+                                "group": location["location_id"],
+                                "availability": get_accessPoint_daily_sla(accessPoint_id)
+                            })
+                            found_location = True
+                            break
+                        elif group_data == "Dorm14" and location["location_id"] == "DRM14":
+                            ap_list.append({
+                                "accessPoint_id": accessPoint_id,
+                                "name": name,
+                                "state": state,
+                                "lat": location["lat"],
+                                "lng": location["lng"],
+                                "group": location["location_id"],
+                                "availability": get_accessPoint_daily_sla(accessPoint_id)
+                            })
+                            found_location = True
+                            break
+                        elif group_data == "Dorm15" and location["location_id"] == "DRM15":
+                            ap_list.append({
+                                "accessPoint_id": accessPoint_id,
+                                "name": name,
+                                "state": state,
+                                "lat": location["lat"],
+                                "lng": location["lng"],
+                                "group": location["location_id"],
+                                "availability": get_accessPoint_daily_sla(accessPoint_id)
+                            })
+                            found_location = True
+                            break
+                        elif name.startswith(location["location_id"]) and group_data not in DORM_LIST:
+                                ap_list.append({
+                                    "accessPoint_id": accessPoint_id,
+                                    "name": name,
+                                    "state": state,
+                                    "lat": location["lat"],
+                                    "lng": location["lng"],
+                                    "group": location["location_id"],
+                                    "availability": get_accessPoint_daily_sla(accessPoint_id)
+                                })
+                                found_location = True
+                                break
+                        
+                    if data["id"] == "WLC" and name.startswith("DRM15") and location["location_id"].startswith("DRM15"):
+                        ap_list.append({
+                            "accessPoint_id": accessPoint_id,
+                            "name": name,
+                            "state": state,
+                            "lat": location["lat"],
+                            "lng": location["lng"],
+                            "group": location["location_id"],
+                            "availability": get_accessPoint_daily_sla(accessPoint_id)
+                        })
+                    elif data["id"] == "WLC" and name.startswith(location["location_id"]):
+                        ap_list.append({
+                            "accessPoint_id": accessPoint_id,
+                            "name": name,
+                            "state": state,
+                            "lat": location["lat"],
+                            "lng": location["lng"],
+                            "group": location["location_id"],
+                            "availability": get_accessPoint_daily_sla(accessPoint_id)
+                        })
+                        found_location = True
+                        break
+                if not found_location :
+                    ap_list.append({
+                        "accessPoint_id": accessPoint_id,
+                        "name": name,
+                        "state": state,
+                        "lat": default_lat,
+                        "lng": default_lng,
+                        "group": "",
+                        "availability": get_accessPoint_daily_sla(accessPoint_id)
+                    })
+    return ap_list
+
+
 def get_all_ap_list(ap_prop):
     get_ap_list = ap_prop
     if get_ap_list is None:
@@ -677,7 +824,7 @@ def get_all_ap_list(ap_prop):
     return ap_list
 
 
-def get_daily_sla(host_id) :
+def get_host_daily_sla(host_id) :
     host_list_ids = []
     minutes = 0
     current_datetime = datetime.datetime.now()
@@ -685,8 +832,6 @@ def get_daily_sla(host_id) :
     host = models.Host.objects(
         host_id=host_id, month=current_datetime.month, year=current_datetime.year).first()
     if host:
-
-        print(host.host_id)
         if host.host_list and host.host_list is not None and host.host_list != [] :
             for value in host.host_list:
                 host_list_ids.append(value.id)
@@ -705,17 +850,97 @@ def get_daily_sla(host_id) :
                     minutes += data.minutes
             
             if minutes == 0 :
-                return 100
+                return '{:.2f}'.format(round(100, 2))
 
             elif minutes >= 1440 :
                 return 0
             
             else :
                 sla = ((1440 - minutes) / 1440) * 100
-                return sla
+                return '{:.4f}'.format(round(sla, 8))
         
         else :
-            return 100
+            return '{:.2f}'.format(round(100, 2))
+        
+
+def get_service_daily_sla(service_id) :
+    service_list_ids = []
+    minutes = 0
+    current_datetime = datetime.datetime.now()
+
+    service = models.Service.objects(
+        service_id=service_id, month=current_datetime.month, year=current_datetime.year).first()
+    if service:
+
+        if service.service_list and service.service_list is not None and service.service_list != [] :
+            for value in service.service_list:
+                service_list_ids.append(value.id)
+
+            query = models.ServiceList.objects(
+                id__in=service_list_ids)
+            matching_data = query.all()
+
+            for data in matching_data :
+
+                timestamp = data.created_date
+                dt_object = datetime.datetime.strptime(str(timestamp), '%Y-%m-%d %H:%M:%S.%f')
+                day = dt_object.day
+
+                if day == current_datetime.day :
+                    minutes += data.minutes
+            
+            if minutes == 0 :
+                return '{:.2f}'.format(round(100, 2))
+
+            elif minutes >= 1440 :
+                return 0
+            
+            else :
+                sla = ((1440 - minutes) / 1440) * 100
+                return '{:.4f}'.format(round(sla, 8))
+        
+        else :
+            return '{:.2f}'.format(round(100, 2))
+    
+
+def get_accessPoint_daily_sla(accessPoint_id) :
+    accessPoint_list_ids = []
+    minutes = 0
+    current_datetime = datetime.datetime.now()
+
+    accessPoint = models.AccessPoint.objects(
+        accessPoint_id=accessPoint_id, month=current_datetime.month, year=current_datetime.year).first()
+    if accessPoint:
+
+        if accessPoint.accessPoint_list and accessPoint.accessPoint_list is not None and accessPoint.accessPoint_list != [] :
+            for value in accessPoint.accessPoint_list:
+                accessPoint_list_ids.append(value.id)
+
+            query = models.AccessPointList.objects(
+                id__in=accessPoint_list_ids)
+            matching_data = query.all()
+
+            for data in matching_data :
+
+                timestamp = data.created_date
+                dt_object = datetime.datetime.strptime(str(timestamp), '%Y-%m-%d %H:%M:%S.%f')
+                day = dt_object.day
+
+                if day == current_datetime.day :
+                    minutes += data.minutes
+            
+            if minutes == 0 :
+                return '{:.2f}'.format(round(100, 2))
+
+            elif minutes >= 1440 :
+                return 0
+            
+            else :
+                sla = ((1440 - minutes) / 1440) * 100
+                return '{:.4f}'.format(round(sla, 8))
+        
+        else :
+            return '{:.2f}'.format(round(100, 2))
     
 
 

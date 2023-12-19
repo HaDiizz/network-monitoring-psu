@@ -1,7 +1,7 @@
 {% extends "/layouts/base.html" %} {% block content %}
 <div class="admin-container">
   {% include "/layouts/messageSection.html" %} {% include
-  "/layouts/hostModal.html" %}
+  "/layouts/accessPointModal.html" %}
 
   <div class="flex justify-center pb-7">
     <ul
@@ -143,7 +143,7 @@
                   <div class="badge badge-neutral pb-0.5">UNKNOWN</div>
                   {% endif %}
                 </td>
-                <td>-</td>
+                <td>{{ accessPoint.availability }} %</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -165,6 +165,11 @@
 
     var yellowIcon = new L.Icon({
       iconUrl: "{{ url_for('static', filename='images/yellow.png') }}",
+      iconSize: [20, 20],
+    });
+
+    var slateIcon = new L.Icon({
+      iconUrl: "{{ url_for('static', filename='images/slate.png') }}",
       iconSize: [20, 20],
     });
   </script>

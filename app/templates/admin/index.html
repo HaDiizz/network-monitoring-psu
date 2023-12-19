@@ -1,7 +1,7 @@
 {% extends "/layouts/base.html" %} {% block content %}
 <div class="admin-container">
   {% include "/layouts/messageSection.html" %} {% include
-  "/layouts/hostModal.html" %}
+  "/layouts/accessPointModal.html" %}
   <div class="page-tabs tabs">
     <a class="tab tab-lifted tab-active" data-tab="accessPoint">AccessPoint</a>
     <a class="tab tab-lifted" data-tab="host">Host</a>
@@ -446,6 +446,11 @@
 
   var yellowIcon = new L.Icon({
     iconUrl: "{{ url_for('static', filename='images/yellow.png') }}",
+    iconSize: [20, 20],
+  });
+
+  var slateIcon = new L.Icon({
+    iconUrl: "{{ url_for('static', filename='images/slate.png') }}",
     iconSize: [20, 20],
   });
 </script>
