@@ -56,10 +56,14 @@ def get_accessPoint(accessPoint_id):
         accessPoint = models.AccessPoint.objects(
             accessPoint_id=accessPoint_id, month=selected_month, year=selected_year).first()
         if accessPoint:
+
             for accessPoint in accessPoint.accessPoint_list:
+
                 accessPoint_list_ids.append(accessPoint["id"])
-            query = models.AccessPoint.objects(id__in=accessPoint_list_ids)
+
+            query = models.AccessPointList.objects(id__in=accessPoint_list_ids)
             query_accessPoint_list = query.all()
+            
 
             for hour in range(24):
                 for minute in range(0, 60, 10):
@@ -112,6 +116,9 @@ def get_accessPoint(accessPoint_id):
                 my_datetime = datetime.datetime.now()
                 hour = int(my_datetime.strftime("%H"))
                 minute = int(my_datetime.strftime("%M"))
+                
+
+
                 hour = hour * 6
                 minute = int(minute / 10)
                 start_time = hour + minute
@@ -120,17 +127,21 @@ def get_accessPoint(accessPoint_id):
                 for i in range(start_time, end_time):
                     status_list[i] = ""
 
-            if not data_filter:
-                if len(query_accessPoint_list) != 0:
+                
 
+            if not data_filter:
+                
+                if len(query_accessPoint_list) != 0:
+                
                     last_state = query_accessPoint_list[len(
                         query_accessPoint_list)-1]["last_state"]
                     if last_state == -1:
                         for i in range(0, 144):
                             status_list[i] = 0
+
                             
-            
             if not data_filter:
+                
                 my_datetime = datetime.datetime.now()
                 hour = int(my_datetime.strftime("%H"))
                 minute = int(my_datetime.strftime("%M"))
@@ -143,6 +154,9 @@ def get_accessPoint(accessPoint_id):
                     status_list[i] = ""
 
             
+                
+
+
             x_values = times_list
             y_values = status_list
 
