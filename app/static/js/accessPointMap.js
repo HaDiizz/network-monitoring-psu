@@ -84,7 +84,7 @@ async function showAPModal(ap) {
                 ? "<span class='text-yellow-500 font-bold'>WARN</span>"
                 : ap.state === 2
                 ? "<span class='text-red-500 font-bold'>CRIT</span>"
-                : "<span class='text-neutral-500 font-bold'>UNKNOWN</span>"
+                : "<span class='text-indigo-500 font-bold'>UNKNOWN</span>"
             }</td>
           </tr>
           <tr>
@@ -114,7 +114,7 @@ fetch("/get-aps")
           ? greenIcon
           : ap.state == 1
           ? yellowIcon
-          : slateIcon;
+          : indigoIcon;
       var randomizedLat = ap.lat + (Math.random() - 0.5) * 0.00055;
       var randomizedLng = ap.lng + (Math.random() - 0.5) * 0.00055;
       var markerData = L.marker([randomizedLat, randomizedLng], {

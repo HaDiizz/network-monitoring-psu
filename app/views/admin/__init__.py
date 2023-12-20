@@ -137,16 +137,17 @@ def host_dashboard():
     host_summary = {}
     if hosts:
         for host in hosts:
-            host_last_state = host["extensions"]["last_state"]
-            if host_last_state == 0:
+            host_state = host["extensions"]["state"]
+            if host_state == 0:
                 host_state = "UP"
-            elif host_last_state == 1:
+            elif host_state == 1:
                 host_state = "DOWN"
-            elif host_last_state == 2:
+            elif host_state == 2:
                 host_state = "UNREACH"
             for maintain_host in maintain_hosts:
                 if host["id"] == maintain_host["id"]:
                     host_state = "MAINTAIN"
+                    host["extensions"]["state"] = -1
             if host_state not in host_summary:
                 host_summary[host_state] = 0
             host_summary[host_state] += 1
@@ -169,18 +170,19 @@ def service_dashboard():
     service_summary = {}
     if services:
         for service in services:
-            service_last_state = service["extensions"]["state"]
-            if service_last_state == 0:
+            service_state = service["extensions"]["state"]
+            if service_state == 0:
                 service_state = "OK" 
-            elif service_last_state == 1:
+            elif service_state == 1:
                 service_state = "WARN"
-            elif service_last_state == 2:
+            elif service_state == 2:
                 service_state = "CRIT"
-            elif service_last_state == 3:
+            elif service_state == 3:
                 service_state = "UNKNOWN" 
             for maintain_service in maintain_services:
                 if service["id"] == maintain_service["id"]:
                     service_state = "MAINTAIN"
+                    service["extensions"]["state"] = -1
             if service_state not in service_summary:
                 service_summary[service_state] = 0
             service_summary[service_state] += 1

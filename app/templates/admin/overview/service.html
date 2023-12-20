@@ -141,11 +141,17 @@
                   <div class="badge badge-warning pb-0.5">WARN</div>
                   {% elif service["extensions"]["state"] == 2 %}
                   <div class="badge badge-error pb-0.5">CRIT</div>
-                  {% else %}
+                  {% elif service["extensions"]["state"] == 3 %}
                   <div class="badge badge-primary pb-0.5">UNKNOWN</div>
+                  {% else %}
+                  <div class="badge badge-neutral pb-0.5">MAINTAIN</div>
                   {% endif %}
                 </td>
-                <td>{{ service["extensions"]["availability"] }} %</td>
+                {% if service.extensions.availability %}
+                <td>{{ service.extensions.availability }} %</td>
+                {% else %}
+                <td>-</td>
+                {% endif %}
               </tr>
               {% endfor %}
             </tbody>

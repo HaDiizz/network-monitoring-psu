@@ -140,10 +140,14 @@
                   {% elif accessPoint.state == 2 %}
                   <div class="badge badge-error pb-0.5">CRIT</div>
                   {% else %}
-                  <div class="badge badge-neutral pb-0.5">UNKNOWN</div>
+                  <div class="badge badge-primary pb-0.5">UNKNOWN</div>
                   {% endif %}
                 </td>
+                {% if accessPoint.availability %}
                 <td>{{ accessPoint.availability }} %</td>
+                {% else %}
+                <td>-</td>
+                {% endif %}
               </tr>
               {% endfor %}
             </tbody>
@@ -170,6 +174,11 @@
 
     var slateIcon = new L.Icon({
       iconUrl: "{{ url_for('static', filename='images/slate.png') }}",
+      iconSize: [20, 20],
+    });
+
+    var indigoIcon = new L.Icon({
+      iconUrl: "{{ url_for('static', filename='images/unknown-mark.png') }}",
       iconSize: [20, 20],
     });
   </script>

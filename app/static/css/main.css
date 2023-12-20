@@ -136,6 +136,33 @@ div.dataTables_wrapper div.dataTables_filter {
   font-size: 14px;
 }
 
+#btn-filter-up,
+#btn-filter-down,
+#btn-filter-unreach,
+#btn-filter-maintain,
+#btn-filter-clear
+{
+  padding: 5px 7px; 
+}
+
+#btn-filter-up span,
+#btn-filter-down span,
+#btn-filter-unreach span,
+#btn-filter-maintain span,
+#btn-filter-clear span
+{
+  font-size: 10px;
+}
+
+#btn-filter-up i,
+#btn-filter-down i,
+#btn-filter-unreach i,
+#btn-filter-maintain i,
+#btn-filter-clear i
+{
+  font-size: 14px;
+}
+
 /* Dark/Light Mode Switch */
 .toggle-mode {
   position: relative;

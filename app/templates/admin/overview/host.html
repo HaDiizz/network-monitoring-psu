@@ -166,7 +166,11 @@
                   <div class="badge badge-neutral pb-0.5">MAINTAIN</div>
                   {% endif %}
                 </td>
+                {% if host.extensions.availability %}
                 <td>{{ host.extensions.availability }} %</td>
+                {% else %}
+                <td>-</td>
+                {% endif %}
               </tr>
               {% endfor %}
             </tbody>
@@ -193,6 +197,11 @@
 
     var slateIcon = new L.Icon({
       iconUrl: "{{ url_for('static', filename='images/slate.png') }}",
+      iconSize: [20, 20],
+    });
+
+    var indigoIcon = new L.Icon({
+      iconUrl: "{{ url_for('static', filename='images/unknown-mark.png') }}",
       iconSize: [20, 20],
     });
   </script>
