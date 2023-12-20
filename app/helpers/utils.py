@@ -543,7 +543,7 @@ DORM_LIST = [
 ]
 
 
-@caches.cache.cached(timeout=3600, key_prefix='get_ap_list_with_sla')
+@caches.cache.cached(timeout=10800, key_prefix='get_ap_list_with_sla')
 def get_ap_list_with_sla(ap_prop):
     get_ap_list = ap_prop
     if get_ap_list is None:
