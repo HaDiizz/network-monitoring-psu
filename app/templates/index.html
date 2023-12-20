@@ -67,7 +67,11 @@
               <div class="badge badge-primary pb-0.5">UNKNOWN</div>
               {% endif %}
             </td>
+            {% if accessPoint.availability %}
             <td>{{ accessPoint.availability }} %</td>
+            {% else %}
+            <td>-</td>
+            {% endif %}
           </tr>
           {% endfor %}
         </tbody>
