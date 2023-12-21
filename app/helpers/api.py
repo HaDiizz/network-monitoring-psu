@@ -1287,7 +1287,7 @@ def service_list(service_state_selector):
     try:
         service_groups = []
         response_list = []
-        for group in service_group_list():
+        for group in service_group_list(False):
             service_groups.append(group["id"])
         
         with httpx.Client() as client:
@@ -1328,7 +1328,7 @@ def get_all_service_list():
     try:
         service_groups = []
         response_list = []
-        for group in service_group_list():
+        for group in service_group_list(False):
             service_groups.append(group["id"])
         
         with httpx.Client() as client:
@@ -1371,6 +1371,8 @@ def host_group_list():
             if response.status_code == 200:
                 response = response.json()
                 if response:
+                    # for item in response['value']:
+                        # item['extensions']['availability'] = get_host_group_daily_sla(item["id"])
                     return response['value']
             else:
                 return []
@@ -1378,7 +1380,7 @@ def host_group_list():
         return None
 
 
-def service_group_list():
+def service_group_list(is_select_sla):
     try:
         with httpx.Client() as client:
 
@@ -1389,6 +1391,9 @@ def service_group_list():
             if response.status_code == 200:
                 response = response.json()
                 if response:
+                    # if is_select_sla:
+                    #     for item in response['value']:
+                    #         item['extensions']['availability'] = get_service_group_daily_sla(item["id"])
                     return response['value']
             else:
                 return []

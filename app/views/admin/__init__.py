@@ -19,7 +19,7 @@ def index():
     hosts = host_list()
     services = get_all_service_list()
     host_groups = host_group_list()
-    service_groups = service_group_list()
+    service_groups = service_group_list(False)
     maintain_hosts = maintain_host_list()
     maintain_services = maintain_service_list()
     
@@ -160,7 +160,7 @@ def host_dashboard():
 @caches.cache.cached(timeout=10800, key_prefix='service_dashboard')
 def service_dashboard():
     services = get_all_service_list()
-    service_groups = service_group_list()
+    service_groups = service_group_list(True)
     maintain_services = maintain_service_list()
     
     if not service_groups:

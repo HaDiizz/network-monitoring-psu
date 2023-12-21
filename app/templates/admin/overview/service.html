@@ -94,7 +94,11 @@
                   {% for service_group in service_group_list %}
                   <tr>
                     <td>{{ service_group["title"] }}</td>
+                    {% if service_group["extensions"]["availability"] %}
+                    <td>{{ service_group["extensions"]["availability"] }} %</td>
+                    {% else %}
                     <td>-</td>
+                    {% endif %}
                   </tr>
                   {% endfor %}
                 </tbody>
