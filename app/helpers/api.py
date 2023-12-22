@@ -102,7 +102,7 @@ def get_accessPoint_all(response, month, year) :
                 accessPoint_name = item['name']
                 group = item['group']
 
-                if state == 1:
+                if state == 2:
                     accessPoint = models.AccessPoint.objects(
                         accessPoint_id=accessPoint_id, month=month, year=year).first()
                     if accessPoint:
@@ -389,7 +389,7 @@ def get_accessPoint_down(response, month, year, accessPoint_down_in_db, accessPo
     for accessPoint in all_accessPoint :
         accessPoint_down_in_db.append(accessPoint.accessPoint_id)
     
-    filter_accessPoint_down = [accessPoint for accessPoint in accessPoint_down_now if accessPoint not in accessPoint_down_in_db]
+    filter_accessPoint_down = [accessPoint for accessPoint in accessPoint_down_in_db if accessPoint not in accessPoint_down_now]
     
     for accessPoint_id in filter_accessPoint_down :
 
@@ -448,7 +448,7 @@ def get_accessPoint_down(response, month, year, accessPoint_down_in_db, accessPo
             )
             new_accessPoint.save()
     
-    models.AccessPointDown.objects(id__in=filter_accessPoint_down).delete()
+    models.AccessPointDown.objects(accessPoint_id__in=filter_accessPoint_down).delete()
 
 def service_down_handler():
     now = datetime.datetime.now()
@@ -495,7 +495,7 @@ def get_service_all(response, month, year) :
                 for group_item in item['extensions']['groups']:
                     groups.append(group_item)
 
-                if state == 1:
+                if state == 2:
                     service = models.Service.objects(
                         service_id=service_id, month=month, year=year).first()
                     if service:
@@ -771,7 +771,7 @@ def get_service_down(response, month, year, servicedown_in_db, servicedown_now) 
     for service in all_service :
         servicedown_in_db.append(service.service_id)
     
-    filter_service_down = [service for service in servicedown_now if service not in servicedown_in_db]
+    filter_service_down = [service for service in servicedown_in_db if service not in servicedown_now]
     
     for service_id in filter_service_down :
 
@@ -827,7 +827,7 @@ def get_service_down(response, month, year, servicedown_in_db, servicedown_now) 
             )
             new_service.save()
     
-    models.ServiceDown.objects(id__in=filter_service_down).delete()
+    models.ServiceDown.objects(service_id__in=filter_service_down).delete()
 
 def host_down_handler():
     now = datetime.datetime.now()
@@ -839,6 +839,7 @@ def host_down_handler():
     
 
     try:
+        
         with httpx.Client() as client:
             params = {
                 "columns": ['name', 'state', 'last_state', 'labels', 'groups', 'address'],
@@ -848,6 +849,7 @@ def host_down_handler():
                 headers=HEADERS,
                 params=params
             )
+            
             if response.status_code == 200:
                 response = response.json()
                 if response:
@@ -855,7 +857,7 @@ def host_down_handler():
             else:
                 response = []
         host = models.Host.objects(month=month, year=year).first()
-
+        
         if not host :
             if response :
                 get_host_all(response, month, year)
@@ -1177,8 +1179,9 @@ def get_host_down(response, month, year, hostdown_in_db, hostdown_now) :
     for host in all_host :
         hostdown_in_db.append(host.host_id)
     
-    filter_host_down = [host for host in hostdown_now if host not in hostdown_in_db]
+    filter_host_down = [host for host in hostdown_in_db if host not in hostdown_now]
     
+
     for host_id in filter_host_down :
 
         host = models.Host.objects(
@@ -1233,8 +1236,8 @@ def get_host_down(response, month, year, hostdown_in_db, hostdown_now) :
                 groups=groups
             )
             new_host.save()
-    
-    models.HostDown.objects(id__in=filter_host_down).delete()
+    print("Del")
+    models.HostDown.objects(host_id__in=filter_host_down).delete()
 
 
 def get_host_markers():
