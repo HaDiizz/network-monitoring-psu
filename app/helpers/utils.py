@@ -108,25 +108,34 @@ def search_host(start_month, end_month, selected_year, host_name):
         return query
 
 
-def search_day_data(matching_data):
+def search_day_data(matching_data, selected_month, selected_year):
     host_day_dict = []
+    
     for data in matching_data:
         day = data.created_date.day
         month = data.created_date.month
         day = str(day) + "-" + str(month)
+        
         if host_day_dict:
             for check_day in host_day_dict:
                 day_exists = any(check_day["day"] ==
                                  day for check_day in host_day_dict)
                 if day_exists:
                     if check_day["day"] == day:
-                        check_day["time"] = check_day["time"] + data.minutes
+                        
+                        if data.minutes >= 1440 :
+                            check_day["time"] = check_day["time"] + 1440
+                        else :
+                            check_day["time"] = check_day["time"] + data.minutes
                         check_day["count"] = check_day["count"] + 1
                         break
 
                 else:
                     date = day
-                    time = data.minutes
+                    if data.minutes >= 1440 :
+                        time = 1440
+                    else :
+                        time = data.minutes
                     count = 1
                     start_day = {"day": day, "time": time, "count": count}
                     host_day_dict.append(start_day)
@@ -134,11 +143,132 @@ def search_day_data(matching_data):
 
         else:
             date = day
-            time = data.minutes
+            if data.minutes >= 1440 :
+                time = 1440
+            else :
+                time = data.minutes
             count = 1
             start_day = {"day": day, "time": time, "count": count}
             host_day_dict.append(start_day)
 
+    if selected_month + 2 == 13 : #! Month 11 now year to Month 1 next year
+        
+        #! First month
+        query = models.Host.objects(
+                                month=selected_month, year=selected_year)
+        matching_data = query.all()
+        total_all_host = len(matching_data)
+
+        for data in host_day_dict :
+            day, month = data['day'].split('-')
+            if int(month) == selected_month :
+                data["count"] = total_all_host - data["count"]
+            else :
+                break
+
+        #! Second month
+        query = models.Host.objects(
+                                month=selected_month + 1, year=selected_year)
+        matching_data = query.all()
+        total_all_host = len(matching_data)
+        if len(matching_data) == 0 :
+            for data in host_day_dict :
+                day, month = data['day'].split('-')
+                if int(month) == selected_month :
+                    data["count"] = total_all_host - data["count"]
+                elif int(month) == 1:
+                    break
+
+        #! Third month
+        query = models.Host.objects(
+                                month=1, year=selected_year + 1)
+        matching_data = query.all()
+        total_all_host = len(matching_data)
+        if len(matching_data) == 0 :
+            for data in host_day_dict :
+                day, month = data['day'].split('-')
+                if int(month) == selected_month :
+                    data["count"] = total_all_host - data["count"]
+
+    if selected_month + 2 == 14 : #! Month 12 now year to Month 2 next year
+
+        #! First month
+        query = models.Host.objects(
+                                month=selected_month, year=selected_year)
+        matching_data = query.all()
+        total_all_host = len(matching_data)
+        
+        for data in host_day_dict :
+            day, month = data['day'].split('-')
+            if int(month) == selected_month :
+                data["count"] = total_all_host - data["count"]
+            else :
+                break
+
+        #! Second month
+        query = models.Host.objects(
+                                month=1, year=selected_year + 1)
+        matching_data = query.all()
+        total_all_host = len(matching_data)
+        if len(matching_data) == 0 :
+            for data in host_day_dict :
+                day, month = data['day'].split('-')
+                if int(month) == selected_month :
+                    data["count"] = total_all_host - data["count"]
+                elif int(month) == 2 :
+                    break
+
+        #! Third month
+        query = models.Host.objects(
+                                month=2, year=selected_year + 1)
+        matching_data = query.all()
+        total_all_host = len(matching_data)
+        if len(matching_data) == 0 :
+            for data in host_day_dict :
+                day, month = data['day'].split('-')
+                if int(month) == selected_month :
+                    data["count"] = total_all_host - data["count"]
+    
+    else :
+
+        #! First month
+        query = models.Host.objects(
+                                month=selected_month, year=selected_year)
+        matching_data = query.all()
+        total_all_host = len(matching_data)
+
+        for data in host_day_dict :
+            day, month = data['day'].split('-')
+            if int(month) == selected_month :
+                data["count"] = total_all_host - data["count"]
+            else :
+                break
+        
+        #! Second month
+        query = models.Host.objects(
+                                month=selected_month + 1, year=selected_year)
+        matching_data = query.all()
+        total_all_host = len(matching_data)
+        if len(matching_data) == 0 :
+            for data in host_day_dict :
+                day, month = data['day'].split('-')
+                if int(month) == selected_month :
+                    data["count"] = total_all_host - data["count"]
+                elif int(month) == selected_month + 2 :
+                    break
+        
+        #! Third month
+        query = models.Host.objects(
+                                month=selected_month + 2, year=selected_year)
+        matching_data = query.all()
+        total_all_host = len(matching_data)
+        if len(matching_data) == 0 :
+            for data in host_day_dict :
+                day, month = data['day'].split('-')
+                if int(month) == selected_month :
+                    data["count"] = total_all_host - data["count"]
+    
+    print(host_day_dict)
     return host_day_dict
 
 
@@ -242,7 +372,7 @@ def get_day_data(selected_month, selected_year):
         query = search_month(start_month, end_month, selected_year)
 
     host = query.all()
-
+    
     host_list_id = []
     if host:
         for hosts in host:
@@ -252,7 +382,7 @@ def get_day_data(selected_month, selected_year):
 
         query = models.HostList.objects(id__in=host_list_id)
         matching_data = query.all()
-        host_day_dict = search_day_data(matching_data)
+        host_day_dict = search_day_data(matching_data, selected_month, selected_year)
         quarter_month_dict = get_all_quarter_data(
             selected_month, selected_year)
 
