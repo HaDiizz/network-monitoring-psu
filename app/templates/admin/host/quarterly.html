@@ -11,9 +11,13 @@
     <a class="tab tab-lifted tab-active" data-tab="Quarterly">Quarterly</a>
     
     {% set second_key = months.keys()|list|slice(1, 2)|first %}
+    {% if second_key[0] %}
     <a class="tab tab-lifted" data-tab="{{ second_key[0] }}">{{ second_key[0] }}</a>
+    {% elif second_key[1] %}
     <a class="tab tab-lifted" data-tab="{{ second_key[1] }}">{{ second_key[1] }}</a>
+    {% elif second_key[2] %}
     <a class="tab tab-lifted" data-tab="{{ second_key[2] }}">{{ second_key[2] }}</a>
+    {% endif %}
   </div>
   {% for key, value in table_data.items() %}
   <div id="{{ key }}"  class="page tab-content {% if key == 'Quarterly' %}current{% endif %}">

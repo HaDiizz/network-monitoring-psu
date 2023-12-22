@@ -27,7 +27,9 @@ def host_quarterly(year, month):
     avg_sla, host_all_count, host_name, host_sla, host_ip, host_count, month_name, host_sla_first_month, host_sla_second_month, host_sla_third_month, host_count_first_month, host_count_second_month, host_count_third_month, host_count_sum_first_month, host_count_sum_second_month, host_count_sum_third_month, host_sla_sum_first_month, host_sla_sum_second_month, host_sla_sum_third_month = get_quarter_data(
         int(month), int(year))
     day_data = get_day_data(int(month), int(year))
-
+    print('host_name', len(host_name))
+    print('host_ip', len(host_ip))
+    print('host_sla', len(host_sla))
     months = {}
     if day_data:
         for key in day_data.keys():
@@ -57,21 +59,27 @@ def host_quarterly(year, month):
             "host_data": host_data,
             "avg_sla": '{:.4f}'.format(round(avg_sla, 8)),
             "host_all_count": host_all_count
-        },
-        month_list_quarterly[0]: {
+        }
+    }
+
+    if len(month_list_quarterly) >= 1:
+        table_data[month_list_quarterly[0]] = {
             "host_data": host_data_first_month,
             "avg_sla": '{:.4f}'.format(round(host_sla_sum_first_month, 8)),
             "host_all_count": host_count_sum_first_month
-        },
-        month_list_quarterly[1]: {
+        }
+
+    if len(month_list_quarterly) >= 2:
+        table_data[month_list_quarterly[1]] = {
             "host_data": host_data_second_month,
             "avg_sla": '{:.4f}'.format(round(host_sla_sum_second_month, 8)),
             "host_all_count": host_count_sum_second_month
-        },
-        month_list_quarterly[2]: {
+        }
+
+    if len(month_list_quarterly) >= 3:
+        table_data[month_list_quarterly[2]] = {
             "host_data": host_data_third_month,
             "avg_sla": '{:.4f}'.format(round(host_sla_sum_third_month, 8)),
             "host_all_count": host_count_sum_third_month
-        },
-    }
+        }
     return render_template("/admin/host/quarterly.html", title="Host Quarterly", month_name=month_name, day_data=day_data, months=months, sla_status=sla_status,table_data=table_data)

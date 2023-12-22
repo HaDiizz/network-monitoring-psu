@@ -838,7 +838,7 @@ def calculate_cumulative_sla(data):
     for item in data:
         year = item['year']
         month = item['month']
-        sla = item['sla']
+        sla = item['availability']
         key = (year, month)
         if key in cumulative_sla:
             cumulative_sla[key] += sla
@@ -860,11 +860,13 @@ def monthly_callbacks(dash_app, selection):
     )
     def update_cards(selected_year):
         sla_requirement = models.SLAConfig.objects(year=selected_year).first()
+        host_monthly_data = models.Host.objects(year=selected_year)
+
         if sla_requirement is None:
             sla_requirement = sla_status_list()
         if selection == "host":
             filtered_data = [
-                item for item in mock_host_monthly if item['year'] == selected_year]
+                item for item in host_monthly_data if item['year'] == selected_year]
         else:
             filtered_data = [
                 item for item in mock_service_monthly if item['year'] == selected_year]

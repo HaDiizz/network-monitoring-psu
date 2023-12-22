@@ -291,7 +291,7 @@ def get_quarter_data(selected_month, selected_year):
     
 
     if end_month > 12:
-        print("1")
+        # print("1")
         query = search_month(start_month, end_month, selected_year)
         matching_hosts = query.all()
         for host in matching_hosts:
@@ -324,7 +324,8 @@ def get_quarter_data(selected_month, selected_year):
                     host_count_third_month.append(host.count)
                     host_sla_third_month.append(host.availability)
                 if host.ip_address in host_ip:
-                    continue
+                    # continue
+                    host_ip.append(host.ip_address)
                 else:
                     host_ip.append(host.ip_address)
             sla = sla / len(matching_hosts)
@@ -332,7 +333,7 @@ def get_quarter_data(selected_month, selected_year):
             host_count.append(count_down)
             
     else:
-        print("2")
+        # print("2")
         query = search_month(start_month, end_month, selected_year)
         matching_hosts = query.all()
         for host in matching_hosts:
@@ -390,8 +391,8 @@ def get_quarter_data(selected_month, selected_year):
     if avg_sla != 0:
         avg_sla = avg_sla / count
     card_title = get_name_month(selected_month, selected_year)
-    print(host_name)    
-    print("\n" , host_count)
+    # print(host_name)    
+    # print("\n" , host_count)
     # return avg_sla, host_all_count, host_name, host_sla, host_ip, host_count, card_title, host_sla_first_month, host_sla_second_month, 
     return (
         avg_sla,
