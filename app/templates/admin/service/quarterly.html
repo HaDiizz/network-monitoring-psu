@@ -7,43 +7,77 @@
       <li>{{ month_name }}</li>
     </ul>
   </div>
-  <div class="stats stats-vertical lg:stats-horizontal shadow w-full">
-    <div class="stat">
-      <div class="stat-title">SLA Availability</div>
-      <div class="stat-value text-indigo-500">{{ avg_sla }}%</div>
-    </div>
+  <div class="page-tabs tabs">
+    <a class="tab tab-lifted tab-active" data-tab="Quarterly">Quarterly</a>
 
-    <div class="stat">
-      <div class="stat-title">Service Down Total</div>
-      <div class="stat-value text-red-500">{{ service_all_count }}</div>
-    </div>
-  </div>
-  <div class="pt-8 pb-8">
-    <div
-      class="w-full md:w-12/12 sm:w-12/12 bg-light-primary rounded-md dark:bg-dark-primary shadow-xl overflow-x-scroll"
+    {% set second_key = months.keys()|list|slice(1, 2)|first %} {% if
+    second_key[0] %}
+    <a class="tab tab-lifted" data-tab="{{ second_key[0] }}"
+      >{{ second_key[0] }}</a
     >
-      <div class="table-responsive p-3 pt-5">
-        <table id="quarterly-table" class="display" style="width: 100%">
-          <thead>
-            <tr>
-              <th>Service Name</th>
-              <th>จำนวนครั้งที่มีปัญหา</th>
-              <th>SLA Availability</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for service in service_data %}
-            <tr>
-              <td>{{ service_data[service]["service_name"] }}</td>
-              <td>{{ service_data[service]["service_count"] }}</td>
-              <td>{{ service_data[service]["service_sla"] }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+    {% elif second_key[1] %}
+    <a class="tab tab-lifted" data-tab="{{ second_key[1] }}"
+      >{{ second_key[1] }}</a
+    >
+    {% elif second_key[2] %}
+    <a class="tab tab-lifted" data-tab="{{ second_key[2] }}"
+      >{{ second_key[2] }}</a
+    >
+    {% endif %}
+  </div>
+  {% for key, value in table_data.items() %}
+  <div
+    id="{{ key }}"
+    class="page tab-content {% if key == 'Quarterly' %}current{% endif %}"
+  >
+    <div class="stats stats-vertical lg:stats-horizontal shadow w-full">
+      <div class="stat">
+        <div class="stat-title">SLA Availability</div>
+        <div class="stat-value text-indigo-500">{{ value['avg_sla'] }}%</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-title">Service Down Total</div>
+        <div class="stat-value text-red-500">{{ value['service_all_count'] }}</div>
+      </div>
+    </div>
+    <div class="pt-8 pb-8">
+      <div
+        class="w-full md:w-12/12 sm:w-12/12 bg-light-primary rounded-md dark:bg-dark-primary shadow-xl overflow-x-scroll"
+      >
+        <div class="table-responsive p-3 pt-5">
+          <table id="{{ key }}-table" class="display" style="width: 100%">
+            <thead>
+              <tr>
+                <th>Service Name</th>
+                <th>จำนวนครั้งที่มีปัญหา</th>
+                <th>SLA Availability</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for service in value['service_data'] %}
+              <tr>
+                <td>{{ value['service_data'][service]["service_name"] }}</td>
+                <td>{{ value['service_data'][service]["service_count"] }}</td>
+                <td>{{ value['service_data'][service]["service_sla"] }} %</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
+  <script>
+    $(document).ready(function () {
+      $("#{{ key }}-table").DataTable({
+        order: [[1, "desc"]],
+        dom: "Bfrtip",
+        buttons: ["copy", "csv", "excel", "print", "colvis"],
+      });
+    });
+  </script>
+  {% endfor %}
   <div class="divider"></div>
   <div class="flex justify-center pt-5 pb-5">
     <ul
@@ -95,7 +129,8 @@
     {% endfor %}
   </div>
 </div>
-<script src="{{ url_for('static', filename='js/quarterlyTable.js') }}"></script>
+<!-- <script src="{{ url_for('static', filename='js/quarterlyTable.js') }}"></script> -->
+<script src="{{ url_for('static', filename='utils/handleSelectTab.js') }}"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const scrollLinks = document.querySelectorAll(".scroll-link");

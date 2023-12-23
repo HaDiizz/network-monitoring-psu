@@ -64,51 +64,93 @@ def get_name_month(selected_month, selected_year):
     return card_title
 
 
-def search_month(start_month, end_month, selected_year):
+def search_month(start_month, end_month, selected_year, option):
+    if option == "host":
+        if end_month <= 12:
+            query = models.Host.objects(
+                month__gte=start_month,
+                month__lte=end_month,
+                year__in=[selected_year]
+            )
+            return query
+        elif end_month == 13:
+            query = models.Host.objects(
+                (Q(month=11) & Q(year=selected_year)) | (Q(month=12) & Q(
+                    year=selected_year)) | (Q(month=1) & Q(year=selected_year + 1))
+            )
+            return query
+        elif end_month == 14:
+            query = models.Host.objects(
+                (Q(month=12) & Q(year=selected_year)) | (Q(month=1) & Q(
+                    year=selected_year + 1)) | (Q(month=2) & Q(year=selected_year + 1))
+            )
+            return query
+
+    elif option == "service":
+        if end_month <= 12:
+            query = models.Service.objects(
+                month__gte=start_month,
+                month__lte=end_month,
+                year__in=[selected_year]
+            )
+            return query
+        elif end_month == 13:
+            query = models.Service.objects(
+                (Q(month=11) & Q(year=selected_year)) | (Q(month=12) & Q(
+                    year=selected_year)) | (Q(month=1) & Q(year=selected_year + 1))
+            )
+            return query
+        elif end_month == 14:
+            query = models.Service.objects(
+                (Q(month=12) & Q(year=selected_year)) | (Q(month=1) & Q(
+                    year=selected_year + 1)) | (Q(month=2) & Q(year=selected_year + 1))
+            )
+            return query
+
+def search_service(start_month, end_month, selected_year, service_name):
     if end_month <= 12:
-        query = models.Host.objects(
+        query = models.Service.objects(
+            name=service_name,
             month__gte=start_month,
             month__lte=end_month,
-            year__in=[selected_year]
-        )
+            year__in=[selected_year])
         return query
-    elif end_month == 13:
-        query = models.Host.objects(
-            (Q(month=11) & Q(year=selected_year)) | (Q(month=12) & Q(
-                year=selected_year)) | (Q(month=1) & Q(year=selected_year + 1))
+    if end_month == 13:
+        query = models.Service.objects(
+            (Q(name=service_name) & Q(month=11) & Q(year=selected_year)) | Q(name=service_name) & (
+                Q(month=12) & Q(year=selected_year)) | Q(name=service_name) & (Q(month=1) & Q(year=selected_year + 1))
         )
         return query
     elif end_month == 14:
-        query = models.Host.objects(
-            (Q(month=12) & Q(year=selected_year)) | (Q(month=1) & Q(
-                year=selected_year + 1)) | (Q(month=2) & Q(year=selected_year + 1))
+        query = models.Service.objects(
+            (Q(name=service_name) & Q(month=12) & Q(year=selected_year)) | Q(name=service_name) & (Q(month=1) & Q(
+                year=selected_year + 1)) | Q(name=service_name) & (Q(month=2) & Q(year=selected_year + 1))
         )
         return query
-
 
 def search_host(start_month, end_month, selected_year, host_name):
     if end_month <= 12:
         query = models.Host.objects(
-            host_id=host_name,
+            name=host_name,
             month__gte=start_month,
             month__lte=end_month,
             year__in=[selected_year])
         return query
     if end_month == 13:
         query = models.Host.objects(
-            (Q(host_id=host_name) & Q(month=11) & Q(year=selected_year)) | Q(host_id=host_name) & (
-                Q(month=12) & Q(year=selected_year)) | Q(host_id=host_name) & (Q(month=1) & Q(year=selected_year + 1))
+            (Q(name=host_name) & Q(month=11) & Q(year=selected_year)) | Q(name=host_name) & (
+                Q(month=12) & Q(year=selected_year)) | Q(name=host_name) & (Q(month=1) & Q(year=selected_year + 1))
         )
         return query
     elif end_month == 14:
         query = models.Host.objects(
-            (Q(host_id=host_name) & Q(month=12) & Q(year=selected_year)) | Q(host_id=host_name) & (Q(month=1) & Q(
-                year=selected_year + 1)) | Q(host_id=host_name) & (Q(month=2) & Q(year=selected_year + 1))
+            (Q(name=host_name) & Q(month=12) & Q(year=selected_year)) | Q(name=host_name) & (Q(month=1) & Q(
+                year=selected_year + 1)) | Q(name=host_name) & (Q(month=2) & Q(year=selected_year + 1))
         )
         return query
 
 
-def search_day_data(matching_data, selected_month, selected_year):
+def search_host_day_data(matching_data, selected_month, selected_year):
     host_day_dict = []
     
     for data in matching_data:
@@ -271,6 +313,168 @@ def search_day_data(matching_data, selected_month, selected_year):
     
     return host_day_dict
 
+def search_service_day_data(matching_data, selected_month, selected_year):
+    service_day_dict = []
+    
+    for data in matching_data:
+        day = data.created_date.day
+        month = data.created_date.month
+        day = str(day) + "-" + str(month)
+        
+        if service_day_dict:
+            for check_day in service_day_dict:
+                day_exists = any(check_day["day"] ==
+                                 day for check_day in service_day_dict)
+                if day_exists:
+                    if check_day["day"] == day:
+                        
+                        if data.minutes >= 1440 :
+                            check_day["time"] = check_day["time"] + 1440
+                        else :
+                            check_day["time"] = check_day["time"] + data.minutes
+                        check_day["count"] = check_day["count"] + 1
+                        break
+
+                else:
+                    date = day
+                    if data.minutes >= 1440 :
+                        time = 1440
+                    else :
+                        time = data.minutes
+                    count = 1
+                    start_day = {"day": day, "time": time, "count": count}
+                    service_day_dict.append(start_day)
+                    break
+
+        else:
+            date = day
+            if data.minutes >= 1440 :
+                time = 1440
+            else :
+                time = data.minutes
+            count = 1
+            start_day = {"day": day, "time": time, "count": count}
+            service_day_dict.append(start_day)
+
+    if selected_month + 2 == 13 : #! Month 11 now year to Month 1 next year
+        
+        #! First month
+        query = models.Service.objects(
+                                month=selected_month, year=selected_year)
+        matching_data = query.all()
+        total_all_service = len(matching_data)
+
+        for data in service_day_dict :
+            day, month = data['day'].split('-')
+            if int(month) == selected_month :
+                data["count"] = total_all_service - data["count"]
+            else :
+                break
+
+        #! Second month
+        query = models.Service.objects(
+                                month=selected_month + 1, year=selected_year)
+        matching_data = query.all()
+        total_all_service = len(matching_data)
+        if len(matching_data) == 0 :
+            for data in service_day_dict :
+                day, month = data['day'].split('-')
+                if int(month) == selected_month :
+                    data["count"] = total_all_service - data["count"]
+                elif int(month) == 1:
+                    break
+
+        #! Third month
+        query = models.Service.objects(
+                                month=1, year=selected_year + 1)
+        matching_data = query.all()
+        total_all_service = len(matching_data)
+        if len(matching_data) == 0 :
+            for data in service_day_dict :
+                day, month = data['day'].split('-')
+                if int(month) == selected_month :
+                    data["count"] = total_all_service - data["count"]
+
+    if selected_month + 2 == 14 : #! Month 12 now year to Month 2 next year
+
+        #! First month
+        query = models.Service.objects(
+                                month=selected_month, year=selected_year)
+        matching_data = query.all()
+        total_all_service = len(matching_data)
+        
+        for data in service_day_dict :
+            day, month = data['day'].split('-')
+            if int(month) == selected_month :
+                data["count"] = total_all_service - data["count"]
+            else :
+                break
+
+        #! Second month
+        query = models.Service.objects(
+                                month=1, year=selected_year + 1)
+        matching_data = query.all()
+        total_all_service = len(matching_data)
+        if len(matching_data) == 0 :
+            for data in service_day_dict :
+                day, month = data['day'].split('-')
+                if int(month) == selected_month :
+                    data["count"] = total_all_service - data["count"]
+                elif int(month) == 2 :
+                    break
+
+        #! Third month
+        query = models.Service.objects(
+                                month=2, year=selected_year + 1)
+        matching_data = query.all()
+        total_all_service = len(matching_data)
+        if len(matching_data) == 0 :
+            for data in service_day_dict :
+                day, month = data['day'].split('-')
+                if int(month) == selected_month :
+                    data["count"] = total_all_service - data["count"]
+    
+    else :
+
+        #! First month
+        query = models.Service.objects(
+                                month=selected_month, year=selected_year)
+        matching_data = query.all()
+        total_all_service = len(matching_data)
+
+        for data in service_day_dict :
+            day, month = data['day'].split('-')
+            if int(month) == selected_month :
+                data["count"] = total_all_service - data["count"]
+            else :
+                break
+        
+        #! Second month
+        query = models.Service.objects(
+                                month=selected_month + 1, year=selected_year)
+        matching_data = query.all()
+        total_all_service = len(matching_data)
+        if len(matching_data) == 0 :
+            for data in service_day_dict :
+                day, month = data['day'].split('-')
+                if int(month) == selected_month :
+                    data["count"] = total_all_service - data["count"]
+                elif int(month) == selected_month + 2 :
+                    break
+        
+        #! Third month
+        query = models.Service.objects(
+                                month=selected_month + 2, year=selected_year)
+        matching_data = query.all()
+        total_all_service = len(matching_data)
+        if len(matching_data) == 0 :
+            for data in service_day_dict :
+                day, month = data['day'].split('-')
+                if int(month) == selected_month :
+                    data["count"] = total_all_service - data["count"]
+    
+    
+    return service_day_dict
 
 def get_day_in_month(month, year):
     days_in_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
@@ -363,40 +567,65 @@ def get_all_quarter_data(month, year):
     return quarter_month
 
 
-def get_day_data(selected_month, selected_year):
+def get_day_data(selected_month, selected_year, option):
     start_month = selected_month
     end_month = selected_month + 2
-    if end_month > 12:
-        query = search_month(start_month, end_month, selected_year)
-    else:
-        query = search_month(start_month, end_month, selected_year)
+    if option == "host":
+        if end_month > 12:
+            query = search_month(start_month, end_month, selected_year, "host")
+        else:
+            query = search_month(start_month, end_month, selected_year, "host")
 
-    host = query.all()
-    
-    host_list_id = []
-    if host:
-        for hosts in host:
-            for value in hosts.host_list:
-                if value.last_state != -1:
-                    host_list_id.append(value.id)
+        host = query.all()
+        
+        host_list_id = []
+        if host:
+            for hosts in host:
+                for value in hosts.host_list:
+                    if value.last_state != -1:
+                        host_list_id.append(value.id)
 
-        query = models.HostList.objects(id__in=host_list_id)
-        matching_data = query.all()
-        host_day_dict = search_day_data(matching_data, selected_month, selected_year)
-        quarter_month_dict = get_all_quarter_data(
-            selected_month, selected_year)
+            query = models.HostList.objects(id__in=host_list_id)
+            matching_data = query.all()
+            host_day_dict = search_host_day_data(matching_data, selected_month, selected_year)
+            quarter_month_dict = get_all_quarter_data(
+                selected_month, selected_year)
 
-        data_dict = {item['day']: {"date": item['day'], 'sla': round(
-            (1440 - (item['time']/item['count']))/1440 * 100, 2)} for item in host_day_dict}
+            data_dict = {item['day']: {"date": item['day'], 'sla': round(
+                (1440 - (item['time']/item['count']))/1440 * 100, 2)} for item in host_day_dict}
 
-        for key in quarter_month_dict:
-            if key in data_dict:
-                quarter_month_dict[key]['sla'] = data_dict[key]['sla']
+    elif option == "service":
+        if end_month > 12:
+            query = search_month(start_month, end_month, selected_year, "service")
+        else:
+            query = search_month(start_month, end_month, selected_year, "service")
 
-        return quarter_month_dict
+        service = query.all()
+        
+        service_list_id = []
+        if service:
+            for services in service:
+                for value in services.service_list:
+                    if value.last_state != -1:
+                        service_list_id.append(value.id)
+
+            query = models.ServiceList.objects(id__in=service_list_id)
+            matching_data = query.all()
+            service_day_dict = search_service_day_data(matching_data, selected_month, selected_year)
+            quarter_month_dict = get_all_quarter_data(
+                selected_month, selected_year)
+
+            data_dict = {item['day']: {"date": item['day'], 'sla': round(
+                (1440 - (item['time']/item['count']))/1440 * 100, 2)} for item in service_day_dict}
+
+    for key in quarter_month_dict:
+        if key in data_dict:
+            quarter_month_dict[key]['sla'] = data_dict[key]['sla']
+
+    return quarter_month_dict
 
 
-def get_quarter_data(selected_month, selected_year):
+def get_host_quarter_data(selected_month, selected_year):
 
     start_month = selected_month
     end_month = selected_month + 2
@@ -423,7 +652,7 @@ def get_quarter_data(selected_month, selected_year):
 
     if end_month > 12:
         print("1")
-        query = search_month(start_month, end_month, selected_year)
+        query = search_month(start_month, end_month, selected_year, "host")
         matching_hosts = query.all()
         for host in matching_hosts:
             avg_sla += host.availability
@@ -463,12 +692,9 @@ def get_quarter_data(selected_month, selected_year):
             host_sla.append(sla)
             host_count.append(count_down)
 
-        
-
-            
     else:
         
-        query = search_month(start_month, end_month, selected_year)
+        query = search_month(start_month, end_month, selected_year, "host")
         matching_hosts = query.all()
         for host in matching_hosts:
             avg_sla += host.availability
@@ -502,7 +728,8 @@ def get_quarter_data(selected_month, selected_year):
                     host_sla_third_month.append(host.availability)
         
                 if host.ip_address in host_ip:
-                    continue
+                    # continue
+                    host_ip.append(host.ip_address)
                 else:
                     host_ip.append(host.ip_address)
             
@@ -556,6 +783,146 @@ def get_quarter_data(selected_month, selected_year):
         host_sla_sum_first_month,
         host_sla_sum_second_month,
         host_sla_sum_third_month
+    )
+
+def get_service_quarter_data(selected_month, selected_year):
+
+    start_month = selected_month
+    end_month = selected_month + 2
+    avg_sla = 0
+    count = 0
+    service_all_count = 0
+    service_name = []
+    service_sla = []
+    service_sla_first_month = []
+    service_sla_second_month = []
+    service_sla_third_month = []
+    service_sla_sum_first_month = 0
+    service_sla_sum_second_month = 0
+    service_sla_sum_third_month = 0
+    service_count = []
+    service_count_first_month = []
+    service_count_second_month = []
+    service_count_third_month = []
+    service_count_sum_first_month = 0
+    service_count_sum_second_month = 0
+    service_count_sum_third_month = 0
+    
+
+    if end_month > 12:
+        query = search_month(start_month, end_month, selected_year, "service")
+        matching_services = query.all()
+        for service in matching_services:
+            avg_sla += service.availability
+            service_all_count += service.count
+            count += 1
+            if service.name in service_name:
+                continue
+            else:
+                service_name.append(service.name)
+        for service in service_name:
+            query = search_service(start_month, end_month, selected_year, service)
+            matching_services = query.all()
+            sla = 0
+            count_down = 0
+            month_count = 1
+
+            for service in matching_services:
+                sla += service.availability
+                count_down += service.count
+                if month_count == 1 :
+                    service_count_first_month.append(service.count)
+                    service_sla_first_month.append(service.availability)
+                    month_count += 1
+                elif month_count == 2 :
+                    service_count_second_month.append(service.count)
+                    service_sla_second_month.append(service.availability)
+                    month_count += 1
+                else :
+                    service_count_third_month.append(service.count)
+                    service_sla_third_month.append(service.availability)
+            sla = sla / len(matching_services)
+            service_sla.append(sla)
+            service_count.append(count_down)
+
+    else:
+        query = search_month(start_month, end_month, selected_year, "service")
+        matching_services = query.all()
+        for service in matching_services:
+            avg_sla += service.availability
+            service_all_count += service.count
+            count += 1
+            if service.name in service_name:
+                continue
+            else:
+                service_name.append(service.name)
+
+        for service in service_name:
+            query = search_service(start_month, end_month, selected_year, service)
+            matching_services = query.all()
+            sla = 0
+            count_down = 0
+            month_count = 1
+            for service in matching_services:
+                sla += service.availability
+                count_down += service.count
+                if month_count == 1 :
+                    service_count_first_month.append(service.count)
+                    service_sla_first_month.append(service.availability)
+                    month_count += 1
+                elif month_count == 2 :
+                    service_count_second_month.append(service.count)
+                    service_sla_second_month.append(service.availability)
+                    month_count += 1
+                else :
+                    service_count_third_month.append(service.count)
+                    service_sla_third_month.append(service.availability)
+            
+            sla = sla / len(matching_services)
+            service_sla.append(sla)
+            service_count.append(count_down)
+
+    #! sum SLA and service count down per down
+    service_count_sum_first_month = sum(service_count_first_month)
+    service_count_sum_second_month = sum(service_count_second_month)
+    service_count_sum_third_month = sum(service_count_third_month)
+    
+    if len(service_sla_first_month) > 0:
+        service_sla_sum_first_month = sum(service_sla_first_month) / len(service_sla_first_month)
+    else :
+        service_sla_sum_first_month = 100
+
+    if len(service_sla_second_month) > 0:
+        service_sla_sum_second_month = sum(service_sla_second_month) / len(service_sla_second_month)
+    else :
+        service_sla_sum_second_month = 100
+        
+    if len(service_sla_third_month) > 0:
+        service_sla_sum_third_month = sum(service_sla_third_month) / len(service_sla_third_month)
+    else :
+        service_sla_sum_third_month = 100
+
+    if avg_sla != 0:
+        avg_sla = avg_sla / count
+    card_title = get_name_month(selected_month, selected_year)
+    return (
+        avg_sla,
+        service_all_count,
+        service_name, service_sla,
+        service_count,
+        card_title,
+        service_sla_first_month,
+        service_sla_second_month,
+        service_sla_third_month,
+        service_count_first_month,
+        service_count_second_month,
+        service_count_third_month,
+        service_count_sum_first_month,
+        service_count_sum_second_month,
+        service_count_sum_third_month,
+        service_sla_sum_first_month,
+        service_sla_sum_second_month,
+        service_sla_sum_third_month
     )
 
 def search_month_same_year (start_month, start_year, end_month):

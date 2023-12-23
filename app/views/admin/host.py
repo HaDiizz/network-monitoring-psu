@@ -3,7 +3,7 @@ from app.views.admin import admin_module
 from ... import acl
 from ...dash.host_monthly import dash_host
 import calendar
-from ...helpers.utils import get_day_data, get_quarter_data, sla_status_list
+from ...helpers.utils import get_day_data, get_host_quarter_data, sla_status_list
 from ... import models
 
 
@@ -24,9 +24,9 @@ def host_quarterly(year, month):
         "warning_status": sla_requirement["warning_status"],
         "critical_status": sla_requirement["critical_status"]
         }
-    avg_sla, host_all_count, host_name, host_sla, host_ip, host_count, month_name, host_sla_first_month, host_sla_second_month, host_sla_third_month, host_count_first_month, host_count_second_month, host_count_third_month, host_count_sum_first_month, host_count_sum_second_month, host_count_sum_third_month, host_sla_sum_first_month, host_sla_sum_second_month, host_sla_sum_third_month = get_quarter_data(
+    avg_sla, host_all_count, host_name, host_sla, host_ip, host_count, month_name, host_sla_first_month, host_sla_second_month, host_sla_third_month, host_count_first_month, host_count_second_month, host_count_third_month, host_count_sum_first_month, host_count_sum_second_month, host_count_sum_third_month, host_sla_sum_first_month, host_sla_sum_second_month, host_sla_sum_third_month = get_host_quarter_data(
         int(month), int(year))
-    day_data = get_day_data(int(month), int(year))
+    day_data = get_day_data(int(month), int(year), "host")
     print('host_name', len(host_name))
     print('host_ip', len(host_ip))
     print('host_sla', len(host_sla))

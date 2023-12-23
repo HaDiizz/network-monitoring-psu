@@ -860,16 +860,17 @@ def monthly_callbacks(dash_app, selection):
     )
     def update_cards(selected_year):
         sla_requirement = models.SLAConfig.objects(year=selected_year).first()
-        host_monthly_data = models.Host.objects(year=selected_year)
 
         if sla_requirement is None:
             sla_requirement = sla_status_list()
         if selection == "host":
+            host_monthly_data = models.Host.objects(year=selected_year)
             filtered_data = [
                 item for item in host_monthly_data if item['year'] == selected_year]
         else:
+            service_monthly_data = models.Service.objects(year=selected_year)
             filtered_data = [
-                item for item in mock_service_monthly if item['year'] == selected_year]
+                item for item in service_monthly_data if item['year'] == selected_year]
         
         cumulative_sla, record_count = calculate_cumulative_sla(filtered_data)
 

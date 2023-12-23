@@ -29,9 +29,7 @@ dash_host.layout = html.Div([
     dcc.Dropdown(
         id='year-dropdown',
         options=[
-            # {'label': '2021', 'value': 2021},
-            # {'label': '2022', 'value': 2022},
-            {'label': '2023', 'value': 2023},
+            {'label': str(year), 'value': year} for year in range(2023, datetime.datetime.now().year + 1)
         ],
         value=datetime.datetime.now().year,
         style={'margin-bottom': '20px'},

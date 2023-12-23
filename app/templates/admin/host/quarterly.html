@@ -9,18 +9,27 @@
   </div>
   <div class="page-tabs tabs">
     <a class="tab tab-lifted tab-active" data-tab="Quarterly">Quarterly</a>
-    
-    {% set second_key = months.keys()|list|slice(1, 2)|first %}
-    {% if second_key[0] %}
-    <a class="tab tab-lifted" data-tab="{{ second_key[0] }}">{{ second_key[0] }}</a>
+
+    {% set second_key = months.keys()|list|slice(1, 2)|first %} {% if
+    second_key[0] %}
+    <a class="tab tab-lifted" data-tab="{{ second_key[0] }}"
+      >{{ second_key[0] }}</a
+    >
     {% elif second_key[1] %}
-    <a class="tab tab-lifted" data-tab="{{ second_key[1] }}">{{ second_key[1] }}</a>
+    <a class="tab tab-lifted" data-tab="{{ second_key[1] }}"
+      >{{ second_key[1] }}</a
+    >
     {% elif second_key[2] %}
-    <a class="tab tab-lifted" data-tab="{{ second_key[2] }}">{{ second_key[2] }}</a>
+    <a class="tab tab-lifted" data-tab="{{ second_key[2] }}"
+      >{{ second_key[2] }}</a
+    >
     {% endif %}
   </div>
   {% for key, value in table_data.items() %}
-  <div id="{{ key }}"  class="page tab-content {% if key == 'Quarterly' %}current{% endif %}">
+  <div
+    id="{{ key }}"
+    class="page tab-content {% if key == 'Quarterly' %}current{% endif %}"
+  >
     <div class="stats stats-vertical lg:stats-horizontal shadow w-full">
       <div class="stat">
         <div class="stat-title">SLA Availability</div>
@@ -37,15 +46,6 @@
         class="w-full md:w-12/12 sm:w-12/12 bg-light-primary rounded-md dark:bg-dark-primary shadow-xl overflow-x-scroll"
       >
         <div class="table-responsive p-3 pt-5">
-          <script>
-            $(document).ready(function () {
-              $("#{{ key }}-table").DataTable({
-                "order": [[2, 'desc']],
-                dom: "Bfrtip",
-                buttons: ["copy", "csv", "excel", "print", "colvis"],
-              });
-            });
-          </script>
           <table id="{{ key }}-table" class="display" style="width: 100%">
             <thead>
               <tr>
@@ -70,6 +70,15 @@
       </div>
     </div>
   </div>
+  <script>
+    $(document).ready(function () {
+      $("#{{ key }}-table").DataTable({
+        order: [[2, "desc"]],
+        dom: "Bfrtip",
+        buttons: ["copy", "csv", "excel", "print", "colvis"],
+      });
+    });
+  </script>
   {% endfor %}
   <div class="divider"></div>
   <div class="flex justify-center pt-5 pb-5">
@@ -122,7 +131,7 @@
     {% endfor %}
   </div>
 </div>
-<script src="{{ url_for('static', filename='js/quarterlyTable.js') }}"></script>
+<!-- <script src="{{ url_for('static', filename='js/quarterlyTable.js') }}"></script> -->
 <script src="{{ url_for('static', filename='utils/handleSelectTab.js') }}"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
