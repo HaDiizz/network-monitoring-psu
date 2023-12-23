@@ -192,10 +192,12 @@ def service_dashboard():
 @admin_module.route("/test")
 def test():
     service_down_list = service_is_down()
+    get_ap_data = access_point_list()
+    result = get_all_ap_list(get_ap_data)
     # ! ถ้าอยากดูข้อมูล service_down_list ให้ uncomment
     # return jsonify(service_is_down())
     # return jsonify(host_is_down())
-    return jsonify(host_list())
+    return jsonify(result)
 
 @admin_module.route("/down-hosts", methods=["GET", "POST"])
 @acl.roles_required("admin")

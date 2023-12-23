@@ -785,7 +785,7 @@ def get_ap_list_with_sla(ap_prop):
                                 found_location = True
                                 break
                         
-                    if data["id"] == "WLC" and name.startswith("DRM15") and location["location_id"].startswith("DRM15"):
+                    if data["id"] == "WLC" and name.startswith(location["location_id"]) and not name.startswith("DRM15") and not location["location_id"].startswith("DRM15"):
                         ap_list.append({
                             "accessPoint_id": accessPoint_id,
                             "name": name,
@@ -795,14 +795,16 @@ def get_ap_list_with_sla(ap_prop):
                             "group": location["location_id"],
                             "availability": get_accessPoint_daily_sla(accessPoint_id)
                         })
-                    elif data["id"] == "WLC" and name.startswith(location["location_id"]):
+                        found_location = True
+                        break
+                    elif data["id"] == "WLC" and name.startswith("DRM15") and location["location_id"].startswith("DRM15"):
                         ap_list.append({
                             "accessPoint_id": accessPoint_id,
                             "name": name,
                             "state": state,
                             "lat": location["lat"],
                             "lng": location["lng"],
-                            "group": location["location_id"],
+                            "group": "DRM15",
                             "availability": get_accessPoint_daily_sla(accessPoint_id)
                         })
                         found_location = True
@@ -923,7 +925,7 @@ def get_all_ap_list(ap_prop):
                                 found_location = True
                                 break
                         
-                    if data["id"] == "WLC" and name.startswith("DRM15") and location["location_id"].startswith("DRM15"):
+                    if data["id"] == "WLC" and name.startswith(location["location_id"]) and not name.startswith("DRM15") and not location["location_id"].startswith("DRM15"):
                         ap_list.append({
                             "accessPoint_id": accessPoint_id,
                             "name": name,
@@ -932,14 +934,16 @@ def get_all_ap_list(ap_prop):
                             "lng": location["lng"],
                             "group": location["location_id"]
                         })
-                    elif data["id"] == "WLC" and name.startswith(location["location_id"]):
+                        found_location = True
+                        break
+                    elif data["id"] == "WLC" and name.startswith("DRM15") and location["location_id"].startswith("DRM15"):
                         ap_list.append({
                             "accessPoint_id": accessPoint_id,
                             "name": name,
                             "state": state,
                             "lat": location["lat"],
                             "lng": location["lng"],
-                            "group": location["location_id"]
+                            "group": "DRM15"
                         })
                         found_location = True
                         break
