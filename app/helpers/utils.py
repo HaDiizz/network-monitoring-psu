@@ -268,7 +268,7 @@ def search_day_data(matching_data, selected_month, selected_year):
                 if int(month) == selected_month :
                     data["count"] = total_all_host - data["count"]
     
-    print(host_day_dict)
+    
     return host_day_dict
 
 
@@ -397,6 +397,7 @@ def get_day_data(selected_month, selected_year):
 
 
 def get_quarter_data(selected_month, selected_year):
+
     start_month = selected_month
     end_month = selected_month + 2
     avg_sla = 0
@@ -421,7 +422,7 @@ def get_quarter_data(selected_month, selected_year):
     
 
     if end_month > 12:
-        # print("1")
+        print("1")
         query = search_month(start_month, end_month, selected_year)
         matching_hosts = query.all()
         for host in matching_hosts:
@@ -461,9 +462,12 @@ def get_quarter_data(selected_month, selected_year):
             sla = sla / len(matching_hosts)
             host_sla.append(sla)
             host_count.append(count_down)
+
+        
+
             
     else:
-        # print("2")
+        
         query = search_month(start_month, end_month, selected_year)
         matching_hosts = query.all()
         for host in matching_hosts:
@@ -476,6 +480,7 @@ def get_quarter_data(selected_month, selected_year):
                 host_name.append(host.name)
 
         for host in host_name:
+            
             query = search_host(start_month, end_month, selected_year, host)
             matching_hosts = query.all()
             sla = 0
@@ -505,16 +510,25 @@ def get_quarter_data(selected_month, selected_year):
             host_sla.append(sla)
             host_count.append(count_down)
 
-        #! sum SLA and Host count down per down
-        host_count_sum_first_month = sum(host_count_first_month)
-        host_count_sum_second_month = sum(host_count_second_month)
-        host_count_sum_third_month = sum(host_count_third_month)
-        if len(host_sla_first_month) > 0 :
-            host_sla_sum_first_month = sum(host_sla_first_month) / len(host_sla_first_month)
-        if len(host_sla_second_month) > 0 :
-            host_sla_sum_second_month = sum(host_sla_second_month) / len(host_sla_second_month)
-        if len(host_sla_third_month) > 0 :
-            host_sla_sum_third_month = sum(host_sla_third_month) / len(host_sla_third_month)
+    #! sum SLA and Host count down per down
+    host_count_sum_first_month = sum(host_count_first_month)
+    host_count_sum_second_month = sum(host_count_second_month)
+    host_count_sum_third_month = sum(host_count_third_month)
+    
+    if len(host_sla_first_month) > 0:
+        host_sla_sum_first_month = sum(host_sla_first_month) / len(host_sla_first_month)
+    else :
+        host_sla_sum_first_month = 100
+
+    if len(host_sla_second_month) > 0:
+        host_sla_sum_second_month = sum(host_sla_second_month) / len(host_sla_second_month)
+    else :
+        host_sla_sum_second_month = 100
+        
+    if len(host_sla_third_month) > 0:
+        host_sla_sum_third_month = sum(host_sla_third_month) / len(host_sla_third_month)
+    else :
+        host_sla_sum_third_month = 100
 
 
 
