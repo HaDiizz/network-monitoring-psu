@@ -1359,7 +1359,10 @@ def get_host_daily_sla(host_id) :
             for data in matching_data :
 
                 timestamp = data.created_date
-                dt_object = datetime.datetime.strptime(str(timestamp), '%Y-%m-%d %H:%M:%S.%f')
+                try:
+                    dt_object = datetime.datetime.strptime(str(timestamp), '%Y-%m-%d %H:%M:%S.%f')
+                except ValueError:
+                    dt_object = datetime.datetime.strptime(str(timestamp), '%Y-%m-%d %H:%M:%S')
                 day = dt_object.day
 
                 if day == current_datetime.day :
@@ -1399,7 +1402,12 @@ def get_service_daily_sla(service_id) :
             for data in matching_data :
 
                 timestamp = data.created_date
-                dt_object = datetime.datetime.strptime(str(timestamp), '%Y-%m-%d %H:%M:%S.%f')
+
+                try:
+                    dt_object = datetime.datetime.strptime(str(timestamp), '%Y-%m-%d %H:%M:%S.%f')
+                except ValueError:
+                    dt_object = datetime.datetime.strptime(str(timestamp), '%Y-%m-%d %H:%M:%S')
+
                 day = dt_object.day
 
                 if day == current_datetime.day :
@@ -1439,7 +1447,12 @@ def get_accessPoint_daily_sla(accessPoint_id) :
             for data in matching_data :
 
                 timestamp = data.created_date
-                dt_object = datetime.datetime.strptime(str(timestamp), '%Y-%m-%d %H:%M:%S.%f')
+
+                try:
+                    dt_object = datetime.datetime.strptime(str(timestamp), '%Y-%m-%d %H:%M:%S.%f')
+                except ValueError:
+                    dt_object = datetime.datetime.strptime(str(timestamp), '%Y-%m-%d %H:%M:%S')
+
                 day = dt_object.day
 
                 if day == current_datetime.day :
