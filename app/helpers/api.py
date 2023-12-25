@@ -6,7 +6,7 @@ import os
 from dotenv import load_dotenv
 import httpx
 import datetime
-from .utils import cal_min_down, cal_sla, get_all_ap_list, get_host_daily_sla, get_service_daily_sla, get_accessPoint_daily_sla
+from .utils import cal_min_down, cal_sla, get_all_ap_list, get_host_daily_sla, get_service_daily_sla, get_accessPoint_daily_sla, get_host_group_monthly_sla, get_service_group_monthly_sla
 
 load_dotenv()
 
@@ -1374,8 +1374,8 @@ def host_group_list():
             if response.status_code == 200:
                 response = response.json()
                 if response:
-                    # for item in response['value']:
-                        # item['extensions']['availability'] = get_host_group_daily_sla(item["id"])
+                    for item in response['value']:
+                        item['extensions']['availability'] = get_host_group_monthly_sla(item["id"])
                     return response['value']
             else:
                 return []

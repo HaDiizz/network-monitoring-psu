@@ -1471,9 +1471,52 @@ def get_accessPoint_daily_sla(accessPoint_id) :
         else :
             return '{:.2f}'.format(round(100, 2))
     
+def get_host_group_monthly_sla(group_id) :
 
+    current_datetime = datetime.datetime.now()
+    sla = 0
+    count = 0
 
-
-
+    query = models.Host.objects(
+                                month=current_datetime.month, year=current_datetime.year)
+    matching_data = query.all()
     
+
+    for host in matching_data :
+        group = host.groups
+        
+        for group_name in group :
+            if group_name == group_id :
+                sla += host.availability
+                count += 1
+                break
     
+    sla = sla / count
+
+    # print("ID : " , group_id , "SLA : ", sla)
+    return sla
+    
+def get_service_group_monthly_sla(group_id) :
+
+    current_datetime = datetime.datetime.now()
+    sla = 0
+    count = 0
+
+    query = models.Service.objects(
+                                month=current_datetime.month, year=current_datetime.year)
+    matching_data = query.all()
+    
+
+    for service in matching_data :
+        group = service.groups
+        
+        for group_name in group :
+            if group_name == group_id :
+                sla += service.availability
+                count += 1
+                break
+    
+    sla = sla / count
+
+    # print("ID : " , group_id , "SLA : ", sla)
+    return sla   
