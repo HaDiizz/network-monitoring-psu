@@ -480,7 +480,7 @@ def service_down_handler():
         else:
             return []
     except Exception as ex:
-        print("Service error: ", ex)
+        print("service_down_handler error: ", ex)
         return None
 
 
@@ -874,7 +874,7 @@ def host_down_handler():
         else:
             return []
     except Exception as ex:
-        print("Host error: ", ex)
+        print("host_down_handler error: ", ex)
         return None
 
 
@@ -1236,7 +1236,7 @@ def get_host_down(response, month, year, hostdown_in_db, hostdown_now) :
                 groups=groups
             )
             new_host.save()
-    print("Del")
+
     models.HostDown.objects(host_id__in=filter_host_down).delete()
 
 
@@ -1380,6 +1380,7 @@ def host_group_list():
             else:
                 return []
     except Exception as ex:
+        print('host_group_list', ex)
         return None
 
 
@@ -1394,13 +1395,14 @@ def service_group_list(is_select_sla):
             if response.status_code == 200:
                 response = response.json()
                 if response:
-                    # if is_select_sla:
-                    #     for item in response['value']:
-                    #         item['extensions']['availability'] = get_service_group_daily_sla(item["id"])
+                    if is_select_sla:
+                        for item in response['value']:
+                            item['extensions']['availability'] = get_service_group_monthly_sla(item["id"])
                     return response['value']
             else:
                 return []
     except Exception as ex:
+        print('service_group_list', ex)
         return None
 
 

@@ -5,14 +5,18 @@ from ...dash.service_monthly import dash_service
 import calendar
 from ...helpers.utils import sla_status_list, get_service_quarter_data, get_day_data
 from ... import models
+from app import caches
+
 
 @admin_module.route("/services")
 @acl.roles_required("admin")
 def service():
     return render_template("/admin/service/index.html", title="Service", dash_service=dash_service.index())
 
+
 @admin_module.route("/services/<int:year>/<string:month>")
 @acl.roles_required("admin")
+@caches.cache.cached(timeout=3600, key_prefix='service_quarterly')
 def service_quarterly(year, month):
     sla_requirement = models.SLAConfig.objects(year=year).first()
     sla_status = sla_status_list()

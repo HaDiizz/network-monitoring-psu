@@ -5,6 +5,7 @@ from ...dash.host_monthly import dash_host
 import calendar
 from ...helpers.utils import get_day_data, get_host_quarter_data, sla_status_list
 from ... import models
+from app import caches
 
 
 @admin_module.route("/hosts")
@@ -15,6 +16,7 @@ def host():
 
 @admin_module.route("/hosts/<int:year>/<string:month>")
 @acl.roles_required("admin")
+@caches.cache.cached(timeout=3600, key_prefix='host_quarterly')
 def host_quarterly(year, month):
     sla_requirement = models.SLAConfig.objects(year=year).first()
     sla_status = sla_status_list()
@@ -27,9 +29,6 @@ def host_quarterly(year, month):
     avg_sla, host_all_count, host_name, host_sla, host_ip, host_count, month_name, host_sla_first_month, host_sla_second_month, host_sla_third_month, host_count_first_month, host_count_second_month, host_count_third_month, host_count_sum_first_month, host_count_sum_second_month, host_count_sum_third_month, host_sla_sum_first_month, host_sla_sum_second_month, host_sla_sum_third_month = get_host_quarter_data(
         int(month), int(year))
     day_data = get_day_data(int(month), int(year), "host")
-    print('host_name', len(host_name))
-    print('host_ip', len(host_ip))
-    print('host_sla', len(host_sla))
     months = {}
     if day_data:
         for key in day_data.keys():

@@ -197,7 +197,7 @@ def test():
     # ! ถ้าอยากดูข้อมูล service_down_list ให้ uncomment
     # return jsonify(service_is_down())
     # return jsonify(host_is_down())
-    return jsonify(result)
+    return jsonify(get_all_service_list())
 
 @admin_module.route("/down-hosts", methods=["GET", "POST"])
 @acl.roles_required("admin")

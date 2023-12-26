@@ -84,14 +84,16 @@
                 </thead>
                 <tbody>
                   {% for host_group in host_group_list %}
-                  <tr>
-                    <td>{{ host_group["title"] }}</td>
-                    {% if host_group["extensions"]["availability"] %}
-                    <td>{{ host_group["extensions"]["availability"] }} %</td>
-                    {% else %}
-                    <td>-</td>
+                    {% if host_group['extensions']["availability"] != "" %}
+                      <tr>
+                        <td>{{ host_group["title"] }}</td>
+                        {% if host_group["extensions"]["availability"] %}
+                        <td>{{ host_group["extensions"]["availability"] }} %</td>
+                        {% else %}
+                        <td>-</td>
+                        {% endif %}
+                      </tr>
                     {% endif %}
-                  </tr>
                   {% endfor %}
                 </tbody>
               </table>

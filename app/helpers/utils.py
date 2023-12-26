@@ -651,7 +651,6 @@ def get_host_quarter_data(selected_month, selected_year):
     
 
     if end_month > 12:
-        print("1")
         query = search_month(start_month, end_month, selected_year, "host")
         matching_hosts = query.all()
         for host in matching_hosts:
@@ -1471,6 +1470,7 @@ def get_accessPoint_daily_sla(accessPoint_id) :
         else :
             return '{:.2f}'.format(round(100, 2))
     
+    
 def get_host_group_monthly_sla(group_id) :
 
     current_datetime = datetime.datetime.now()
@@ -1491,10 +1491,11 @@ def get_host_group_monthly_sla(group_id) :
                 count += 1
                 break
     
-    sla = sla / count
-
-    # print("ID : " , group_id , "SLA : ", sla)
-    return sla
+    if count > 0:
+        return '{:.4f}'.format(round(sla / count, 8))
+    else:
+        return ""
+    
     
 def get_service_group_monthly_sla(group_id) :
 
@@ -1515,8 +1516,8 @@ def get_service_group_monthly_sla(group_id) :
                 sla += service.availability
                 count += 1
                 break
-    
-    sla = sla / count
-
-    # print("ID : " , group_id , "SLA : ", sla)
-    return sla   
+            
+    if count > 0:
+        return '{:.4f}'.format(round(sla / count, 8))
+    else:
+        return "" 
