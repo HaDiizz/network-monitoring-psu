@@ -129,6 +129,9 @@ def host_dashboard():
     hosts = host_list()
     host_groups = host_group_list()
     maintain_hosts = maintain_host_list()
+    now = datetime.datetime.now()
+    month = calendar.month_name[now.month]
+    year = now.year
 
     if not host_groups:
         host_groups = []
@@ -152,7 +155,7 @@ def host_dashboard():
                 host_summary[host_state] = 0
             host_summary[host_state] += 1
         host_summary["TOTAL"] = len(hosts)
-    return render_template("/admin/overview/host.html", title="Host", location_list=location_list(), host_list=hosts, host_summary=host_summary, host_group_list=host_groups)
+    return render_template("/admin/overview/host.html", title="Host", location_list=location_list(), host_list=hosts, host_summary=host_summary, host_group_list=host_groups, month=month, year=year)
 
 
 @admin_module.route("/overview/service")
@@ -162,6 +165,9 @@ def service_dashboard():
     services = get_all_service_list()
     service_groups = service_group_list(True)
     maintain_services = maintain_service_list()
+    now = datetime.datetime.now()
+    month = calendar.month_name[now.month]
+    year = now.year
     
     if not service_groups:
         service_groups = []
@@ -187,7 +193,7 @@ def service_dashboard():
                 service_summary[service_state] = 0
             service_summary[service_state] += 1
         service_summary["TOTAL"] = len(services)
-    return render_template("/admin/overview/service.html", title="Service", service_list=services, service_summary=service_summary, service_group_list=service_groups)
+    return render_template("/admin/overview/service.html", title="Service", service_list=services, service_summary=service_summary, service_group_list=service_groups, month=month, year=year)
 
 @admin_module.route("/test")
 def test():

@@ -4537,3 +4537,7 @@ details.collapse summary::-webkit-details-marker {
   --tw-bg-opacity: 1;
   background-color: rgb(99 102 241 / var(--tw-bg-opacity));
 }
+
+.gap-x-5 {
+  column-gap: 1.25rem/* 20px */;
+}
