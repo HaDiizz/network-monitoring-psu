@@ -12,7 +12,7 @@
   <form method="post">
     {{ form.csrf_token }}
     <div class="flex justify-end gap-5">
-      <div class="btn cursor-pointer" id="showLocationsButton">แสดงหมุดทั้งหมด</div>
+      <div class="btn cursor-pointer" id="showLocationsButton" onclick="showAllLocations('location')">แสดงหมุดทั้งหมด</div>
       {{ form.submit(value="แก้ไขข้อมูล") }}
     </div>
     <div class="map-container pb-5 pt-5">

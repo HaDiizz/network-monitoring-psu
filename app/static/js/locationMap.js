@@ -1,5 +1,5 @@
 var osmLayer = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 18,
+  maxZoom: 19,
   attribution:
     '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 });
@@ -7,25 +7,25 @@ var osmLayer = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
 var Esri_WorldImagery = L.tileLayer(
   "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
   {
-    maxZoom: 18,
+    maxZoom: 19,
   }
 );
 
 var Stadia_AlidadeSmooth = L.tileLayer(
   "https://{s}.tile.jawg.io/jawg-light/{z}/{x}/{y}{r}.png?access-token={accessToken}",
   {
-    maxZoom: 18,
+    maxZoom: 19,
     accessToken:
       "LIMUfFvUA0DaZQbkYyYbzSLNFizJ91WY5UzFCxJkDWbC4gETyZcmqwD2OvnXdj6X",
   }
 );
 
 defaultMap = L.tileLayer("http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}", {
-  maxZoom: 18,
+  maxZoom: 19,
   subdomains: ["mt0", "mt1", "mt2", "mt3"],
 });
 hybridMap = L.tileLayer("http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}", {
-  maxZoom: 18,
+  maxZoom: 19,
   subdomains: ["mt0", "mt1", "mt2", "mt3"],
 });
 
@@ -119,7 +119,7 @@ function handleMapClick(e) {
 let markers = [];
 let markersVisible = false;
 
-function showAllLocations() {
+function showAllLocations(option) {
   const showButton = document.getElementById("showLocationsButton");
 
   if (markersVisible) {
@@ -128,28 +128,74 @@ function showAllLocations() {
     markersVisible = false;
     showButton.textContent = "แสดงหมุดทั้งหมด";
   } else {
-    fetch("/get-locations")
-      .then((response) => response.json())
-      .then((data) => {
-        if (!data) return;
+    if (option === "location") {
+      fetch("/get-locations")
+        .then((response) => response.json())
+        .then((data) => {
+          if (!data) return;
 
-        data.forEach((location) => {
-          var marker = L.marker([location.lat, location.lng], {
-            icon: markedIcon,
-          }).bindPopup(`${location.name}<br/>`);
+          data.forEach((location) => {
+            var marker = L.marker([location.lat, location.lng], {
+              icon: markedIcon,
+            }).bindPopup(`${location.name}<br/>`);
 
-          marker.addTo(map);
-          markers.push(marker);
+            marker.addTo(map);
+            markers.push(marker);
+          });
+
+          markersVisible = true;
+          showButton.textContent = "ซ่อนหมุดทั้งหมด";
+        })
+        .catch((error) => {
+          console.error("Error fetching location data:", error);
         });
+    } else if (option === "accessPoint") {
+      fetch("/get-ap-locations")
+        .then((response) => response.json())
+        .then((data) => {
+          if (!data) return;
 
-        markersVisible = true;
-        showButton.textContent = "ซ่อนหมุดทั้งหมด";
-      })
-      .catch((error) => {
-        console.error("Error fetching location data:", error);
-      });
+          data.forEach((location) => {
+            var marker = L.marker([location.lat, location.lng], {
+              icon: markedIcon,
+            }).bindPopup(`
+            <div class="container">
+            <table class="table">
+              <thead>
+                <tr class="dark:border-[#f2f2f2]">
+                  <th class='uppercase'>Properties</th>
+                  <th class='uppercase'>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="dark:border-[#f2f2f2]">
+                  <td>Access Point Name</td>
+                  <td>${location.name}</td>
+                </tr>
+                <tr class="dark:border-[#f2f2f2]">
+                  <td>Floor</td>
+                  <td>${location.floor ? location.floor : "-"}</td>
+                </tr>
+                <tr class="dark:border-[#f2f2f2]">
+                  <td>Room</td>
+                  <td>${location.room ? `${location.room}` : "-"}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>`)
+            marker.addTo(map);
+            markers.push(marker);
+          });
+
+          markersVisible = true;
+          showButton.textContent = "ซ่อนหมุดทั้งหมด";
+        })
+        .catch((error) => {
+          console.error("Error fetching location data:", error);
+        });
+    }
   }
 }
 
-const showButton = document.getElementById("showLocationsButton");
-showButton.addEventListener("click", showAllLocations);
+// const showButton = document.getElementById("showLocationsButton");
+// showButton.addEventListener("click", showAllLocations);

@@ -4561,3 +4561,13 @@ details.collapse summary::-webkit-details-marker {
 .loading-md {
   width: 1.5rem/* 24px */;
 }
+
+:is([data-theme="dark"] .dark\:border-white) {
+  --tw-border-opacity: 1;
+  border-color: rgb(255 255 255 / var(--tw-border-opacity));
+}
+
+:is([data-theme="dark"] .dark\:border-\[\#f2f2f2\]) {
+  --tw-border-opacity: 1;
+  border-color: rgb(242 242 242 / var(--tw-border-opacity));
+}

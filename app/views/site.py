@@ -180,6 +180,21 @@ def getLocations():
     return jsonify(location_data)
 
 
+@module.route('/get-ap-locations')
+def get_ap_locations():
+    location_data = []
+    ap_data = models.AccessPointLocation.objects()
+    for item in ap_data:
+        location_data.append({
+            "name": item.name,
+            "lat": item.coordinates[0],
+            "lng": item.coordinates[1],
+            "floor": item.floor,
+            "room": item.room
+        })
+    return jsonify(location_data)
+
+
 @module.route('/login')
 def login():
     if current_user.is_authenticated:
