@@ -9,8 +9,8 @@ services:
             - ../deployment/nwms/mongodb/data/db:/data/db
             - /etc/localtime:/etc/localtime:ro
         restart: always
-        ports:
-            - 27017:27017
+        # ports:
+        #     - 27017:27017
         networks:
             - default
         logging:
