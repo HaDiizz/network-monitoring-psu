@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, jsonify
 from ... import acl
 from ...helpers.api import host_list, service_list, host_group, host_group_list, service_group_list, maintain_host_list, maintain_service_list, service_down_handler, service_is_down, host_is_down, host_down_handler, accessPoint_down_handler, access_point_list, get_all_service_list, access_point_list
-from ...helpers.utils import location_list, get_host_down_select_time, get_all_ap_list, get_ap_list_with_sla
+from ...helpers.utils import location_list, get_host_down_select_time, get_all_ap_list, get_ap_list_with_sla, get_ap_name_list
 from app import caches
 import datetime
 
@@ -194,6 +194,20 @@ def service_dashboard():
             service_summary[service_state] += 1
         service_summary["TOTAL"] = len(services)
     return render_template("/admin/overview/service.html", title="Service", service_list=services, service_summary=service_summary, service_group_list=service_groups, month=month, year=year)
+
+
+@admin_module.route("/get-latest-access-point", methods=["POST", "GET"])
+@acl.roles_required("admin")
+def get_latest_access_point():
+    get_ap_data = access_point_list()
+    result = get_ap_name_list(get_ap_data)
+    existing_entries = models.AccessPointLocation.objects(name__in=[item['name'] for item in result])
+    new_entries = [item for item in result if item['name'] not in [entry.name for entry in existing_entries]]
+    for entry in new_entries:
+        ap = models.AccessPointLocation(name=entry['name'])
+        ap.save()
+    return jsonify(new_entries)
+
 
 @admin_module.route("/test")
 def test():

@@ -4,7 +4,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 from .. import models
 import mongoengine as me
 from ..helpers.utils import location_list, get_all_ap_list, get_ap_list_with_sla
-from ..helpers.api import host_list, get_host_markers, access_point_list, access_point_list
+from ..helpers.api import host_list, get_host_markers, access_point_list
 from .. import oauth2
 import datetime
 from app import caches

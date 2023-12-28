@@ -2,7 +2,10 @@
   <div class="header_container">
     <div class="header_img flex gap-5" style="align-items: center">
       <li class="pr-3">
-        <a id="link-report" class="hover:text-neutral-500 dark:hover:text-white" href="/report"
+        <a
+          id="link-report"
+          class="hover:text-neutral-500 dark:hover:text-white"
+          href="/report"
           >แจ้งปัญหา</a
         >
       </li>
@@ -27,8 +30,14 @@
         >
           <li>
             <div class="p-3 flex flex-col">
-              <span style="width: 100%; font-size: 16px;">{{ account.first_name }} {{ account.last_name }}</span>
-              <span class="text-neutral-500" style="width: 100%; font-size: 13px;">{{ account.email }}</span>
+              <span style="width: 100%; font-size: 16px"
+                >{{ account.first_name }} {{ account.last_name }}</span
+              >
+              <span
+                class="text-neutral-500"
+                style="width: 100%; font-size: 13px"
+                >{{ account.email }}</span
+              >
             </div>
           </li>
           <li>
@@ -42,7 +51,9 @@
         </ul>
       </div>
     </div>
-    <a href="{{ url_for('admin.access_point_dashboard') }}" class="header_logo dark:text-white"
+    <a
+      href="{{ url_for('admin.access_point_dashboard') }}"
+      class="header_logo dark:text-white"
       >Network Monitoring System</a
     >
 
@@ -81,7 +92,9 @@
 <div class="nav dark:bg-base-200" id="navbar">
   <nav class="nav_container">
     <div>
-      <a href="{{ url_for('admin.access_point_dashboard') }}" class="nav_link pb-10"
+      <a
+        href="{{ url_for('admin.access_point_dashboard') }}"
+        class="nav_link pb-10"
         ><img
           src="{{ url_for('static', filename='/images/psu.png') }}"
           alt="logo"
@@ -149,20 +162,42 @@
             <i class="bx bxs-report nav_icon"></i>
             <span class="nav_name">SLA</span>
           </a>
-          <a
-            id="location-link"
-            href="{{ url_for('admin.location') }}"
-            class="nav_link"
-          >
-            <i class="bx bx-location-plus nav_icon"></i>
-            <span class="nav_name">Location</span>
-          </a>
+          <div id="ddl-location" class="nav_dropdown">
+            <a class="nav_link">
+              <i class="bx bx-line-chart nav_icon"></i>
+              <span class="nav_name">Location</span>
+              <i class="bx bx-chevron-down nav_icon nav_dropdown-icon"></i>
+            </a>
+
+            <div class="nav_dropdown-collapse dark:bg-base-200">
+              <div class="nav_dropdown-content">
+                <a
+                  id="location-link"
+                  href="{{ url_for('admin.location') }}"
+                  class="nav_dropdown-item pb-4"
+                  >Location</a
+                >
+                <a
+                  id="accesspoint-location-link"
+                  href="{{ url_for('admin.access_point_location') }}"
+                  class="nav_dropdown-item pb-4"
+                  >Access Point</a
+                >
+                <a
+                  id="host-location-link"
+                  href="{{ url_for('admin.service') }}"
+                  class="nav_dropdown-item"
+                  >Host</a
+                >
+              </div>
+            </div>
+          </div>
           <a
             id="problem-link"
             href="{{ url_for('admin.category') }}"
             class="nav_link"
           >
-            <i class='bx bx-category nav_icon'></i>
+            <i class="bx bx-category nav_icon"></i>
             <span class="nav_name">Issue Category</span>
           </a>
           <a
@@ -181,7 +216,6 @@
             <i class="bx bx-bug nav_icon"></i>
             <span class="nav_name">Report</span>
           </a>
-          
         </div>
       </div>
     </div>

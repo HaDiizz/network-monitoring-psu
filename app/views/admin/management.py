@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request, url_for, flash, abort
+from flask import render_template, redirect, request, url_for, flash, abort, jsonify
 from flask_login import current_user
 from bson import ObjectId
 from app.views.admin import admin_module
@@ -12,7 +12,7 @@ import mongoengine as me
 @acl.roles_required("admin")
 def location():
     locations = models.Location.objects().order_by("-updated_date")
-    return render_template("/admin/location.html", title="Location", locations=locations)
+    return render_template("/admin/location/map/location.html", title="Location", locations=locations)
 
 
 @admin_module.route("/locations/delete/<string:location_id>")
@@ -38,11 +38,11 @@ def create_location():
         lng = request.form.get('lng')
         if name == '' or lat == '' or lng == '' or location_id == '':
             flash("กรุณาใส่ข้อมูลให้ครบถ้วน", "error")
-            return render_template("/admin/createLocation.html", title="Create Location", form=form)
+            return render_template("/admin/location/map/createLocation.html", title="Create Location", form=form)
         existing_location = models.Location.objects.filter(me.Q(name=name) | me.Q(location_id=location_id)).first()
         if existing_location:
             flash("ชื่อสถานที่นี้มีอยู่แล้ว", "error")
-            return render_template("/admin/createLocation.html", title="Create Location", form=form)
+            return render_template("/admin/location/map/createLocation.html", title="Create Location", form=form)
         location = models.Location(
             location_id=location_id,
             name=name,
@@ -55,7 +55,7 @@ def create_location():
         form.lat.data = ""
         form.lng.data = ""
         flash("เพิ่มข้อมูลสำเร็จ", "success")
-    return render_template("/admin/createLocation.html", title="Create Location", form=form)
+    return render_template("/admin/location/map/createLocation.html", title="Create Location", form=form)
 
 
 @admin_module.route("/locations/edit/<string:location_id_prop>", methods=["GET", "POST"])
@@ -73,18 +73,18 @@ def edit_location(location_id_prop):
         lng = request.form.get('lng')
         if name == '' or lat == '' or lng == '' or location_id == '':
             flash("กรุณาใส่ข้อมูลให้ครบถ้วน", "error")
-            return render_template("/admin/editLocation.html", title="Edit Location", form=form)
+            return render_template("/admin/location/map/editLocation.html", title="Edit Location", form=form)
         existing_location = models.Location.objects.filter(me.Q(name=name) | me.Q(location_id=location_id)).first()
         if existing_location and existing_location.id != ObjectId(location_id_prop):
             flash("ชื่อสถานที่นี้มีอยู่แล้ว", "error")
-            return render_template("/admin/editLocation.html", title="Edit Location", form=form)
+            return render_template("/admin/location/map/editLocation.html", title="Edit Location", form=form)
         location.location_id = location_id
         location.name = name
         location.lat = round(float(lat), 6)
         location.lng = round(float(lng), 6)
         location.save()
         flash("แก้ไขข้อมูลสำเร็จ", "success")
-    return render_template("/admin/editLocation.html", title="Edit Location", form=form)
+    return render_template("/admin/location/map/editLocation.html", title="Edit Location", form=form)
 
 
 @admin_module.route("/permission", methods=["GET", "POST"])
@@ -273,3 +273,78 @@ def delete_sla_config(sla_config_id):
     sla_config.delete()
     flash('ลบข้อมูลสำเร็จ', 'success')
     return redirect(url_for('admin.sla_configuration'))
+
+
+@admin_module.route("/access-point-location")
+@acl.roles_required("admin")
+def access_point_location():
+    accessPoints = models.AccessPointLocation.objects().order_by("-updated_date")
+    return render_template("/admin/location/access-point/accessPointLocation.html", title="Access Point Location", accessPoints=accessPoints)
+
+
+@admin_module.route("/access-point-location/create",  methods=["GET", "POST"])
+@acl.roles_required("admin")
+def create_access_point_location():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        lat = request.form.get('lat')
+        lng = request.form.get('lng')
+        floor = request.form.get('floor')
+        room = request.form.get('room')
+        if name == '' or lat == '' or lng == '':
+            flash("กรุณาใส่ข้อมูลให้ครบถ้วน", "error")
+            return render_template("/admin/location/access-point/create.html", title="Create Access Point Location")
+        existing_name = models.AccessPointLocation.objects.filter(me.Q(name=name)).first()
+        if existing_name:
+            flash("ชื่อแอคเซสพอยต์ซ้ำ", "error")
+            return render_template("/admin/location/access-point/create.html", title="Create Access Point Location")
+        accessPoint = models.AccessPointLocation(
+            name=name,
+            coordinates=(round(float(lat), 6), round(float(lng), 6)),
+            floor=floor,
+            room=room
+        )
+        accessPoint.save()
+        flash("เพิ่มข้อมูลสำเร็จ", "success")
+    return render_template("/admin/location/access-point/create.html", title="Create Access Point Location")
+
+
+@admin_module.route("/access-point-location/edit/<string:access_point_id>", methods=["GET", "POST"])
+@acl.roles_required("admin")
+def edit_access_point_location(access_point_id):
+    accessPoint = models.AccessPointLocation.objects.with_id(access_point_id)
+    if not accessPoint:
+        flash('ไม่พบข้อมูลที่ต้องการ', 'error')
+        return redirect(url_for('admin.access_point_location'))
+    if request.method == 'POST':
+        name = request.form.get('name')
+        lat = request.form.get('lat')
+        lng = request.form.get('lng')
+        floor = request.form.get('floor')
+        room = request.form.get('room')
+        if name == '' or lat == '' or lng == '':
+            flash("กรุณาใส่ข้อมูลให้ครบถ้วน", "error")
+            return render_template("/admin/location/access-point/edit.html", title="Edit Access Point Location", accessPoint=accessPoint)
+        existing_name = models.AccessPointLocation.objects.filter(me.Q(name=name)).first()
+        if existing_name and existing_name.id != ObjectId(access_point_id):
+            flash("ชื่อแอคเซสพอยต์ซ้ำ", "error")
+            return render_template("/admin/location/access-point/edit.html", title="Edit Access Point Location", accessPoint=accessPoint)
+        accessPoint.name = name
+        accessPoint.floor = floor
+        accessPoint.room = room
+        accessPoint.coordinates = (round(float(lat), 6), round(float(lng), 6))
+        accessPoint.save()
+        flash("แก้ไขข้อมูลสำเร็จ", "success")
+    return render_template("/admin/location/access-point/edit.html", title="Edit Access Point Location", accessPoint=accessPoint)
+
+
+@admin_module.route("/access-point-location/delete/<string:access_point_id>")
+@acl.roles_required("admin")
+def delete_access_point_location(access_point_id):
+    accessPoint = models.AccessPointLocation.objects.with_id(access_point_id)
+    if not accessPoint:
+        flash('ไม่พบข้อมูลที่ต้องการ', 'error')
+        return redirect(url_for('admin.access_point_location'))
+    accessPoint.delete()
+    flash('ลบข้อมูลสำเร็จ', 'success')
+    return redirect(url_for('admin.access_point_location'))

@@ -1202,6 +1202,21 @@ def get_ap_list_with_sla(ap_prop):
     return ap_list
 
 
+def get_ap_name_list(ap_prop):
+    get_ap_list = ap_prop
+    if get_ap_list is None:
+        get_ap_list = []
+    ap_list = []
+
+    for data in get_ap_list:
+        for item in data["extensions"]["services_with_info"]:
+            if item[0].startswith("AP"):
+                name = item[0].split()[1]
+                ap_list.append({
+                    "name": name,
+                })
+    return ap_list
+
 def get_all_ap_list(ap_prop):
     get_ap_list = ap_prop
     if get_ap_list is None:

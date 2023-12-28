@@ -16,6 +16,7 @@ from .services import ServiceDown
 from .accesspoints import AccessPoint
 from .accesspoints import AccessPointList
 from .accesspoints import AccessPointDown
+from .accesspoints import AccessPointLocation
 
 def init_mongoengine(server):
     server.config['MONGODB_SETTINGS'] = {

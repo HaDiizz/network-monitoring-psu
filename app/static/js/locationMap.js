@@ -52,6 +52,22 @@ L.control
   })
   .addTo(map);
 
+// Default location value
+const latInput = document.getElementById("lat").value;
+const lngInput = document.getElementById("lng").value;
+
+const defaultMarker = L.marker([7.008874, 100.498056], {
+  icon: redIcon,
+  title: "ตำแหน่งที่คุณเลือก",
+}).addTo(map);
+
+if (!latInput || !lngInput) {
+  document.getElementById("lat").value = 7.008874;
+  document.getElementById("lng").value = 100.498056;
+} else {
+  map.removeLayer(defaultMarker);
+}
+
 var marker, zoomed;
 
 map.on("click", handleMapClick);
@@ -59,6 +75,8 @@ map.on("click", handleMapClick);
 function updateMarker() {
   const lat = parseFloat(document.getElementById("lat").value);
   const lng = parseFloat(document.getElementById("lng").value);
+
+  map.removeLayer(defaultMarker);
 
   if (!isNaN(lat) && !isNaN(lng)) {
     if (marker) {
@@ -82,6 +100,8 @@ updateMarker();
 function handleMapClick(e) {
   const lat = e.latlng.lat;
   const lng = e.latlng.lng;
+
+  map.removeLayer(defaultMarker);
 
   if (marker) {
     map.removeLayer(marker);

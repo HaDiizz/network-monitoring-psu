@@ -5,13 +5,17 @@ $(document).ready(function () {
   });
 });
 
-function openDeleteModal(locationId, locationName) {
+function openDeleteModal(item_id, item_name, option) {
   const modal = document.getElementById("delete_modal");
   modal.querySelector(
     "p"
-  ).innerHTML = `คุณยืนยันที่จะลบ <i class="font-bold text-indigo-500">${locationName}</i> ?`;
+  ).innerHTML = `คุณยืนยันที่จะลบ <i class="font-bold text-indigo-500">${item_name}</i> ?`;
   const confirmBtn = modal.querySelector("#cf_delete");
-  confirmBtn.href = `/admin/locations/delete/${locationId}`;
+  if (option === "location") {
+    confirmBtn.href = `/admin/locations/delete/${item_id}`;
+  } else if (option === "accessPoint") {
+    confirmBtn.href = `/admin/access-point-location/delete/${item_id}`;
+  }
 
   modal.showModal();
 }

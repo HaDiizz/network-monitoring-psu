@@ -1,0 +1,111 @@
+{% extends "/layouts/base.html" %} {% block content %}
+<div class="admin-container">
+  <h1 class="text-4xl font-bold pb-8">Create Location</h1>
+  <div class="text-sm breadcrumbs pb-5">
+    <ul>
+      <li><a href="/admin/overview/access-point">Home</a></li>
+      <li><a href="/admin/access-point-location">Access Point Locations</a></li>
+      <li>Create Location</li>
+    </ul>
+  </div>
+  {% include "/layouts/messageSection.html" %}
+  <form
+    method="POST"
+    action="{{ url_for('admin.create_access_point_location') }}"
+  >
+    <div class="flex justify-end gap-5">
+      <div class="btn cursor-pointer" id="showLocationsButton">
+        แสดงหมุดทั้งหมด
+      </div>
+      <button
+        type="submit"
+        class="btn bg-primary hover:bg-secondary dark:bg-neutral text-white"
+      >
+        เพิ่มข้อมูล
+      </button>
+    </div>
+    <div class="map-container pb-5 pt-5">
+      <div id="map"></div>
+    </div>
+    <div class="form-control w-full pb-3">
+      <label for="name" class="label">
+        <span class="label-text">Name</span>
+      </label>
+      <input
+        type="text"
+        name="name"
+        placeholder="Name"
+        class="input input-bordered w-full"
+        required
+      />
+    </div>
+    <div class="form-control w-full pb-3">
+      <label for="lat" class="label">
+        <span class="label-text">Latitude</span>
+      </label>
+      <input
+        id="lat"
+        type="text"
+        name="lat"
+        placeholder="Latitude"
+        class="input input-bordered w-full"
+        required
+      />
+    </div>
+    <div class="form-control w-full pb-3">
+      <label for="longitude" class="label">
+        <span class="label-text">Longitude</span>
+      </label>
+      <input
+        id="lng"
+        type="text"
+        name="lng"
+        placeholder="Longitude"
+        class="input input-bordered w-full"
+        required
+      />
+    </div>
+    <div class="form-control w-full pb-3">
+      <label for="floor" class="label">
+        <span class="label-text">Floor</span>
+      </label>
+      <input
+        id="floor"
+        type="text"
+        name="floor"
+        placeholder="Floor"
+        class="input input-bordered w-full"
+      />
+    </div>
+    <div class="form-control w-full pb-3">
+      <label for="room" class="label">
+        <span class="label-text">Room</span>
+      </label>
+      <input
+        id="room"
+        type="text"
+        name="room"
+        placeholder="Room"
+        class="input input-bordered w-full"
+      />
+    </div>
+  </form>
+</div>
+<script>
+  var markedIcon = L.icon({
+    iconUrl: "{{ url_for('static', filename='images/marked.png') }}",
+    iconSize: [30, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+  });
+</script>
+<script>
+  var redIcon = L.icon({
+    iconUrl: "{{ url_for('static', filename='images/red-mark.png') }}",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+  });
+</script>
+<script src="{{ url_for('static', filename='js/locationMap.js') }}"></script>
+{% endblock %}

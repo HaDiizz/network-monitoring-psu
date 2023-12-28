@@ -1,0 +1,161 @@
+{% extends "/layouts/base.html" %} {% block content %}
+<div class="admin-container">
+  <h1 class="text-4xl font-bold pb-8">Access Point Location</h1>
+  {% include "/layouts/messageSection.html" %}
+  <dialog id="delete_modal" class="modal modal-bottom sm:modal-middle">
+    <form method="dialog" class="modal-box">
+      <h3 class="font-bold text-lg">Delete Confirmation</h3>
+      <p class="py-4"></p>
+      <div class="modal-action">
+        <button class="btn">ยกเลิก</button>
+        <a id="cf_delete" class="btn text-white bg-red-500 hover:bg-red-600"
+          >ตกลง</a
+        >
+      </div>
+    </form>
+    <form method="dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
+  </dialog>
+  <div class="flex justify-end gap-x-3">
+    <button
+      onclick="fetchLatestData()"
+      id="updateButton"
+      class="btn bg-secondary hover:bg-slate-50 flex gap-x-3"
+    >
+      <span id="text-btn-fetch">ดึงข้อมูลล่าสุด</span>
+      <span
+        id="loadingSpinner"
+        class="loading loading-dots loading-md"
+        style="display: none"
+      ></span>
+    </button>
+    <a
+      href="{{ url_for('admin.create_access_point_location') }}"
+      class="btn bg-primary hover:bg-secondary dark:bg-neutral text-white"
+    >
+      เพิ่มข้อมูล
+    </a>
+  </div>
+  <div class="overflow-x-auto pt-10">
+    <table id="location-table" class="display nowrap" style="width: 100%">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Access Point Name</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for accessPoint in accessPoints %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ accessPoint.name }}</td>
+          <td>{{ accessPoint.coordinates[0] }}</td>
+          <td>{{ accessPoint.coordinates[1] }}</td>
+          <td>
+            <div class="cursor-pointer flex justify-evenly">
+              <a
+                href="/admin/access-point-location/edit/{{ accessPoint.id }}"
+                id="btn-location-edit"
+              >
+                <i
+                  class="bx bx-edit-alt text-indigo-500"
+                  style="font-size: 25px"
+                ></i>
+              </a>
+              <button
+                onclick="openDeleteModal('{{ accessPoint.id }}', '{{ accessPoint.name }}', 'accessPoint')"
+                id="btn-location-delete"
+              >
+                <i
+                  class="bx bxs-trash text-red-500"
+                  style="font-size: 25px"
+                ></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th></th>
+          <th>Access Point Name</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+          <th></th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/location.js') }}"></script>
+<script>
+  function fetchLatestData() {
+    let textBtnFetch = document.getElementById("text-btn-fetch");
+    let loadingSpinner = document.getElementById("loadingSpinner");
+    textBtnFetch.innerHTML = "";
+    textBtnFetch.innerHTML = "กำลังโหลดข้อมูล";
+    loadingSpinner.style.display = "block";
+    $.ajax({
+      url: "/admin/get-latest-access-point",
+      type: "POST",
+      success: function (data) {
+        textBtnFetch.innerHTML = "";
+        textBtnFetch.innerHTML = "ดึงข้อมูลล่าสุด";
+        loadingSpinner.style.display = "none";
+        if (data.length > 0) {
+          var apNames = [];
+          for (var i = 0; i < data.length; i++) {
+            var apName = data[i].name;
+            apNames.push(apName);
+          }
+
+          Swal.fire({
+            title: "New AP Entries",
+            html: "New APs: " + apNames.join(", "),
+            icon: "info",
+            confirmButtonText: "OK",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            footer: '<button id="copyButton">Copy to Clipboard</button>',
+          }).then((result) => {
+            if (result.isConfirmed || result.isDismissed) {
+              location.reload();
+            }
+          });
+          $("#copyButton").click(function () {
+            let textarea = document.createElement("textarea");
+            textarea.value = apNames.join(", ");
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textarea);
+            let copyButton = $("#copyButton");
+            copyButton.html("Copied to Clipboard").addClass("text-green-500");
+            setTimeout(function () {
+              copyButton
+                .html("Copy to Clipboard")
+                .removeClass("text-green-500");
+            }, 4000);
+          });
+        } else {
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Everything up-to-date",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+      },
+      error: function (error) {
+        console.log(error);
+      },
+    });
+  }
+</script>
+{% endblock %}
