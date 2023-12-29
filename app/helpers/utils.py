@@ -1077,6 +1077,7 @@ def get_ap_list_with_sla(ap_prop):
                 default_lat = 7.0088136
                 default_lng = 100.498062
                 group_data = None
+                query_ap = models.AccessPointLocation.objects(name=name).first()
                 for location in location_data:
                     if item[3] and "Group" in item[3]:
                         group_data = item[3].split(", ")[1].split(": ")[1]
@@ -1085,8 +1086,8 @@ def get_ap_list_with_sla(ap_prop):
                                 "accessPoint_id": accessPoint_id,
                                 "name": name,
                                 "state": state,
-                                "lat": location["lat"],
-                                "lng": location["lng"],
+                                "lat": query_ap["coordinates"][0] if query_ap else location["lat"],
+                                "lng": query_ap["coordinates"][1] if query_ap else location["lng"],
                                 "group": location["location_id"],
                                 "availability": get_accessPoint_daily_sla(accessPoint_id)
                             })
@@ -1097,8 +1098,8 @@ def get_ap_list_with_sla(ap_prop):
                                 "accessPoint_id": accessPoint_id,
                                 "name": name,
                                 "state": state,
-                                "lat": location["lat"],
-                                "lng": location["lng"],
+                                "lat": query_ap["coordinates"][0] if query_ap else location["lat"],
+                                "lng": query_ap["coordinates"][1] if query_ap else location["lng"],
                                 "group": location["location_id"],
                                 "availability": get_accessPoint_daily_sla(accessPoint_id)
                             })
@@ -1109,8 +1110,8 @@ def get_ap_list_with_sla(ap_prop):
                                 "accessPoint_id": accessPoint_id,
                                 "name": name,
                                 "state": state,
-                                "lat": location["lat"],
-                                "lng": location["lng"],
+                                "lat": query_ap["coordinates"][0] if query_ap else location["lat"],
+                                "lng": query_ap["coordinates"][1] if query_ap else location["lng"],
                                 "group": location["location_id"],
                                 "availability": get_accessPoint_daily_sla(accessPoint_id)
                             })
@@ -1121,8 +1122,8 @@ def get_ap_list_with_sla(ap_prop):
                                 "accessPoint_id": accessPoint_id,
                                 "name": name,
                                 "state": state,
-                                "lat": location["lat"],
-                                "lng": location["lng"],
+                                "lat": query_ap["coordinates"][0] if query_ap else location["lat"],
+                                "lng": query_ap["coordinates"][1] if query_ap else location["lng"],
                                 "group": location["location_id"],
                                 "availability": get_accessPoint_daily_sla(accessPoint_id)
                             })
@@ -1133,8 +1134,8 @@ def get_ap_list_with_sla(ap_prop):
                                 "accessPoint_id": accessPoint_id,
                                 "name": name,
                                 "state": state,
-                                "lat": location["lat"],
-                                "lng": location["lng"],
+                                "lat": query_ap["coordinates"][0] if query_ap else location["lat"],
+                                "lng": query_ap["coordinates"][1] if query_ap else location["lng"],
                                 "group": location["location_id"],
                                 "availability": get_accessPoint_daily_sla(accessPoint_id)
                             })
@@ -1145,8 +1146,8 @@ def get_ap_list_with_sla(ap_prop):
                                 "accessPoint_id": accessPoint_id,
                                 "name": name,
                                 "state": state,
-                                "lat": location["lat"],
-                                "lng": location["lng"],
+                                "lat": query_ap["coordinates"][0] if query_ap else location["lat"],
+                                "lng": query_ap["coordinates"][1] if query_ap else location["lng"],
                                 "group": location["location_id"],
                                 "availability": get_accessPoint_daily_sla(accessPoint_id)
                             })
@@ -1157,8 +1158,8 @@ def get_ap_list_with_sla(ap_prop):
                                     "accessPoint_id": accessPoint_id,
                                     "name": name,
                                     "state": state,
-                                    "lat": location["lat"],
-                                    "lng": location["lng"],
+                                    "lat": query_ap["coordinates"][0] if query_ap else location["lat"],
+                                    "lng": query_ap["coordinates"][1] if query_ap else location["lng"],
                                     "group": location["location_id"],
                                     "availability": get_accessPoint_daily_sla(accessPoint_id)
                                 })
@@ -1170,8 +1171,8 @@ def get_ap_list_with_sla(ap_prop):
                             "accessPoint_id": accessPoint_id,
                             "name": name,
                             "state": state,
-                            "lat": location["lat"],
-                            "lng": location["lng"],
+                            "lat": query_ap["coordinates"][0] if query_ap else location["lat"],
+                            "lng": query_ap["coordinates"][1] if query_ap else location["lng"],
                             "group": location["location_id"],
                             "availability": get_accessPoint_daily_sla(accessPoint_id)
                         })
@@ -1182,8 +1183,8 @@ def get_ap_list_with_sla(ap_prop):
                             "accessPoint_id": accessPoint_id,
                             "name": name,
                             "state": state,
-                            "lat": location["lat"],
-                            "lng": location["lng"],
+                            "lat": query_ap["coordinates"][0] if query_ap else location["lat"],
+                            "lng": query_ap["coordinates"][1] if query_ap else location["lng"],
                             "group": "DRM15",
                             "availability": get_accessPoint_daily_sla(accessPoint_id)
                         })
@@ -1194,8 +1195,8 @@ def get_ap_list_with_sla(ap_prop):
                         "accessPoint_id": accessPoint_id,
                         "name": name,
                         "state": state,
-                        "lat": default_lat,
-                        "lng": default_lng,
+                        "lat": query_ap["coordinates"][0] if query_ap else default_lat,
+                        "lng": query_ap["coordinates"][1] if query_ap else default_lng,
                         "group": "",
                         "availability": get_accessPoint_daily_sla(accessPoint_id)
                     })
@@ -1239,6 +1240,7 @@ def get_all_ap_list(ap_prop):
                 default_lat = 7.0088136
                 default_lng = 100.498062
                 group_data = None
+                query_ap = models.AccessPointLocation.objects(name=name).first()
                 for location in location_data:
                     if item[3] and "Group" in item[3]:
                         group_data = item[3].split(", ")[1].split(": ")[1]
@@ -1247,8 +1249,8 @@ def get_all_ap_list(ap_prop):
                                 "accessPoint_id": accessPoint_id,
                                 "name": name,
                                 "state": state,
-                                "lat": location["lat"],
-                                "lng": location["lng"],
+                                "lat": query_ap["coordinates"][0] if query_ap else location["lat"],
+                                "lng": query_ap["coordinates"][1] if query_ap else location["lng"],
                                 "group": location["location_id"]
                             })
                             found_location = True
@@ -1258,8 +1260,8 @@ def get_all_ap_list(ap_prop):
                                 "accessPoint_id": accessPoint_id,
                                 "name": name,
                                 "state": state,
-                                "lat": location["lat"],
-                                "lng": location["lng"],
+                                "lat": query_ap["coordinates"][0] if query_ap else location["lat"],
+                                "lng": query_ap["coordinates"][1] if query_ap else location["lng"],
                                 "group": location["location_id"]
                             })
                             found_location = True
@@ -1269,8 +1271,8 @@ def get_all_ap_list(ap_prop):
                                 "accessPoint_id": accessPoint_id,
                                 "name": name,
                                 "state": state,
-                                "lat": location["lat"],
-                                "lng": location["lng"],
+                                "lat": query_ap["coordinates"][0] if query_ap else location["lat"],
+                                "lng": query_ap["coordinates"][1] if query_ap else location["lng"],
                                 "group": location["location_id"]
                             })
                             found_location = True
@@ -1280,8 +1282,8 @@ def get_all_ap_list(ap_prop):
                                 "accessPoint_id": accessPoint_id,
                                 "name": name,
                                 "state": state,
-                                "lat": location["lat"],
-                                "lng": location["lng"],
+                                "lat": query_ap["coordinates"][0] if query_ap else location["lat"],
+                                "lng": query_ap["coordinates"][1] if query_ap else location["lng"],
                                 "group": location["location_id"]
                             })
                             found_location = True
@@ -1291,8 +1293,8 @@ def get_all_ap_list(ap_prop):
                                 "accessPoint_id": accessPoint_id,
                                 "name": name,
                                 "state": state,
-                                "lat": location["lat"],
-                                "lng": location["lng"],
+                                "lat": query_ap["coordinates"][0] if query_ap else location["lat"],
+                                "lng": query_ap["coordinates"][1] if query_ap else location["lng"],
                                 "group": location["location_id"]
                             })
                             found_location = True
@@ -1302,8 +1304,8 @@ def get_all_ap_list(ap_prop):
                                 "accessPoint_id": accessPoint_id,
                                 "name": name,
                                 "state": state,
-                                "lat": location["lat"],
-                                "lng": location["lng"],
+                                "lat": query_ap["coordinates"][0] if query_ap else location["lat"],
+                                "lng": query_ap["coordinates"][1] if query_ap else location["lng"],
                                 "group": location["location_id"]
                             })
                             found_location = True
@@ -1313,8 +1315,8 @@ def get_all_ap_list(ap_prop):
                                     "accessPoint_id": accessPoint_id,
                                     "name": name,
                                     "state": state,
-                                    "lat": location["lat"],
-                                    "lng": location["lng"],
+                                    "lat": query_ap["coordinates"][0] if query_ap else location["lat"],
+                                    "lng": query_ap["coordinates"][1] if query_ap else location["lng"],
                                     "group": location["location_id"]
                                 })
                                 found_location = True
@@ -1325,8 +1327,8 @@ def get_all_ap_list(ap_prop):
                             "accessPoint_id": accessPoint_id,
                             "name": name,
                             "state": state,
-                            "lat": location["lat"],
-                            "lng": location["lng"],
+                            "lat": query_ap["coordinates"][0] if query_ap else location["lat"],
+                            "lng": query_ap["coordinates"][1] if query_ap else location["lng"],
                             "group": location["location_id"]
                         })
                         found_location = True
@@ -1336,8 +1338,8 @@ def get_all_ap_list(ap_prop):
                             "accessPoint_id": accessPoint_id,
                             "name": name,
                             "state": state,
-                            "lat": location["lat"],
-                            "lng": location["lng"],
+                            "lat": query_ap["coordinates"][0] if query_ap else location["lat"],
+                            "lng": query_ap["coordinates"][1] if query_ap else location["lng"],
                             "group": "DRM15"
                         })
                         found_location = True
@@ -1347,8 +1349,8 @@ def get_all_ap_list(ap_prop):
                         "accessPoint_id": accessPoint_id,
                         "name": name,
                         "state": state,
-                        "lat": default_lat,
-                        "lng": default_lng,
+                        "lat":  query_ap["coordinates"][0] if query_ap else default_lat,
+                        "lng":  query_ap["coordinates"][1] if query_ap else default_lng,
                         "group": ""
                     })
     return ap_list
