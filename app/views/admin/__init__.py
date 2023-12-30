@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, jsonify
 from ... import acl
 from ...helpers.api import host_list, service_list, host_group, host_group_list, service_group_list, maintain_host_list, maintain_service_list, service_down_handler, service_is_down, host_is_down, host_down_handler, accessPoint_down_handler, access_point_list, get_all_service_list, access_point_list, host_list_with_sla
-from ...helpers.utils import location_list, get_host_down_select_time, get_all_ap_list, get_ap_list_with_sla, get_ap_name_list, get_host_name_list
+from ...helpers.utils import location_list, get_host_down_select_time, get_all_ap_list, get_ap_list_with_sla, get_ap_name_list, get_host_name_list, get_all_host_list
 from app import caches
 import datetime
 
@@ -223,6 +223,127 @@ def get_host_locations():
             "room": item.room
         })
     return jsonify(location_data)
+
+
+@acl.roles_required("admin")
+@admin_module.route('/get-hosts')
+def get_hosts():
+    get_host_data = host_list_with_sla()
+    result = get_all_host_list(get_host_data)
+
+    return jsonify(result)
+
+
+@admin_module.route('/get-host/<string:host_id>')
+@acl.roles_required("admin")
+def get_host(host_id):
+    try:
+        times_list = []
+        status_list = []
+        data_filter = []
+        host_list_ids = []
+        now = datetime.datetime.now()
+        selected_month = now.month
+        selected_year = now.year
+        selected_date = now.day
+        host = models.Host.objects(
+            host_id=host_id, month=selected_month, year=selected_year).first()
+        if host:
+            for host in host.host_list:
+                host_list_ids.append(host["id"])
+            query = models.HostList.objects(id__in=host_list_ids)
+            query_host_list = query.all()
+
+            for hour in range(24):
+                for minute in range(0, 60, 10):
+                    time_str = f"{hour:02d}:{minute:02d}"
+                    times_list.append(time_str)
+
+            for item in query_host_list:
+                created_date = item["created_date"]
+                day = created_date.day
+                month = created_date.month
+                year = created_date.year
+                if day == selected_date and month == selected_month and year == selected_year:
+                    data_filter.append(item)
+
+            for i in times_list:
+                status_list.append(1)
+
+            for item in data_filter:
+                last_state = item["last_state"]
+                time_add = item["created_date"]
+                if last_state != -1 :
+                    time_hour = time_add.hour
+                    time_minutes = time_add.minute
+                    time_hour = time_hour * 6
+                    time_minutes = int(time_minutes / 10)
+                    time_down = int(item["minutes"] / 10)
+
+                    start_time = time_hour + time_minutes
+                    end_time = start_time + time_down
+
+                else :
+                    time_hour = time_add.hour
+                    time_minutes = time_add.minute
+                    time_hour = time_hour * 6
+                    time_minutes = int(time_minutes / 10)
+                    start_time = time_hour + time_minutes
+
+                    my_datetime = datetime.datetime.now()
+                    hour = int(my_datetime.strftime("%H"))
+                    minute = int(my_datetime.strftime("%M"))
+                    hour = hour * 6
+                    minute = int(minute / 10)
+                    end_time = hour + minute
+
+                for i in range(start_time, end_time + 1):
+                    status_list[i] = 0
+                    
+
+            if data_filter:
+                my_datetime = datetime.datetime.now()
+                hour = int(my_datetime.strftime("%H"))
+                minute = int(my_datetime.strftime("%M"))
+                hour = hour * 6
+                minute = int(minute / 10)
+                start_time = hour + minute
+                end_time = len(status_list)
+                
+                for i in range(start_time, end_time):
+                    status_list[i] = ""
+
+            if not data_filter:
+                if len(query_host_list) != 0:
+
+                    last_state = query_host_list[len(
+                        query_host_list)-1]["last_state"]
+                    if last_state == -1:
+                        for i in range(0, 144):
+                            status_list[i] = 0
+                            
+            
+            if not data_filter:
+                my_datetime = datetime.datetime.now()
+                hour = int(my_datetime.strftime("%H"))
+                minute = int(my_datetime.strftime("%M"))
+                hour = hour * 6
+                minute = int(minute / 10)
+                start_time = hour + minute
+                end_time = len(status_list)
+
+                for i in range(start_time, end_time):
+                    status_list[i] = ""
+
+            
+            x_values = times_list
+            y_values = status_list
+
+            return jsonify(x_values, y_values)
+        else:
+            return jsonify({"error": "Host not found"}), 404
+    except Exception as ex:
+        return jsonify({"error": str(ex)}), 500
 
 
 @admin_module.route("/get-latest-host", methods=["POST", "GET"])

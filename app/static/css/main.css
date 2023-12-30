@@ -342,3 +342,10 @@ div.dataTables_wrapper div.dataTables_filter {
 #ap-plotly-graph {
   place-self: center;
 }
+
+#host-graph-detail {
+  display: grid;
+}
+#host-plotly-graph {
+  place-self: center;
+}

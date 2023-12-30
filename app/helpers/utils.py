@@ -1052,6 +1052,8 @@ DORM_LIST = [
     "Dorm14",
     "Dorm15",
 ]
+DEFAULT_LAT = 7.0088136
+DEFAULT_LNG = 100.498062
 
 
 @caches.cache.cached(timeout=10800, key_prefix='get_ap_list_with_sla')
@@ -1074,8 +1076,6 @@ def get_ap_list_with_sla(ap_prop):
                 state = int(item[1])
                 accessPoint_id = data["id"] + ":" + item[0]
                 found_location = False
-                default_lat = 7.0088136
-                default_lng = 100.498062
                 group_data = None
                 query_ap = models.AccessPointLocation.objects(name=name).first()
                 for location in location_data:
@@ -1195,8 +1195,8 @@ def get_ap_list_with_sla(ap_prop):
                         "accessPoint_id": accessPoint_id,
                         "name": name,
                         "state": state,
-                        "lat": query_ap["coordinates"][0] if query_ap else default_lat,
-                        "lng": query_ap["coordinates"][1] if query_ap else default_lng,
+                        "lat": query_ap["coordinates"][0] if query_ap else DEFAULT_LAT,
+                        "lng": query_ap["coordinates"][1] if query_ap else DEFAULT_LNG,
                         "group": "",
                         "availability": get_accessPoint_daily_sla(accessPoint_id)
                     })
@@ -1233,6 +1233,24 @@ def get_host_name_list(host_prop):
     return host_list
 
 
+@caches.cache.cached(timeout=10800, key_prefix='get_all_host_list')
+def get_all_host_list(host_prop):
+    get_host_list = host_prop
+    result = []
+    for item in get_host_list:
+        query_host = models.HostLocation.objects(name=item["extensions"]["name"]).first()
+        result.append({
+            "host_id": item["id"],
+            "name": item["extensions"]["name"],
+            "state": item["extensions"]["state"],
+            "lat": query_host["coordinates"][0] if query_host else DEFAULT_LAT,
+            "lng": query_host["coordinates"][1] if query_host else DEFAULT_LNG,
+            "groups": item["extensions"]["groups"],
+            "availability": item["extensions"]["availability"]
+        })
+    return result
+
+
 def get_all_ap_list(ap_prop):
     get_ap_list = ap_prop
     if get_ap_list is None:
@@ -1252,8 +1270,6 @@ def get_all_ap_list(ap_prop):
                 state = int(item[1])
                 accessPoint_id = data["id"] + ":" + item[0]
                 found_location = False
-                default_lat = 7.0088136
-                default_lng = 100.498062
                 group_data = None
                 query_ap = models.AccessPointLocation.objects(name=name).first()
                 for location in location_data:
@@ -1364,8 +1380,8 @@ def get_all_ap_list(ap_prop):
                         "accessPoint_id": accessPoint_id,
                         "name": name,
                         "state": state,
-                        "lat":  query_ap["coordinates"][0] if query_ap else default_lat,
-                        "lng":  query_ap["coordinates"][1] if query_ap else default_lng,
+                        "lat":  query_ap["coordinates"][0] if query_ap else DEFAULT_LAT,
+                        "lng":  query_ap["coordinates"][1] if query_ap else DEFAULT_LNG,
                         "group": ""
                     })
     return ap_list

@@ -34,7 +34,7 @@ def index():
 
 @module.route('/get-aps')
 # @caches.cache.cached(timeout=3600, key_prefix='get-aps')
-def get_hosts():
+def get_aps():
     get_ap_data = access_point_list()
     result = get_ap_list_with_sla(get_ap_data)
 

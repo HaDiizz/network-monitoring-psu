@@ -25,87 +25,106 @@ function updateMapView(lat, lng) {
   map.setView([lat, lng], 18);
 }
 
-// async function showAPModal(ap) {
-//   const modal = document.getElementById("ap-modal");
-//   const modalInfo = document.getElementById("ap-info");
-//   const accessPoint_id = ap.accessPoint_id;
+async function showHostModal(host) {
+  const modal = document.getElementById("host-modal");
+  const modalInfo = document.getElementById("host-info");
+  const host_id = host.host_id;
 
-//   await fetch(`/get-ap/${accessPoint_id}`)
-//     .then((response) => response.json())
-//     .then((data) => {
-//       const graphDiv = document.createElement("div");
-//       graphDiv.id = "ap-plotly-graph";
-//       modal.querySelector("#ap-graph-detail").appendChild(graphDiv);
+  await fetch(`/admin/get-host/${host_id}`)
+    .then((response) => response.json())
+    .then((data) => {
+      const graphDiv = document.createElement("div");
+      graphDiv.id = "host-plotly-graph";
+      modal.querySelector("#host-graph-detail").appendChild(graphDiv);
 
-//       const dataGraph = [
-//         {
-//           x: data[0],
-//           y: data[1],
-//           type: "scatter",
-//           mode: "lines",
-//           name: "AP Status",
-//         },
-//       ];
+      const dataGraph = [
+        {
+          x: data[0],
+          y: data[1],
+          type: "scatter",
+          mode: "lines",
+          name: "Host Status",
+        },
+      ];
 
-//       const layout = {
-//         title: "AP Status",
-//         xaxis: { title: "Times" },
-//         yaxis: {
-//           title: "Status",
-//           tickvals: [1, 0],
-//           ticktext: ["UP", "DOWN"],
-//         },
-//       };
+      const layout = {
+        title: "Host Status",
+        xaxis: { title: "Times" },
+        yaxis: {
+          title: "Status",
+          tickvals: [1, 0],
+          ticktext: ["UP", "DOWN"],
+        },
+      };
 
-//       Plotly.newPlot("ap-plotly-graph", dataGraph, layout);
-//     });
-//   modalInfo.style.display = "inherit";
-//   modal.querySelector("#ap-title").innerHTML = `${ap.name}`;
-//   modal.querySelector("#ap-info-detail").innerHTML = `
-//             <div class="flex flex-col gap-5">
-//               <div class="flex-row">
-//                 <span class="font-semibold">AP name</span>
-//                 <span>:</span>
-//                 <span>${ap.name}</span>
-//               </div>
-//               <div class="flex-row">
-//                 <span class="font-semibold">AP status</span>
-//                 <span>:</span>
-//                 ${ap.state === 0 ? "<span>UP</span>" : "<span>DOWN</span>"}
-//               </div>
-//               <div class="flex-row">
-//                 <span class="font-semibold">Availability</span>
-//                 <span>:</span>
-//                 <span>-</span>
-//               </div>
-//             </div>`;
+      Plotly.newPlot("host-plotly-graph", dataGraph, layout);
+    });
+  modalInfo.style.display = "inherit";
+  modal.querySelector("#host-title").innerHTML = `${host.name}`;
+  modal.querySelector("#host-info-detail").innerHTML = `
+  <div class="container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th class='uppercase'>Properties</th>
+        <th class='uppercase'>Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Host Name</td>
+        <td>${host.name}</td>
+      </tr>
+      <tr>
+        <td>Status</td>
+        <td>${
+          host.state === 0
+            ? "<span class='text-green-500 font-bold'>UP</span>"
+            : host.state === 1
+            ? "<span class='text-red-500 font-bold'>DOWN</span>"
+            : "<span class='text-yellow-500 font-bold'>UNREACH</span>"
+        }</td>
+      </tr>
+      <tr>
+        <td>Availability</td>
+        <td>${host.availability ? `${host.availability} %` : "-"}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>`;
 
-//   modal.showModal();
-// }
+  modal.showModal();
+}
 
-// var markerClusterGroup = L.markerClusterGroup();
+var markerClusterGroup = L.markerClusterGroup({
+  disableClusteringAtZoom: 19,
+});
 
-// fetch("/get-aps")
-//   .then((response) => response.json())
-//   .then((data) => {
-//     if (!data) return;
-//     data.forEach((ap) => {
-//       var marker =
-//         ap.state === 2 ? redIcon : ap.state == 0 ? greenIcon : yellowIcon;
-//       var markerData = L.marker([ap.lat, ap.lng], { icon: marker });
+fetch("/admin/get-hosts")
+  .then((response) => response.json())
+  .then((data) => {
+    if (!data) return;
+    data.forEach((host) => {
+      var marker =
+        host.state === 1 ? redIcon : host.state == 0 ? greenIcon : yellowIcon;
+      var randomizedLat = host.lat + (Math.random() - 0.5) * 0.00055;
+      var randomizedLng = host.lng + (Math.random() - 0.5) * 0.00055;
+      var markerData = L.marker([randomizedLat, randomizedLng], {
+        icon: marker,
+      });
 
-//       markerClusterGroup.addLayer(markerData);
+      markerClusterGroup.addLayer(markerData);
 
-//       markerData.bindPopup(
-//         `AP Name: ${ap.name}<br/> 
-//                 <div class="pt-2 flex justify-center"><a onclick='showAPModal(${JSON.stringify(
-//                   ap
-//                 )})' style="text-decoration: none" type="button" class="text-indigo-500 cursor-pointer">
-//                   ดูรายละเอียด
-//                 </a></div>`
-//       );
-//     });
+      markerData.bindPopup(
+        `Host Name: ${host.name}<br/> 
+                <div class="pt-2 flex justify-center"><a onclick='showHostModal(${JSON.stringify(
+                  host
+                )})' style="text-decoration: none" type="button" class="text-indigo-500 cursor-pointer">
+                  ดูรายละเอียด
+                </a></div>`
+      );
+    });
 
-//     map.addLayer(markerClusterGroup);
-//   })
-//   .catch((error) => console.error("Error fetching markers:", error));
+    map.addLayer(markerClusterGroup);
+  })
+  .catch((error) => console.error("Error fetching markers:", error));

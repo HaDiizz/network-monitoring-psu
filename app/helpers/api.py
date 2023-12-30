@@ -1255,7 +1255,7 @@ def get_host_markers():
         return None
 
 
-# @caches.cache.cached(timeout=3600, key_prefix='host_list')
+# @caches.cache.cached(timeout=10800, key_prefix='host_list_with_sla')
 def host_list_with_sla():
     try:
         with httpx.Client() as client:
