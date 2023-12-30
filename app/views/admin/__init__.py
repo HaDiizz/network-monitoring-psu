@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, jsonify
 from ... import acl
-from ...helpers.api import host_list, service_list, host_group, host_group_list, service_group_list, maintain_host_list, maintain_service_list, service_down_handler, service_is_down, host_is_down, host_down_handler, accessPoint_down_handler, access_point_list, get_all_service_list, access_point_list, host_list_with_sla
+from ...helpers.api import host_list, service_list, host_group, host_group_list, service_group_list, maintain_host_list, maintain_service_list, service_down_handler, service_is_down, host_is_down, host_down_handler, accessPoint_down_handler, access_point_list, get_all_service_list, access_point_list, host_list_info
 from ...helpers.utils import location_list, get_host_down_select_time, get_all_ap_list, get_ap_list_with_sla, get_ap_name_list, get_host_name_list, get_all_host_list
 from app import caches
 import datetime
@@ -16,7 +16,7 @@ from app.views.admin.management import *
 @acl.roles_required("admin")
 # @caches.cache.cached(timeout=3600, key_prefix='overview')
 def index():
-    hosts = host_list_with_sla()
+    hosts = host_list_info()
     services = get_all_service_list()
     host_groups = host_group_list()
     service_groups = service_group_list(False)
@@ -124,9 +124,9 @@ def access_point_dashboard():
 
 @admin_module.route("/overview/host")
 @acl.roles_required("admin")
-@caches.cache.cached(timeout=10800, key_prefix='host_dashboard')
 def host_dashboard():
-    hosts = host_list_with_sla()
+    get_host_data = host_list_info()
+    hosts = get_all_host_list(get_host_data)
     host_groups = host_group_list()
     maintain_hosts = maintain_host_list()
     now = datetime.datetime.now()
@@ -140,7 +140,7 @@ def host_dashboard():
     host_summary = {}
     if hosts:
         for host in hosts:
-            host_state = host["extensions"]["state"]
+            host_state = host["state"]
             if host_state == 0:
                 host_state = "UP"
             elif host_state == 1:
@@ -148,9 +148,9 @@ def host_dashboard():
             elif host_state == 2:
                 host_state = "UNREACH"
             for maintain_host in maintain_hosts:
-                if host["id"] == maintain_host["id"]:
+                if host["host_id"] == maintain_host["id"]:
                     host_state = "MAINTAIN"
-                    host["extensions"]["state"] = -1
+                    host["state"] = -1
             if host_state not in host_summary:
                 host_summary[host_state] = 0
             host_summary[host_state] += 1
@@ -228,7 +228,7 @@ def get_host_locations():
 @acl.roles_required("admin")
 @admin_module.route('/get-hosts')
 def get_hosts():
-    get_host_data = host_list_with_sla()
+    get_host_data = host_list_info()
     result = get_all_host_list(get_host_data)
 
     return jsonify(result)

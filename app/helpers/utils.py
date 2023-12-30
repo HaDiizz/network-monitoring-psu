@@ -1241,12 +1241,14 @@ def get_all_host_list(host_prop):
         query_host = models.HostLocation.objects(name=item["extensions"]["name"]).first()
         result.append({
             "host_id": item["id"],
+            "title": item["title"],
+            "address": item["extensions"]["address"] if item["extensions"]["address"] else "",
             "name": item["extensions"]["name"],
             "state": item["extensions"]["state"],
             "lat": query_host["coordinates"][0] if query_host else DEFAULT_LAT,
             "lng": query_host["coordinates"][1] if query_host else DEFAULT_LNG,
             "groups": item["extensions"]["groups"],
-            "availability": item["extensions"]["availability"]
+            "availability": get_host_daily_sla(item["id"])
         })
     return result
 

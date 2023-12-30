@@ -1255,8 +1255,8 @@ def get_host_markers():
         return None
 
 
-# @caches.cache.cached(timeout=10800, key_prefix='host_list_with_sla')
-def host_list_with_sla():
+# @caches.cache.cached(timeout=10800, key_prefix='host_list_info')
+def host_list_info():
     try:
         with httpx.Client() as client:
             params = {
@@ -1274,12 +1274,12 @@ def host_list_with_sla():
                     for item in response['value']:
                         if not current_user.is_authenticated or current_user.role != 'admin':
                             del item['extensions']['address']
-                        item['extensions']['availability'] = get_host_daily_sla(item["id"])
+                        # item['extensions']['availability'] = get_host_daily_sla(item["id"])
                     return response['value']
             else:
                 return []
     except Exception as ex:
-        print("host_list_with_sla", ex)
+        print("host_list_info", ex)
         return None
     
 

@@ -160,20 +160,20 @@
                 >
                   <div id="host-name">{{ host.title }}</div>
                 </td>
-                <td>{{ host.extensions.address }}</td>
+                <td>{{ host.address }}</td>
                 <td>
-                  {% if host.extensions.state == 0 %}
+                  {% if host.state == 0 %}
                   <div class="badge badge-success pb-0.5">UP</div>
-                  {% elif host.extensions.state == 1 %}
+                  {% elif host.state == 1 %}
                   <div class="badge badge-error pb-0.5">DOWN</div>
-                  {% elif host.extensions.state == 2 %}
+                  {% elif host.state == 2 %}
                   <div class="badge badge-warning pb-0.5">UNREACH</div>
                   {% else %}
                   <div class="badge badge-neutral pb-0.5">MAINTAIN</div>
                   {% endif %}
                 </td>
-                {% if host.extensions.availability %}
-                <td>{{ host.extensions.availability }} %</td>
+                {% if host.availability %}
+                <td>{{ host.availability }} %</td>
                 {% else %}
                 <td>-</td>
                 {% endif %}
