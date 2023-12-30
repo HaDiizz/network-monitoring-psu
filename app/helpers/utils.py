@@ -1218,6 +1218,21 @@ def get_ap_name_list(ap_prop):
                 })
     return ap_list
 
+
+def get_host_name_list(host_prop):
+    get_host_list = host_prop
+    if get_host_list is None:
+        get_host_list = []
+    host_list = []
+
+    for item in get_host_list:
+        name = item["extensions"]["name"]
+        host_list.append({
+            "name": name,
+        })
+    return host_list
+
+
 def get_all_ap_list(ap_prop):
     get_ap_list = ap_prop
     if get_ap_list is None:

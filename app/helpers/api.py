@@ -1256,15 +1256,12 @@ def get_host_markers():
 
 
 # @caches.cache.cached(timeout=3600, key_prefix='host_list')
-def host_list():
+def host_list_with_sla():
     try:
         with httpx.Client() as client:
             params = {
                 "columns": ['name', 'state', 'last_state', 'labels', 'groups', 'address'],
             }
-            # params = {
-            #     "columns": ['name', 'state', 'last_state', 'last_time_up', 'last_time_down', 'last_time_unreachable', 'last_state_change', 'labels', 'groups', 'address'],
-            # }
 
             response = client.get(
                 f"{API_URL}/domain-types/host/collections/all",
@@ -1278,6 +1275,29 @@ def host_list():
                         if not current_user.is_authenticated or current_user.role != 'admin':
                             del item['extensions']['address']
                         item['extensions']['availability'] = get_host_daily_sla(item["id"])
+                    return response['value']
+            else:
+                return []
+    except Exception as ex:
+        print("host_list_with_sla", ex)
+        return None
+    
+
+def host_list():
+    try:
+        with httpx.Client() as client:
+            params = {
+                "columns": ['name'],
+            }
+
+            response = client.get(
+                f"{API_URL}/domain-types/host/collections/all",
+                headers=HEADERS,
+                params=params
+            )
+            if response.status_code == 200:
+                response = response.json()
+                if response:
                     return response['value']
             else:
                 return []

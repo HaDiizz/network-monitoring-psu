@@ -193,6 +193,50 @@ function showAllLocations(option) {
         .catch((error) => {
           console.error("Error fetching location data:", error);
         });
+    } else if (option === "host") {
+      fetch("/admin/get-host-locations")
+        .then((response) => response.json())
+        .then((data) => {
+          if (!data) return;
+
+          data.forEach((location) => {
+            var marker = L.marker([location.lat, location.lng], {
+              icon: markedIcon,
+            }).bindPopup(`
+            <div class="container">
+            <table class="table">
+              <thead>
+                <tr class="dark:border-[#f2f2f2]">
+                  <th class='uppercase'>Properties</th>
+                  <th class='uppercase'>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="dark:border-[#f2f2f2]">
+                  <td>Host Name</td>
+                  <td>${location.name}</td>
+                </tr>
+                <tr class="dark:border-[#f2f2f2]">
+                  <td>Floor</td>
+                  <td>${location.floor ? location.floor : "-"}</td>
+                </tr>
+                <tr class="dark:border-[#f2f2f2]">
+                  <td>Room</td>
+                  <td>${location.room ? `${location.room}` : "-"}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>`)
+            marker.addTo(map);
+            markers.push(marker);
+          });
+
+          markersVisible = true;
+          showButton.textContent = "ซ่อนหมุดทั้งหมด";
+        })
+        .catch((error) => {
+          console.error("Error fetching location data:", error);
+        });
     }
   }
 }

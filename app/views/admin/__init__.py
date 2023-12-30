@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, jsonify
 from ... import acl
-from ...helpers.api import host_list, service_list, host_group, host_group_list, service_group_list, maintain_host_list, maintain_service_list, service_down_handler, service_is_down, host_is_down, host_down_handler, accessPoint_down_handler, access_point_list, get_all_service_list, access_point_list
-from ...helpers.utils import location_list, get_host_down_select_time, get_all_ap_list, get_ap_list_with_sla, get_ap_name_list
+from ...helpers.api import host_list, service_list, host_group, host_group_list, service_group_list, maintain_host_list, maintain_service_list, service_down_handler, service_is_down, host_is_down, host_down_handler, accessPoint_down_handler, access_point_list, get_all_service_list, access_point_list, host_list_with_sla
+from ...helpers.utils import location_list, get_host_down_select_time, get_all_ap_list, get_ap_list_with_sla, get_ap_name_list, get_host_name_list
 from app import caches
 import datetime
 
@@ -16,7 +16,7 @@ from app.views.admin.management import *
 @acl.roles_required("admin")
 # @caches.cache.cached(timeout=3600, key_prefix='overview')
 def index():
-    hosts = host_list()
+    hosts = host_list_with_sla()
     services = get_all_service_list()
     host_groups = host_group_list()
     service_groups = service_group_list(False)
@@ -126,7 +126,7 @@ def access_point_dashboard():
 @acl.roles_required("admin")
 @caches.cache.cached(timeout=10800, key_prefix='host_dashboard')
 def host_dashboard():
-    hosts = host_list()
+    hosts = host_list_with_sla()
     host_groups = host_group_list()
     maintain_hosts = maintain_host_list()
     now = datetime.datetime.now()
@@ -206,6 +206,35 @@ def get_latest_access_point():
     for entry in new_entries:
         ap = models.AccessPointLocation(name=entry['name'])
         ap.save()
+    return jsonify(new_entries)
+
+
+@admin_module.route('/get-host-locations')
+@acl.roles_required("admin")
+def get_host_locations():
+    location_data = []
+    host_data = models.HostLocation.objects()
+    for item in host_data:
+        location_data.append({
+            "name": item.name,
+            "lat": item.coordinates[0],
+            "lng": item.coordinates[1],
+            "floor": item.floor,
+            "room": item.room
+        })
+    return jsonify(location_data)
+
+
+@admin_module.route("/get-latest-host", methods=["POST", "GET"])
+@acl.roles_required("admin")
+def get_latest_host():
+    get_hosts = host_list()
+    result = get_host_name_list(get_hosts)
+    existing_entries = models.HostLocation.objects(name__in=[item['name'] for item in result])
+    new_entries = [item for item in result if item['name'] not in [entry.name for entry in existing_entries]]
+    for entry in new_entries:
+        host = models.HostLocation(name=entry['name'])
+        host.save()
     return jsonify(new_entries)
 
 

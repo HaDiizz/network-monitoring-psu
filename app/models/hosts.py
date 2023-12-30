@@ -48,3 +48,19 @@ class Host(me.Document):
     def save(self, *args, **kwargs):
         self.updated_date = datetime.datetime.now
         return super(Host, self).save(*args, **kwargs)
+
+
+class HostLocation(me.Document):
+    name = me.StringField(required=True, unique=True)
+    coordinates = me.GeoPointField(required=True, default=(7.008874, 100.498056))
+    floor = me.StringField(default="")
+    room = me.StringField(default="")
+    created_date = me.DateTimeField(
+        required=True, default=datetime.datetime.now)
+    updated_date = me.DateTimeField(
+        required=True, default=datetime.datetime.now, auto_now=True
+    )
+
+    def save(self, *args, **kwargs):
+        self.updated_date = datetime.datetime.now
+        return super(HostLocation, self).save(*args, **kwargs)

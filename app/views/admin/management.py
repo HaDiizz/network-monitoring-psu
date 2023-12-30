@@ -348,3 +348,78 @@ def delete_access_point_location(access_point_id):
     accessPoint.delete()
     flash('ลบข้อมูลสำเร็จ', 'success')
     return redirect(url_for('admin.access_point_location'))
+
+
+@admin_module.route("/host-location")
+@acl.roles_required("admin")
+def host_location():
+    hosts = models.HostLocation.objects().order_by("-updated_date")
+    return render_template("/admin/location/host/hostLocation.html", title="Host Location", hosts=hosts)
+
+
+@admin_module.route("/host-location/create",  methods=["GET", "POST"])
+@acl.roles_required("admin")
+def create_host_location():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        lat = request.form.get('lat')
+        lng = request.form.get('lng')
+        floor = request.form.get('floor')
+        room = request.form.get('room')
+        if name == '' or lat == '' or lng == '':
+            flash("กรุณาใส่ข้อมูลให้ครบถ้วน", "error")
+            return render_template("/admin/location/host/create.html", title="Create Host Location")
+        existing_name = models.HostLocation.objects.filter(me.Q(name=name)).first()
+        if existing_name:
+            flash("ชื่อโฮสต์ซ้ำ", "error")
+            return render_template("/admin/location/host/create.html", title="Create Host Location")
+        host = models.HostLocation(
+            name=name,
+            coordinates=(round(float(lat), 6), round(float(lng), 6)),
+            floor=floor,
+            room=room
+        )
+        host.save()
+        flash("เพิ่มข้อมูลสำเร็จ", "success")
+    return render_template("/admin/location/host/create.html", title="Create Host Location")
+
+
+@admin_module.route("/host-location/edit/<string:host_id>", methods=["GET", "POST"])
+@acl.roles_required("admin")
+def edit_host_location(host_id):
+    host = models.HostLocation.objects.with_id(host_id)
+    if not host:
+        flash('ไม่พบข้อมูลที่ต้องการ', 'error')
+        return redirect(url_for('admin.host_location'))
+    if request.method == 'POST':
+        name = request.form.get('name')
+        lat = request.form.get('lat')
+        lng = request.form.get('lng')
+        floor = request.form.get('floor')
+        room = request.form.get('room')
+        if name == '' or lat == '' or lng == '':
+            flash("กรุณาใส่ข้อมูลให้ครบถ้วน", "error")
+            return render_template("/admin/location/host/edit.html", title="Edit Host Location", host=host)
+        existing_name = models.HostLocation.objects.filter(me.Q(name=name)).first()
+        if existing_name and existing_name.id != ObjectId(host_id):
+            flash("ชื่อโฮสต์ซ้ำ", "error")
+            return render_template("/admin/location/host/edit.html", title="Edit Host Location", host=host)
+        host.name = name
+        host.floor = floor
+        host.room = room
+        host.coordinates = (round(float(lat), 6), round(float(lng), 6))
+        host.save()
+        flash("แก้ไขข้อมูลสำเร็จ", "success")
+    return render_template("/admin/location/host/edit.html", title="Edit Host Location", host=host)
+
+
+@admin_module.route("/host-location/delete/<string:host_id>")
+@acl.roles_required("admin")
+def delete_host_location(host_id):
+    host = models.HostLocation.objects.with_id(host_id)
+    if not host:
+        flash('ไม่พบข้อมูลที่ต้องการ', 'error')
+        return redirect(url_for('admin.host_location'))
+    host.delete()
+    flash('ลบข้อมูลสำเร็จ', 'success')
+    return redirect(url_for('admin.host_location'))

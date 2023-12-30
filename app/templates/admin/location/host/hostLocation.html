@@ -1,0 +1,162 @@
+
+{% extends "/layouts/base.html" %} {% block content %}
+<div class="admin-container">
+  <h1 class="text-4xl font-bold pb-8">Host Location</h1>
+  {% include "/layouts/messageSection.html" %}
+  <dialog id="delete_modal" class="modal modal-bottom sm:modal-middle">
+    <form method="dialog" class="modal-box">
+      <h3 class="font-bold text-lg">Delete Confirmation</h3>
+      <p class="py-4"></p>
+      <div class="modal-action">
+        <button class="btn">ยกเลิก</button>
+        <a id="cf_delete" class="btn text-white bg-red-500 hover:bg-red-600"
+          >ตกลง</a
+        >
+      </div>
+    </form>
+    <form method="dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
+  </dialog>
+  <div class="flex justify-end gap-x-3">
+    <button
+      onclick="fetchLatestData()"
+      id="updateButton"
+      class="btn bg-secondary hover:bg-slate-50 flex gap-x-3"
+    >
+      <span id="text-btn-fetch">ดึงข้อมูลล่าสุด</span>
+      <span
+        id="loadingSpinner"
+        class="loading loading-dots loading-md"
+        style="display: none"
+      ></span>
+    </button>
+    <a
+      href="{{ url_for('admin.create_host_location') }}"
+      class="btn bg-primary hover:bg-secondary dark:bg-neutral text-white"
+    >
+      เพิ่มข้อมูล
+    </a>
+  </div>
+  <div class="overflow-x-auto pt-10">
+    <table id="location-table" class="display nowrap" style="width: 100%">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Host Name</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for host in hosts %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ host.name }}</td>
+          <td>{{ host.coordinates[0] }}</td>
+          <td>{{ host.coordinates[1] }}</td>
+          <td>
+            <div class="cursor-pointer flex justify-evenly">
+              <a
+                href="/admin/host-location/edit/{{ host.id }}"
+                id="btn-location-edit"
+              >
+                <i
+                  class="bx bx-edit-alt text-indigo-500"
+                  style="font-size: 25px"
+                ></i>
+              </a>
+              <button
+                onclick="openDeleteModal('{{ host.id }}', '{{ host.name }}', 'host')"
+                id="btn-location-delete"
+              >
+                <i
+                  class="bx bxs-trash text-red-500"
+                  style="font-size: 25px"
+                ></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th></th>
+          <th>Host Name</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+          <th></th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/location.js') }}"></script>
+<script>
+  function fetchLatestData() {
+    let textBtnFetch = document.getElementById("text-btn-fetch");
+    let loadingSpinner = document.getElementById("loadingSpinner");
+    textBtnFetch.innerHTML = "";
+    textBtnFetch.innerHTML = "กำลังโหลดข้อมูล";
+    loadingSpinner.style.display = "block";
+    $.ajax({
+      url: "/admin/get-latest-host",
+      type: "POST",
+      success: function (data) {
+        textBtnFetch.innerHTML = "";
+        textBtnFetch.innerHTML = "ดึงข้อมูลล่าสุด";
+        loadingSpinner.style.display = "none";
+        if (data.length > 0) {
+          var hosts = [];
+          for (var i = 0; i < data.length; i++) {
+            var host = data[i].name;
+            hosts.push(host);
+          }
+
+          Swal.fire({
+            title: "New Host Entries",
+            html: "New Hosts: " + hosts.join(", "),
+            icon: "info",
+            confirmButtonText: "OK",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            footer: '<button id="copyButton">Copy to Clipboard</button>',
+          }).then((result) => {
+            if (result.isConfirmed || result.isDismissed) {
+              location.reload();
+            }
+          });
+          $("#copyButton").click(function () {
+            let textarea = document.createElement("textarea");
+            textarea.value = hosts.join(", ");
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textarea);
+            let copyButton = $("#copyButton");
+            copyButton.html("Copied to Clipboard").addClass("text-green-500");
+            setTimeout(function () {
+              copyButton
+                .html("Copy to Clipboard")
+                .removeClass("text-green-500");
+            }, 4000);
+          });
+        } else {
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Everything up-to-date",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+      },
+      error: function (error) {
+        console.log(error);
+      },
+    });
+  }
+</script>
+{% endblock %}

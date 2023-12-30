@@ -15,6 +15,8 @@ function openDeleteModal(item_id, item_name, option) {
     confirmBtn.href = `/admin/locations/delete/${item_id}`;
   } else if (option === "accessPoint") {
     confirmBtn.href = `/admin/access-point-location/delete/${item_id}`;
+  } else if (option === "host") {
+    confirmBtn.href = `/admin/host-location/delete/${item_id}`;
   }
 
   modal.showModal();
