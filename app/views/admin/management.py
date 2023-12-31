@@ -209,19 +209,18 @@ def sla_configuration():
         category = request.form.get('category')
         year = request.form.get('year')
         ok_status = float(request.form.get('ok_status'))
-        warning_status = float(request.form.get('warning_status'))
         critical_status = float(request.form.get('critical_status'))
-        if year is None or year == '' or ok_status is None or ok_status == '' or warning_status is None or warning_status == '' or critical_status is None or critical_status == '' or category is None or category == '':
+        if year is None or year == '' or ok_status is None or ok_status == '' or critical_status is None or critical_status == '' or category is None or category == '':
             flash("กรุณากรอกข้อมูลให้ครบถ้วน", "error")
             return render_template("/admin/slaConfiguration.html", title="SLA Requirements", sla_configs=sla_configs)
-        if category != "Host" or category != "Service" or category != "All":
+        if category not in ("Host", "Service", "All"):
             flash("ข้อมูลไม่ถูกต้อง", "error")
             return render_template("/admin/slaConfiguration.html", title="SLA Requirements", sla_configs=sla_configs)
         duplicate_year = models.SLAConfig.objects(year=year, category=category)
         if duplicate_year:
             flash(f"พบข้อมูลซ้ำซ้อน {category} - {year}", "error")
             return render_template("/admin/slaConfiguration.html", title="SLA Requirements", sla_configs=sla_configs)
-        if ok_status <= warning_status or warning_status >= ok_status or critical_status >= warning_status:
+        if ok_status <= critical_status:
             flash("State conflict", "error")
             return render_template("/admin/slaConfiguration.html", title="SLA Requirements", sla_configs=sla_configs)
         if category == "All":
@@ -229,7 +228,6 @@ def sla_configuration():
                 category="Host",
                 year=year,
                 ok_status=ok_status,
-                warning_status=warning_status,
                 critical_status=critical_status,
             )
             sla_config_host.save()
@@ -237,7 +235,6 @@ def sla_configuration():
                 category="Service",
                 year=year,
                 ok_status=ok_status,
-                warning_status=warning_status,
                 critical_status=critical_status,
             )
             sla_config_service.save()
@@ -246,7 +243,6 @@ def sla_configuration():
                 category=category,
                 year=year,
                 ok_status=ok_status,
-                warning_status=warning_status,
                 critical_status=critical_status,
             )
             sla_config.save()  
@@ -262,13 +258,12 @@ def edit_sla_configuration():
         category = request.form.get('category')
         year = request.form.get('year')
         ok_status = float(request.form.get('ok_status'))
-        warning_status = float(request.form.get('warning_status'))
         critical_status = float(request.form.get('critical_status'))
         sla_config_id = request.form.get('sla_config_id')
         if not sla_config_id or sla_config_id == "":
             flash("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง", "error")
             return render_template("/admin/slaConfiguration.html", title="SLA Requirements", sla_configs=sla_configs)
-        if year is None or year == '' or ok_status is None or ok_status == '' or warning_status is None or warning_status == '' or critical_status is None or critical_status == '':
+        if year is None or year == '' or ok_status is None or ok_status == '' or critical_status is None or critical_status == '':
             flash("กรุณากรอกข้อมูลให้ครบถ้วน", "error")
             return render_template("/admin/slaConfiguration.html", title="Issue Category", sla_configs=sla_configs)
         duplicate_doc = models.SLAConfig.objects.with_id(sla_config_id)
@@ -280,13 +275,12 @@ def edit_sla_configuration():
             if duplicate_year.id != ObjectId(sla_config_id):
                 flash(f"พบข้อมูลซ้ำซ้อน {category} - {year}", "error")
                 return render_template("/admin/slaConfiguration.html", title="SLA Requirements", sla_configs=sla_configs)
-        if ok_status <= warning_status or warning_status >= ok_status or critical_status >= warning_status:
+        if ok_status <= critical_status:
             flash("State conflict", "error")
             return render_template("/admin/slaConfiguration.html", title="SLA Requirements", sla_configs=sla_configs)
         sla_config = models.SLAConfig.objects.with_id(sla_config_id)
         sla_config.year = int(year)
         sla_config.ok_status = float(ok_status)
-        sla_config.warning_status = float(warning_status)
         sla_config.critical_status = float(critical_status)
         sla_config.save()
         flash("แก้ไขข้อมูลสำเร็จ", "success")

@@ -44,13 +44,12 @@ function openDeleteModal(id, year, category) {
   modal.showModal();
 }
 
-function openEditModal(id, year, ok_status, warning_status, critical_status, category) {
+function openEditModal(id, year, ok_status, critical_status, category) {
   const modal = document.getElementById("edit_modal");
   const categoryInput = document.getElementById("edit_category");
   const editYearInput = document.getElementById("edit_year");
   const editIdInput = document.getElementById("edit_sla_config_id");
   const editOkStatusInput = document.getElementById("edit_ok_status");
-  const editWarningStatusInput = document.getElementById("edit_warning_status");
   const editCriticalStatusInput = document.getElementById(
     "edit_critical_status"
   );
@@ -58,7 +57,6 @@ function openEditModal(id, year, ok_status, warning_status, critical_status, cat
   editYearInput.value = year;
   editIdInput.value = id;
   editOkStatusInput.value = ok_status;
-  editWarningStatusInput.value = warning_status;
   editCriticalStatusInput.value = critical_status;
   modal.showModal();
 }

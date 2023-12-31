@@ -109,7 +109,7 @@
         </div>
       </div>
       {% elif day_data[date]["sla"] < sla_status["ok_status"] and
-      day_data[date]["sla"] >= sla_status["warning_status"] %}
+      day_data[date]["sla"] > sla_status["critical_status"] %}
       <div class="card shadow-xl bg-yellow-400 text-white">
         <div class="place-self-center m-5 text-center font-bold">
           <span class="text-xl">{{ day_data[date]["sla"] }}%</span>

@@ -23,7 +23,6 @@ def service_quarterly(year, month):
     if sla_requirement:
         sla_status = {
         "ok_status": sla_requirement["ok_status"],
-        "warning_status": sla_requirement["warning_status"],
         "critical_status": sla_requirement["critical_status"]
         }
     avg_sla, service_all_count, service_name, service_sla, service_count, month_name, service_sla_first_month, service_sla_second_month, service_sla_third_month, service_count_first_month, service_count_second_month, service_count_third_month, service_count_sum_first_month, service_count_sum_second_month, service_count_sum_third_month, service_sla_sum_first_month, service_sla_sum_second_month, service_sla_sum_third_month = get_service_quarter_data(

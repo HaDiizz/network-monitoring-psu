@@ -3672,6 +3672,10 @@ details.collapse summary::-webkit-details-marker {
   align-items: center;
 }
 
+.justify-start {
+  justify-content: flex-start;
+}
+
 .justify-end {
   justify-content: flex-end;
 }
@@ -4540,6 +4544,10 @@ details.collapse summary::-webkit-details-marker {
 
 .gap-x-5 {
   column-gap: 1.25rem/* 20px */;
+}
+
+.gap-3 {
+  gap: 0.75rem/* 12px */;
 }
 
 .loading {

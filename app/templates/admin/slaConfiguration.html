@@ -10,7 +10,7 @@
       <form action="{{ url_for('admin.sla_configuration') }}" method="POST">
         <div class="form-control w-full pt-5">
           <label class="label">
-            <span class="label-text">Category</span>
+            <span class="label-text font-semibold">Category</span>
           </label>
           <select class="select select-bordered" name="category" required>
             <option selected value="All">Host - Service</option>
@@ -20,7 +20,7 @@
         </div>
         <div class="form-control w-full pt-5">
           <label class="label">
-            <span class="label-text">Year</span>
+            <span class="label-text font-semibold">Year</span>
           </label>
           <input
             type="text"
@@ -32,39 +32,26 @@
         </div>
         <div class="form-control w-full pt-5">
           <label class="label">
-            <span class="label-text">OK</span>
+            <span class="label-text text-green-500 font-semibold">OK</span>
           </label>
           <input
             type="number"
             step="any"
             name="ok_status"
-            placeholder="90.00"
+            placeholder="เช่น 99.982 (≥ 99.982)"
             class="input input-bordered w-full"
             required
           />
         </div>
         <div class="form-control w-full pt-5">
           <label class="label">
-            <span class="label-text">Warning</span>
-          </label>
-          <input
-            type="number"
-            step="any"
-            name="warning_status"
-            placeholder="50.00"
-            class="input input-bordered w-full"
-            required
-          />
-        </div>
-        <div class="form-control w-full pt-5">
-          <label class="label">
-            <span class="label-text">Critical</span>
+            <span class="label-text text-red-500 font-semibold">Critical</span>
           </label>
           <input
             type="number"
             step="any"
             name="critical_status"
-            placeholder="10.00"
+            placeholder="เช่น 99.75 (≤ 99.75)"
             class="input input-bordered w-full"
             required
           />
@@ -77,6 +64,16 @@
           >
             บันทึก
           </button>
+        </div>
+        <div class="flex justify-start gap-x-5">
+          <span>ค่าสถานะ : </span>
+          <span>
+            <div class="badge badge-error"><code>CRITICAL</code></div>
+            <code style="font-size: 16px"><</code>
+            <div class="badge badge-warning"><code>WARNING</code></div>
+            <code style="font-size: 16px"><</code>
+            <div class="badge badge-success"><code>OK</code></div>
+          </span>
         </div>
       </form>
     </div>
@@ -140,42 +137,28 @@
         </div>
         <div class="form-control w-full pt-5">
           <label class="label">
-            <span class="label-text">OK</span>
+            <span class="label-text text-green-500 font-semibold">OK</span>
           </label>
           <input
             id="edit_ok_status"
             type="number"
             step="any"
             name="ok_status"
-            placeholder="90.00"
+            placeholder="เช่น 99.982 (≥ 99.982)"
             class="input input-bordered w-full"
             required
           />
         </div>
         <div class="form-control w-full pt-5">
           <label class="label">
-            <span class="label-text">Warning</span>
-          </label>
-          <input
-            id="edit_warning_status"
-            type="number"
-            step="any"
-            name="warning_status"
-            placeholder="50.00"
-            class="input input-bordered w-full"
-            required
-          />
-        </div>
-        <div class="form-control w-full pt-5">
-          <label class="label">
-            <span class="label-text">Critical</span>
+            <span class="label-text text-red-500 font-semibold">Critical</span>
           </label>
           <input
             id="edit_critical_status"
             type="number"
             step="any"
             name="critical_status"
-            placeholder="10.00"
+            placeholder="เช่น 99.75 (≤ 99.75)"
             class="input input-bordered w-full"
             required
           />
@@ -188,6 +171,16 @@
           >
             บันทึก
           </button>
+        </div>
+        <div class="flex justify-start gap-x-5">
+          <span>ค่าสถานะ : </span>
+          <span>
+            <div class="badge badge-error"><code>CRITICAL</code></div>
+            <code style="font-size: 16px"><</code>
+            <div class="badge badge-warning"><code>WARNING</code></div>
+            <code style="font-size: 16px"><</code>
+            <div class="badge badge-success"><code>OK</code></div>
+          </span>
         </div>
       </form>
     </div>
@@ -219,7 +212,6 @@
           <th>Category</th>
           <th>YEAR</th>
           <th>OK</th>
-          <th>WARNING</th>
           <th>CRITICAL</th>
           <th></th>
         </tr>
@@ -231,12 +223,11 @@
           <td>{{ item.category }}</td>
           <td>{{ item.year }}</td>
           <td>{{ item.ok_status }}</td>
-          <td>{{ item.warning_status }}</td>
           <td>{{ item.critical_status }}</td>
           <td>
             <div class="cursor-pointer flex justify-evenly">
               <button
-                onclick="openEditModal('{{ item.id }}', '{{ item.year }}', '{{ item.ok_status }}', '{{ item.warning_status }}', '{{ item.critical_status }}', '{{ item.category }}')"
+                onclick="openEditModal('{{ item.id }}', '{{ item.year }}', '{{ item.ok_status }}', '{{ item.critical_status }}', '{{ item.category }}')"
                 id="btn-edit"
               >
                 <i

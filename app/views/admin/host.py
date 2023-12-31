@@ -23,7 +23,6 @@ def host_quarterly(year, month):
     if sla_requirement:
         sla_status = {
         "ok_status": sla_requirement["ok_status"],
-        "warning_status": sla_requirement["warning_status"],
         "critical_status": sla_requirement["critical_status"]
         }
     avg_sla, host_all_count, host_name, host_sla, host_ip, host_count, month_name, host_sla_first_month, host_sla_second_month, host_sla_third_month, host_count_first_month, host_count_second_month, host_count_third_month, host_count_sum_first_month, host_count_sum_second_month, host_count_sum_third_month, host_sla_sum_first_month, host_sla_sum_second_month, host_sla_sum_third_month = get_host_quarter_data(

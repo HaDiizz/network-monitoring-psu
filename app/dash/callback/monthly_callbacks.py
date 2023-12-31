@@ -796,10 +796,10 @@ mock_service_monthly = [
 ]
 
 
-def get_color(sla, ok, warning, critical):
+def get_color(sla, ok, critical):
     if sla >= ok:
         return "green"
-    elif sla >= warning and sla < ok:
+    elif sla < ok and sla > critical:
         return "#FACC15"
     else:
         return "red"
@@ -892,7 +892,7 @@ def monthly_callbacks(dash_app, selection):
                         className="text-white justify-center text-center p-3")
                 ),
                 style={'width': '90px', 'height': '90px', 'background': get_color(
-                    cumulative_sla.get((year, month), 0) / record_count.get((year, month), 1), sla_requirement["ok_status"], sla_requirement["warning_status"], sla_requirement["critical_status"])},
+                    cumulative_sla.get((year, month), 0) / record_count.get((year, month), 1), sla_requirement["ok_status"], sla_requirement["critical_status"])},
                 className='p-5 text-center flex justify-center card place-self-center',
                 href = f"hosts/{year}/{month}" if selection == "host" else f"services/{year}/{month}"
             )
@@ -906,19 +906,19 @@ def monthly_callbacks(dash_app, selection):
                         html.I(className="bx bxs-circle pt-1",
                                style={"color": "green"}),
                         html.Span(
-                            f"OK Status: {sla_requirement['ok_status']}%"),
+                            f"OK Status: ≥ {sla_requirement['ok_status']}%"),
                     ], className="flex gap-5"),
                     html.Div([
                         html.I(className="bx bxs-circle pt-1",
                                style={"color": "#FACC15"}),
                         html.Span(
-                            f"WARNING Status: {sla_requirement['warning_status']}%"),
+                            f"WARNING Status: > {sla_requirement['critical_status']}% and < {sla_requirement['ok_status']}%"),
                     ], className="flex gap-5"),
                     html.Div([
                         html.I(className="bx bxs-circle pt-1",
                                style={"color": "red"}),
                         html.Span(
-                            f"CRITICAL Status: {sla_requirement['critical_status']}%"),
+                            f"CRITICAL Status: ≤ {sla_requirement['critical_status']}%"),
                     ], className="flex gap-5"),
                 ], className="grid gap-5"),
                 html.Div([
