@@ -859,7 +859,12 @@ def monthly_callbacks(dash_app, selection):
         [dash.dependencies.Input('year-dropdown', 'value')]
     )
     def update_cards(selected_year):
-        sla_requirement = models.SLAConfig.objects(year=selected_year).first()
+
+        sla_requirement = None
+        if selection == "host":
+            sla_requirement = models.SLAConfig.objects(year=selected_year, category="Host").first()
+        else:
+            sla_requirement = models.SLAConfig.objects(year=selected_year, category="Service").first()            
 
         if sla_requirement is None:
             sla_requirement = sla_status_list()

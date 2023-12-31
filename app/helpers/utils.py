@@ -7,9 +7,9 @@ from mongoengine import Q
 
 def sla_status_list():
     return {
-        "ok_status": 99.99,
-        "warning_status": 99.5,
-        "critical_status": 99
+        "ok_status": 99.982,
+        "warning_status": 99.9,
+        "critical_status": 99.75
     }
 
 

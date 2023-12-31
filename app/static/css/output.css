@@ -4571,3 +4571,7 @@ details.collapse summary::-webkit-details-marker {
   --tw-border-opacity: 1;
   border-color: rgb(242 242 242 / var(--tw-border-opacity));
 }
+
+.ml-5 {
+  margin-left: 1.25rem/* 20px */;
+}

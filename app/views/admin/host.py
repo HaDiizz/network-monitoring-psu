@@ -18,7 +18,7 @@ def host():
 @acl.roles_required("admin")
 @caches.cache.cached(timeout=3600, key_prefix='host_quarterly')
 def host_quarterly(year, month):
-    sla_requirement = models.SLAConfig.objects(year=year).first()
+    sla_requirement = models.SLAConfig.objects(year=year, category="Host").first()
     sla_status = sla_status_list()
     if sla_requirement:
         sla_status = {

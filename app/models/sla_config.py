@@ -2,6 +2,7 @@ import mongoengine as me
 import datetime
 
 class SLAConfig(me.Document):
+    category = me.StringField(required=True)
     year = me.IntField(required=True)
     ok_status = me.FloatField(required=True)
     warning_status = me.FloatField(required=True)
