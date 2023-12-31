@@ -44,18 +44,6 @@ $(document).ready(function () {
     }
   });
 });
-// $(document).ready(function () {
-//   $(".tabs a").click(function () {
-//     var tab_id = $(this).attr("data-tab");
-
-//     $(".tabs a").removeClass("tab-active");
-//     $(".tab-content").removeClass("current");
-
-//     $(this).addClass("tab-active");
-//     $("#" + tab_id).addClass("current");
-//   });
-// });
-
 var osmLayer = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
   attribution:
@@ -206,10 +194,6 @@ fetch("/get-aps")
           : indigoIcon;
       var randomizedLat = ap.lat + (Math.random() - 0.5) * 0.00055;
       var randomizedLng = ap.lng + (Math.random() - 0.5) * 0.00055;
-      // var row = Math.floor(index / 10);
-      // var col = index % 10;
-      // var randomizedLat = (ap.lat + (row * 0.0001)) - 0.005;
-      // var randomizedLng = (ap.lng + (col * 0.0001)) - 0.0003;
       var markerData = L.marker([randomizedLat, randomizedLng], {
         icon: marker,
       });

@@ -10,7 +10,6 @@ class ServiceDown(me.Document):
 class ServiceList(me.Document):
     state = me.IntField(required=True)
     last_state = me.IntField(required=True)
-    # notified = me.BooleanField(required=True)
     remark = me.StringField(default="")
     last_time_up = me.DateTimeField(required=True)
     last_time_down = me.DateTimeField()

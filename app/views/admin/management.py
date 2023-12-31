@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request, url_for, flash, abort, jsonify
+from flask import render_template, redirect, request, url_for, flash, abort
 from flask_login import current_user
 from bson import ObjectId
 from app.views.admin import admin_module

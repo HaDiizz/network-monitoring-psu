@@ -3,11 +3,10 @@ from .. import forms
 from flask_login import login_user, login_required, logout_user, current_user
 from .. import models
 import mongoengine as me
-from ..helpers.utils import location_list, get_all_ap_list, get_ap_list_with_sla
-from ..helpers.api import host_list, get_host_markers, access_point_list
+from ..helpers.utils import location_list, get_ap_list_with_sla
+from ..helpers.api import access_point_list
 from .. import oauth2
 import datetime
-from app import caches
 
 module = Blueprint('site', __name__)
 
@@ -18,7 +17,6 @@ def account_context():
 
 
 @module.route('/')
-# @caches.cache.cached(timeout=3600, key_prefix='index_user_page')
 def index():
     if current_user.is_authenticated:
         if current_user.role == 'admin':
@@ -33,12 +31,9 @@ def index():
 
 
 @module.route('/get-aps')
-# @caches.cache.cached(timeout=3600, key_prefix='get-aps')
 def get_aps():
     get_ap_data = access_point_list()
     result = get_ap_list_with_sla(get_ap_data)
-
-    # return jsonify(get_host_markers())
     return jsonify(result)
 
 

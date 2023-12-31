@@ -8,7 +8,6 @@ from mongoengine import Q
 def sla_status_list():
     return {
         "ok_status": 99.982,
-        # "warning_status": 99.9,
         "critical_status": 99.75
     }
 
@@ -193,9 +192,8 @@ def search_host_day_data(matching_data, selected_month, selected_year):
             start_day = {"day": day, "time": time, "count": count}
             host_day_dict.append(start_day)
 
-    if selected_month + 2 == 13 : #! Month 11 now year to Month 1 next year
+    if selected_month + 2 == 13 :
         
-        #! First month
         query = models.Host.objects(
                                 month=selected_month, year=selected_year)
         matching_data = query.all()
@@ -208,7 +206,6 @@ def search_host_day_data(matching_data, selected_month, selected_year):
             else :
                 break
 
-        #! Second month
         query = models.Host.objects(
                                 month=selected_month + 1, year=selected_year)
         matching_data = query.all()
@@ -221,7 +218,6 @@ def search_host_day_data(matching_data, selected_month, selected_year):
                 elif int(month) == 1:
                     break
 
-        #! Third month
         query = models.Host.objects(
                                 month=1, year=selected_year + 1)
         matching_data = query.all()
@@ -232,9 +228,8 @@ def search_host_day_data(matching_data, selected_month, selected_year):
                 if int(month) == selected_month :
                     data["count"] = total_all_host - data["count"]
 
-    if selected_month + 2 == 14 : #! Month 12 now year to Month 2 next year
+    if selected_month + 2 == 14 :
 
-        #! First month
         query = models.Host.objects(
                                 month=selected_month, year=selected_year)
         matching_data = query.all()
@@ -247,7 +242,6 @@ def search_host_day_data(matching_data, selected_month, selected_year):
             else :
                 break
 
-        #! Second month
         query = models.Host.objects(
                                 month=1, year=selected_year + 1)
         matching_data = query.all()
@@ -260,7 +254,6 @@ def search_host_day_data(matching_data, selected_month, selected_year):
                 elif int(month) == 2 :
                     break
 
-        #! Third month
         query = models.Host.objects(
                                 month=2, year=selected_year + 1)
         matching_data = query.all()
@@ -273,7 +266,6 @@ def search_host_day_data(matching_data, selected_month, selected_year):
     
     else :
 
-        #! First month
         query = models.Host.objects(
                                 month=selected_month, year=selected_year)
         matching_data = query.all()
@@ -286,7 +278,6 @@ def search_host_day_data(matching_data, selected_month, selected_year):
             else :
                 break
         
-        #! Second month
         query = models.Host.objects(
                                 month=selected_month + 1, year=selected_year)
         matching_data = query.all()
@@ -299,7 +290,6 @@ def search_host_day_data(matching_data, selected_month, selected_year):
                 elif int(month) == selected_month + 2 :
                     break
         
-        #! Third month
         query = models.Host.objects(
                                 month=selected_month + 2, year=selected_year)
         matching_data = query.all()
@@ -356,9 +346,8 @@ def search_service_day_data(matching_data, selected_month, selected_year):
             start_day = {"day": day, "time": time, "count": count}
             service_day_dict.append(start_day)
 
-    if selected_month + 2 == 13 : #! Month 11 now year to Month 1 next year
+    if selected_month + 2 == 13 :
         
-        #! First month
         query = models.Service.objects(
                                 month=selected_month, year=selected_year)
         matching_data = query.all()
@@ -371,7 +360,6 @@ def search_service_day_data(matching_data, selected_month, selected_year):
             else :
                 break
 
-        #! Second month
         query = models.Service.objects(
                                 month=selected_month + 1, year=selected_year)
         matching_data = query.all()
@@ -384,7 +372,6 @@ def search_service_day_data(matching_data, selected_month, selected_year):
                 elif int(month) == 1:
                     break
 
-        #! Third month
         query = models.Service.objects(
                                 month=1, year=selected_year + 1)
         matching_data = query.all()
@@ -395,9 +382,8 @@ def search_service_day_data(matching_data, selected_month, selected_year):
                 if int(month) == selected_month :
                     data["count"] = total_all_service - data["count"]
 
-    if selected_month + 2 == 14 : #! Month 12 now year to Month 2 next year
+    if selected_month + 2 == 14 :
 
-        #! First month
         query = models.Service.objects(
                                 month=selected_month, year=selected_year)
         matching_data = query.all()
@@ -410,7 +396,6 @@ def search_service_day_data(matching_data, selected_month, selected_year):
             else :
                 break
 
-        #! Second month
         query = models.Service.objects(
                                 month=1, year=selected_year + 1)
         matching_data = query.all()
@@ -423,7 +408,6 @@ def search_service_day_data(matching_data, selected_month, selected_year):
                 elif int(month) == 2 :
                     break
 
-        #! Third month
         query = models.Service.objects(
                                 month=2, year=selected_year + 1)
         matching_data = query.all()
@@ -436,7 +420,6 @@ def search_service_day_data(matching_data, selected_month, selected_year):
     
     else :
 
-        #! First month
         query = models.Service.objects(
                                 month=selected_month, year=selected_year)
         matching_data = query.all()
@@ -449,7 +432,6 @@ def search_service_day_data(matching_data, selected_month, selected_year):
             else :
                 break
         
-        #! Second month
         query = models.Service.objects(
                                 month=selected_month + 1, year=selected_year)
         matching_data = query.all()
@@ -462,7 +444,6 @@ def search_service_day_data(matching_data, selected_month, selected_year):
                 elif int(month) == selected_month + 2 :
                     break
         
-        #! Third month
         query = models.Service.objects(
                                 month=selected_month + 2, year=selected_year)
         matching_data = query.all()
@@ -683,7 +664,6 @@ def get_host_quarter_data(selected_month, selected_year):
                     host_count_third_month.append(host.count)
                     host_sla_third_month.append(host.availability)
                 if host.ip_address in host_ip:
-                    # continue
                     host_ip.append(host.ip_address)
                 else:
                     host_ip.append(host.ip_address)
@@ -727,7 +707,6 @@ def get_host_quarter_data(selected_month, selected_year):
                     host_sla_third_month.append(host.availability)
         
                 if host.ip_address in host_ip:
-                    # continue
                     host_ip.append(host.ip_address)
                 else:
                     host_ip.append(host.ip_address)
@@ -736,7 +715,6 @@ def get_host_quarter_data(selected_month, selected_year):
             host_sla.append(sla)
             host_count.append(count_down)
 
-    #! sum SLA and Host count down per down
     host_count_sum_first_month = sum(host_count_first_month)
     host_count_sum_second_month = sum(host_count_second_month)
     host_count_sum_third_month = sum(host_count_third_month)
@@ -761,9 +739,7 @@ def get_host_quarter_data(selected_month, selected_year):
     if avg_sla != 0:
         avg_sla = avg_sla / count
     card_title = get_name_month(selected_month, selected_year)
-    # print(host_name)    
-    # print("\n" , host_count)
-    # return avg_sla, host_all_count, host_name, host_sla, host_ip, host_count, card_title, host_sla_first_month, host_sla_second_month, 
+
     return (
         avg_sla,
         host_all_count,
@@ -881,7 +857,6 @@ def get_service_quarter_data(selected_month, selected_year):
             service_sla.append(sla)
             service_count.append(count_down)
 
-    #! sum SLA and service count down per down
     service_count_sum_first_month = sum(service_count_first_month)
     service_count_sum_second_month = sum(service_count_second_month)
     service_count_sum_third_month = sum(service_count_third_month)

@@ -11,7 +11,6 @@ class OAuth2Token(me.Document):
 
     token_type = me.StringField()
     access_token = me.StringField(required=True)
-    # refresh_token or access_token_secret
     refresh_token = me.StringField()
     expires = me.DateTimeField(required=True,
                             default=datetime.datetime.now)

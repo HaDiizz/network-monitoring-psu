@@ -7,7 +7,6 @@ import datetime
 from .callback import monthly_callbacks
 
 
-
 dash_service = dash.Dash(__name__, server=server,
                       url_base_pathname='/admin/services/',
                       external_stylesheets=['../static/css/dash/main.css']
@@ -21,7 +20,7 @@ for view_func in server.view_functions:
 
 def generate_year_options():
     current_year = datetime.datetime.now().year
-    year_options = [{'label': str(year), 'value': year} for year in range(2023 - 2, current_year + 1)] #! Delete -2 this is for test function
+    year_options = [{'label': str(year), 'value': year} for year in range(2023 - 2, current_year + 1)]
     return year_options
 
 dash_service.layout = html.Div([

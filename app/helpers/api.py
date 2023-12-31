@@ -156,9 +156,6 @@ def get_accessPoint_all(response, month, year) :
                                     accessPoint_list.last_state = -2
                                     accessPoint_list.minutes = minute
                                     accessPoint_list.save()
-                                    # msg = "🔴" + "\nAccessPoint : " + accessPoint_name + "\nไม่ต้องจ่ายเงิน"
-                                    # r = requests.post(
-                                    #     url, headers=headers, data={'message': msg})
                     else:
                         new_accessPoint_list = models.AccessPointList(
                             state=int(state),
@@ -281,7 +278,6 @@ def get_accessPoint_down(response, month, year, accessPoint_down_in_db, accessPo
                             new_accessPoint_list = models.AccessPointList(
                                 state=int(state),
                                 last_state=-1,
-                                # notified=False,
                                 remark="",
                                 last_time_up=datetime.datetime.now(),
                                 last_time_down=datetime.datetime.now(),
@@ -312,7 +308,6 @@ def get_accessPoint_down(response, month, year, accessPoint_down_in_db, accessPo
                             new_accessPoint_list = models.AccessPointList(
                                 state=int(state),
                                 last_state=-1,
-                                # notified=False,
                                 remark="",
                                 last_time_up=datetime.datetime.now(),
                                 last_time_down=datetime.datetime.now(),
@@ -344,11 +339,6 @@ def get_accessPoint_down(response, month, year, accessPoint_down_in_db, accessPo
                                     accessPoint_list.last_state = -2
                                     accessPoint_list.minutes = minute
                                     accessPoint_list.save()
-                                    # msg = "🔴" + "\nAccessPoint : " + accessPoint_id + "\nไม่ต้องจ่ายเงิน" #?
-                                    # r = requests.post(
-                                    #     url, headers=headers, data={'message': msg})
-                                    
-                        
                 else:
                     new_accessPoint_list = models.AccessPointList(
                         state=int(state),
@@ -384,7 +374,6 @@ def get_accessPoint_down(response, month, year, accessPoint_down_in_db, accessPo
                     r = requests.post(
                         url, headers=headers, data={'message': msg})
 
-#! Filter delete AccessPoint Up From database
     all_accessPoint = models.AccessPointDown.objects.all()   
     for accessPoint in all_accessPoint :
         accessPoint_down_in_db.append(accessPoint.accessPoint_id)
@@ -549,9 +538,6 @@ def get_service_all(response, month, year) :
                                     service_list.last_state = -2
                                     service_list.minutes = minute
                                     service_list.save()
-                                    # msg = "🔴" + "\nService : " + service_id + "\nไม่ต้องจ่ายเงิน"
-                                    # r = requests.post(
-                                    #     url, headers=headers, data={'message': msg})
                     else:
                         new_service_list = models.ServiceList(
                             state=int(state),
@@ -666,7 +652,6 @@ def get_service_down(response, month, year, servicedown_in_db, servicedown_now) 
                             new_service_list = models.ServiceList(
                                 state=int(state),
                                 last_state=-1,
-                                # notified=False,
                                 remark="",
                                 last_time_up=datetime.datetime.now(),
                                 last_time_down=datetime.datetime.now(),
@@ -697,7 +682,6 @@ def get_service_down(response, month, year, servicedown_in_db, servicedown_now) 
                             new_service_list = models.ServiceList(
                                 state=int(state),
                                 last_state=-1,
-                                # notified=False,
                                 remark="",
                                 last_time_up=datetime.datetime.now(),
                                 last_time_down=datetime.datetime.now(),
@@ -729,12 +713,6 @@ def get_service_down(response, month, year, servicedown_in_db, servicedown_now) 
                                     service_list.last_state = -2
                                     service_list.minutes = minute
                                     service_list.save()
-                                    # msg = "🔴" + "\nService : " + service_id + "\nไม่ต้องจ่ายเงิน" #?
-                                    # r = requests.post(
-                                    #     url, headers=headers, data={'message': msg})
-                                    
-
-                        
                 else:
                     new_service_list = models.ServiceList(
                         state=int(state),
@@ -766,7 +744,6 @@ def get_service_down(response, month, year, servicedown_in_db, servicedown_now) 
                     r = requests.post(
                         url, headers=headers, data={'message': msg})
 
-#! Filter delete Service Up From database
     all_service = models.ServiceDown.objects.all()   
     for service in all_service :
         servicedown_in_db.append(service.service_id)
@@ -899,7 +876,6 @@ def get_host_all(response, month, year) :
                             new_host_list = models.HostList(
                                 state=int(state),
                                 last_state=-1,
-                                # notified=False,
                                 remark="",
                                 last_time_up=datetime.datetime.now(),
                                 last_time_down=datetime.datetime.now(),
@@ -945,9 +921,6 @@ def get_host_all(response, month, year) :
                                     host_list.last_state = -2
                                     host_list.minutes = minute
                                     host_list.save()
-                                    # msg = "🔴" + "\nHost : " + host_id + "\nไม่ต้องจ่ายเงิน"
-                                    # r = requests.post(
-                                    #     url, headers=headers, data={'message': msg})
                     else:
                         new_host_list = models.HostList(
                             state=int(state),
@@ -1071,7 +1044,6 @@ def get_host_down(response, month, year, hostdown_in_db, hostdown_now) :
                             new_host_list = models.HostList(
                                 state=int(state),
                                 last_state=-1,
-                                # notified=False,
                                 remark="",
                                 last_time_up=datetime.datetime.now(),
                                 last_time_down=datetime.datetime.now(),
@@ -1102,7 +1074,6 @@ def get_host_down(response, month, year, hostdown_in_db, hostdown_now) :
                             new_host_list = models.HostList(
                                 state=int(state),
                                 last_state=-1,
-                                # notified=False,
                                 remark="",
                                 last_time_up=datetime.datetime.now(),
                                 last_time_down=datetime.datetime.now(),
@@ -1134,11 +1105,6 @@ def get_host_down(response, month, year, hostdown_in_db, hostdown_now) :
                                     host_list.last_state = -2
                                     host_list.minutes = minute
                                     host_list.save()
-                                    # msg = "🔴" + "\nHost : " + host_id + "\nไม่ต้องจ่ายเงิน" #?
-                                    # r = requests.post(
-                                    #     url, headers=headers, data={'message': msg})
-                                    
-                        
                 else:
                     new_host_list = models.HostList(
                         state=int(state),
@@ -1174,7 +1140,6 @@ def get_host_down(response, month, year, hostdown_in_db, hostdown_now) :
                     r = requests.post(
                         url, headers=headers, data={'message': msg})
 
-#! Filter delete Host Up From database
     all_host = models.HostDown.objects.all()   
     for host in all_host :
         hostdown_in_db.append(host.host_id)
@@ -1255,7 +1220,6 @@ def get_host_markers():
         return None
 
 
-# @caches.cache.cached(timeout=10800, key_prefix='host_list_info')
 def host_list_info():
     try:
         with httpx.Client() as client:
@@ -1274,7 +1238,6 @@ def host_list_info():
                     for item in response['value']:
                         if not current_user.is_authenticated or current_user.role != 'admin':
                             del item['extensions']['address']
-                        # item['extensions']['availability'] = get_host_daily_sla(item["id"])
                     return response['value']
             else:
                 return []
@@ -1346,7 +1309,6 @@ def service_list(service_state_selector):
         return None
 
 
-# @caches.cache.cached(timeout=3600, key_prefix='get_all_service_list')
 def get_all_service_list():
     try:
         service_groups = []
@@ -1576,25 +1538,3 @@ def access_point_is_down():
     except Exception as ex:
         print("access_point_is_down", ex)
         return None
-    
-# def access_point_list():
-#     try:
-#         with httpx.Client() as client:
-#             params = {
-#                 "query": '{"op": "and", "expr": [{"op":"or", "expr": [{"op":"=","left":"services.host_name","right":"WLC"}, {"op":"=","left":"services.host_name","right":"Aruba-Controller"} ]}]}',
-#                 "columns": [ 'host_name', 'state', 'description'],
-#             }
-#             response = client.get(
-#                 f"{API_URL}/domain-types/service/collections/all",
-#                 headers=HEADERS,
-#                 params=params
-#             )
-#             if response.status_code == 200:
-#                 response = response.json()
-#                 if response:
-#                     return response['value']
-#             else:
-#                 return []
-#     except Exception as ex:
-#         return None
-    

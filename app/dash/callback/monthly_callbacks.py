@@ -933,7 +933,6 @@ def monthly_callbacks(dash_app, selection):
             ], className="flex justify-between border m-5 gap-5", style={"padding": "2rem", "border-radius": "2rem"})
         ]
 
-        # Cal AVG OF SLA PER YEAR
         average_sla_per_year = {
             year: cumulative_sla[year] / record_count[year] for year in cumulative_sla}
         total_sum = 0
@@ -941,7 +940,6 @@ def monthly_callbacks(dash_app, selection):
             total_sum += value
 
         sla_avg = "{:.{}f}".format((total_sum/len(average_sla_per_year)), 2)
-        #
 
         graph_figure = {
             'data': [

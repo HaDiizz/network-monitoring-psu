@@ -167,15 +167,6 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-  // $(".modal-tabs a").click(function () {
-  //   var tab_id = $(this).attr("data-tab");
-  //   $(".modal-tabs a").removeClass("tab-active");
-  //   $(".modal-section.tab-content").removeClass("current");
-
-  //   $(this).addClass("tab-active");
-  //   $("#" + tab_id).addClass("current");
-  // });
-
   $(".page-tabs a").click(function () {
     var tab_id = $(this).attr("data-tab");
 

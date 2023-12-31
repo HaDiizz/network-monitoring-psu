@@ -240,6 +240,3 @@ function showAllLocations(option) {
     }
   }
 }
-
-// const showButton = document.getElementById("showLocationsButton");
-// showButton.addEventListener("click", showAllLocations);

@@ -83,7 +83,6 @@ def init_oauth(server):
         userinfo_endpoint= os.getenv("USER_INFO"),
         client_kwargs={'scope': 'openid email profile'},
         server_metadata_url=os.getenv("CONF_URL"),
-        # jwks = os.getenv("JWKS"),
         end_session=os.getenv("END_SESSION"),
     )
     
