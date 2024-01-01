@@ -293,7 +293,7 @@ def search_host_day_data(matching_data, selected_month, selected_year):
             for data in host_day_dict :
                 day, month = data['day'].split('-')
     
-    print(host_day_dict)
+    
     return host_day_dict
 
 def search_service_day_data(matching_data, selected_month, selected_year):
@@ -564,7 +564,7 @@ def get_day_data(selected_month, selected_year, option):
             query = models.Host.objects(
                                 month=selected_month, year=selected_year)
             total_host = query.count()
-            print("LEN = " , total_host)
+            
 
             data_dict = {item['day']: {"date": item['day'], 'sla': round(
                 ((total_host * 1440 ) - (item['time']))/(1440 * total_host) * 100, 2)} for item in host_day_dict}
@@ -592,7 +592,7 @@ def get_day_data(selected_month, selected_year, option):
             query = models.Service.objects(
                                 month=selected_month, year=selected_year)
             total_service = query.count()
-            print("LEN = " , total_service)
+            
 
             data_dict = {item['day']: {"date": item['day'], 'sla': round(
                 ((total_service * 1440 ) - (item['time']))/(1440 * total_service) * 100, 2)} for item in service_day_dict}
