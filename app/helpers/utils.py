@@ -790,6 +790,8 @@ def get_service_quarter_data(selected_month, selected_year):
     service_count_sum_first_month = 0
     service_count_sum_second_month = 0
     service_count_sum_third_month = 0
+    service_name_second_month = []
+    service_name_third_month = []
     
 
     if end_month > 12:
@@ -818,10 +820,12 @@ def get_service_quarter_data(selected_month, selected_year):
                     service_sla_first_month.append(service.availability)
                     month_count += 1
                 elif month_count == 2 :
+                    service_name_second_month.append(service.service_id)
                     service_count_second_month.append(service.count)
                     service_sla_second_month.append(service.availability)
                     month_count += 1
                 else :
+                    service_name_third_month.append(service.service_id)
                     service_count_third_month.append(service.count)
                     service_sla_third_month.append(service.availability)
             sla = sla / len(matching_services)
@@ -854,10 +858,12 @@ def get_service_quarter_data(selected_month, selected_year):
                     service_sla_first_month.append(service.availability)
                     month_count += 1
                 elif month_count == 2 :
+                    service_name_second_month.append(service.service_id)
                     service_count_second_month.append(service.count)
                     service_sla_second_month.append(service.availability)
                     month_count += 1
                 else :
+                    service_name_third_month.append(service.service_id)
                     service_count_third_month.append(service.count)
                     service_sla_third_month.append(service.availability)
             
@@ -904,7 +910,9 @@ def get_service_quarter_data(selected_month, selected_year):
         service_count_sum_third_month,
         service_sla_sum_first_month,
         service_sla_sum_second_month,
-        service_sla_sum_third_month
+        service_sla_sum_third_month,
+        service_name_second_month,
+        service_name_third_month
     )
 
 def search_month_same_year (start_month, start_year, end_month):

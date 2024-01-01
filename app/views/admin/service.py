@@ -25,7 +25,7 @@ def service_quarterly(year, month):
         "ok_status": sla_requirement["ok_status"],
         "critical_status": sla_requirement["critical_status"]
         }
-    avg_sla, service_all_count, service_name, service_sla, service_count, month_name, service_sla_first_month, service_sla_second_month, service_sla_third_month, service_count_first_month, service_count_second_month, service_count_third_month, service_count_sum_first_month, service_count_sum_second_month, service_count_sum_third_month, service_sla_sum_first_month, service_sla_sum_second_month, service_sla_sum_third_month = get_service_quarter_data(
+    avg_sla, service_all_count, service_name, service_sla, service_count, month_name, service_sla_first_month, service_sla_second_month, service_sla_third_month, service_count_first_month, service_count_second_month, service_count_third_month, service_count_sum_first_month, service_count_sum_second_month, service_count_sum_third_month, service_sla_sum_first_month, service_sla_sum_second_month, service_sla_sum_third_month, service_name_second_month , service_name_third_month = get_service_quarter_data(
         int(month), int(year))
     day_data = get_day_data(int(month), int(year), "service")
     months = {}
@@ -42,13 +42,13 @@ def service_quarterly(year, month):
     if len(service_sla_second_month) == 0 :
         service_data_second_month = {}
     else :
-        service_data_second_month = {service_name[i]: {"service_name": service_name[i], "service_sla": '{:.4f}'.format(round( service_sla_second_month[i], 8)),
-                                    "service_count": service_count_second_month[i]} for i in range(len(service_name))} 
+        service_data_second_month = {service_name_second_month[i]: {"service_name": service_name_second_month[i], "service_sla": '{:.4f}'.format(round( service_sla_second_month[i], 8)),
+                                    "service_count": service_count_second_month[i]} for i in range(len(service_name_second_month))} 
     if len(service_sla_third_month) == 0 :
         service_data_third_month = {}
     else :
-        service_data_third_month = {service_name[i]: {"service_name": service_name[i], "service_sla": '{:.4f}'.format(round( service_sla_third_month[i], 8)),
-                                    "service_count": service_count_third_month[i]} for i in range(len(service_name))} 
+        service_data_third_month = {service_name_third_month[i]: {"service_name": service_name_third_month[i], "service_sla": '{:.4f}'.format(round( service_sla_third_month[i], 8)),
+                                    "service_count": service_count_third_month[i]} for i in range(len(service_name_third_month))} 
 
     month_list_quarterly = list(months.keys())
 
