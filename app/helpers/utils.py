@@ -629,6 +629,8 @@ def get_host_quarter_data(selected_month, selected_year):
     host_count_sum_first_month = 0
     host_count_sum_second_month = 0
     host_count_sum_third_month = 0
+    host_name_second_month = []
+    host_name_third_month = []
     
 
     if end_month > 12:
@@ -657,12 +659,15 @@ def get_host_quarter_data(selected_month, selected_year):
                     host_sla_first_month.append(host.availability)
                     month_count += 1
                 elif month_count == 2 :
+                    host_name_second_month.append(host.host_id)
                     host_count_second_month.append(host.count)
                     host_sla_second_month.append(host.availability)
                     month_count += 1
                 else :
+                    host_name_third_month.append(host.host_id)
                     host_count_third_month.append(host.count)
                     host_sla_third_month.append(host.availability)
+
                 if host.ip_address in host_ip:
                     host_ip.append(host.ip_address)
                 else:
@@ -672,7 +677,6 @@ def get_host_quarter_data(selected_month, selected_year):
             host_count.append(count_down)
 
     else:
-        
         query = search_month(start_month, end_month, selected_year, "host")
         matching_hosts = query.all()
         for host in matching_hosts:
@@ -699,10 +703,12 @@ def get_host_quarter_data(selected_month, selected_year):
                     host_sla_first_month.append(host.availability)
                     month_count += 1
                 elif month_count == 2 :
-                    host_count_second_month.append(host.count)
-                    host_sla_second_month.append(host.availability)
-                    month_count += 1
+                        host_name_second_month.append(host.host_id)
+                        host_count_second_month.append(host.count)
+                        host_sla_second_month.append(host.availability)
+                        month_count += 1
                 else :
+                    host_name_third_month.append(host.host_id)
                     host_count_third_month.append(host.count)
                     host_sla_third_month.append(host.availability)
         
@@ -757,7 +763,9 @@ def get_host_quarter_data(selected_month, selected_year):
         host_count_sum_third_month,
         host_sla_sum_first_month,
         host_sla_sum_second_month,
-        host_sla_sum_third_month
+        host_sla_sum_third_month,
+        host_name_second_month,
+        host_name_third_month
     )
 
 def get_service_quarter_data(selected_month, selected_year):
