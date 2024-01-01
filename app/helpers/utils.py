@@ -168,7 +168,6 @@ def search_host_day_data(matching_data, selected_month, selected_year):
                             check_day["time"] = check_day["time"] + 1440
                         else :
                             check_day["time"] = check_day["time"] + data.minutes
-                        check_day["count"] = check_day["count"] + 1
                         break
 
                 else:
@@ -178,7 +177,7 @@ def search_host_day_data(matching_data, selected_month, selected_year):
                     else :
                         time = data.minutes
                     count = 1
-                    start_day = {"day": day, "time": time, "count": count}
+                    start_day = {"day": day, "time": time}
                     host_day_dict.append(start_day)
                     break
 
@@ -189,7 +188,7 @@ def search_host_day_data(matching_data, selected_month, selected_year):
             else :
                 time = data.minutes
             count = 1
-            start_day = {"day": day, "time": time, "count": count}
+            start_day = {"day": day, "time": time}
             host_day_dict.append(start_day)
 
     if selected_month + 2 == 13 :
@@ -197,110 +196,104 @@ def search_host_day_data(matching_data, selected_month, selected_year):
         query = models.Host.objects(
                                 month=selected_month, year=selected_year)
         matching_data = query.all()
-        total_all_host = len(matching_data)
+        
 
         for data in host_day_dict :
             day, month = data['day'].split('-')
             if int(month) == selected_month :
-                data["count"] = total_all_host - data["count"]
+                continue
             else :
                 break
 
         query = models.Host.objects(
                                 month=selected_month + 1, year=selected_year)
         matching_data = query.all()
-        total_all_host = len(matching_data)
+        
         if len(matching_data) == 0 :
             for data in host_day_dict :
                 day, month = data['day'].split('-')
                 if int(month) == selected_month :
-                    data["count"] = total_all_host - data["count"]
+                    continue
                 elif int(month) == 1:
                     break
 
         query = models.Host.objects(
                                 month=1, year=selected_year + 1)
         matching_data = query.all()
-        total_all_host = len(matching_data)
+        
         if len(matching_data) == 0 :
             for data in host_day_dict :
                 day, month = data['day'].split('-')
-                if int(month) == selected_month :
-                    data["count"] = total_all_host - data["count"]
 
     if selected_month + 2 == 14 :
 
         query = models.Host.objects(
                                 month=selected_month, year=selected_year)
         matching_data = query.all()
-        total_all_host = len(matching_data)
+        
         
         for data in host_day_dict :
             day, month = data['day'].split('-')
             if int(month) == selected_month :
-                data["count"] = total_all_host - data["count"]
+                continue
             else :
                 break
 
         query = models.Host.objects(
                                 month=1, year=selected_year + 1)
         matching_data = query.all()
-        total_all_host = len(matching_data)
+        
         if len(matching_data) == 0 :
             for data in host_day_dict :
                 day, month = data['day'].split('-')
                 if int(month) == selected_month :
-                    data["count"] = total_all_host - data["count"]
+                    continue
                 elif int(month) == 2 :
                     break
 
         query = models.Host.objects(
                                 month=2, year=selected_year + 1)
         matching_data = query.all()
-        total_all_host = len(matching_data)
+        
         if len(matching_data) == 0 :
             for data in host_day_dict :
                 day, month = data['day'].split('-')
-                if int(month) == selected_month :
-                    data["count"] = total_all_host - data["count"]
     
     else :
 
         query = models.Host.objects(
                                 month=selected_month, year=selected_year)
         matching_data = query.all()
-        total_all_host = len(matching_data)
+        
 
         for data in host_day_dict :
             day, month = data['day'].split('-')
             if int(month) == selected_month :
-                data["count"] = total_all_host - data["count"]
+                continue
             else :
                 break
         
         query = models.Host.objects(
                                 month=selected_month + 1, year=selected_year)
         matching_data = query.all()
-        total_all_host = len(matching_data)
+        
         if len(matching_data) == 0 :
             for data in host_day_dict :
                 day, month = data['day'].split('-')
                 if int(month) == selected_month :
-                    data["count"] = total_all_host - data["count"]
+                    continue
                 elif int(month) == selected_month + 2 :
                     break
         
         query = models.Host.objects(
                                 month=selected_month + 2, year=selected_year)
         matching_data = query.all()
-        total_all_host = len(matching_data)
+        
         if len(matching_data) == 0 :
             for data in host_day_dict :
                 day, month = data['day'].split('-')
-                if int(month) == selected_month :
-                    data["count"] = total_all_host - data["count"]
     
-    
+    print(host_day_dict)
     return host_day_dict
 
 def search_service_day_data(matching_data, selected_month, selected_year):
@@ -322,7 +315,7 @@ def search_service_day_data(matching_data, selected_month, selected_year):
                             check_day["time"] = check_day["time"] + 1440
                         else :
                             check_day["time"] = check_day["time"] + data.minutes
-                        check_day["count"] = check_day["count"] + 1
+                        
                         break
 
                 else:
@@ -332,7 +325,7 @@ def search_service_day_data(matching_data, selected_month, selected_year):
                     else :
                         time = data.minutes
                     count = 1
-                    start_day = {"day": day, "time": time, "count": count}
+                    start_day = {"day": day, "time": time}
                     service_day_dict.append(start_day)
                     break
 
@@ -343,7 +336,7 @@ def search_service_day_data(matching_data, selected_month, selected_year):
             else :
                 time = data.minutes
             count = 1
-            start_day = {"day": day, "time": time, "count": count}
+            start_day = {"day": day, "time": time}
             service_day_dict.append(start_day)
 
     if selected_month + 2 == 13 :
@@ -356,7 +349,7 @@ def search_service_day_data(matching_data, selected_month, selected_year):
         for data in service_day_dict :
             day, month = data['day'].split('-')
             if int(month) == selected_month :
-                data["count"] = total_all_service - data["count"]
+                continue
             else :
                 break
 
@@ -368,7 +361,7 @@ def search_service_day_data(matching_data, selected_month, selected_year):
             for data in service_day_dict :
                 day, month = data['day'].split('-')
                 if int(month) == selected_month :
-                    data["count"] = total_all_service - data["count"]
+                    continue
                 elif int(month) == 1:
                     break
 
@@ -379,8 +372,8 @@ def search_service_day_data(matching_data, selected_month, selected_year):
         if len(matching_data) == 0 :
             for data in service_day_dict :
                 day, month = data['day'].split('-')
-                if int(month) == selected_month :
-                    data["count"] = total_all_service - data["count"]
+                
+                    
 
     if selected_month + 2 == 14 :
 
@@ -392,7 +385,7 @@ def search_service_day_data(matching_data, selected_month, selected_year):
         for data in service_day_dict :
             day, month = data['day'].split('-')
             if int(month) == selected_month :
-                data["count"] = total_all_service - data["count"]
+                continue
             else :
                 break
 
@@ -404,7 +397,7 @@ def search_service_day_data(matching_data, selected_month, selected_year):
             for data in service_day_dict :
                 day, month = data['day'].split('-')
                 if int(month) == selected_month :
-                    data["count"] = total_all_service - data["count"]
+                    continue
                 elif int(month) == 2 :
                     break
 
@@ -415,8 +408,6 @@ def search_service_day_data(matching_data, selected_month, selected_year):
         if len(matching_data) == 0 :
             for data in service_day_dict :
                 day, month = data['day'].split('-')
-                if int(month) == selected_month :
-                    data["count"] = total_all_service - data["count"]
     
     else :
 
@@ -428,7 +419,7 @@ def search_service_day_data(matching_data, selected_month, selected_year):
         for data in service_day_dict :
             day, month = data['day'].split('-')
             if int(month) == selected_month :
-                data["count"] = total_all_service - data["count"]
+                continue
             else :
                 break
         
@@ -440,7 +431,7 @@ def search_service_day_data(matching_data, selected_month, selected_year):
             for data in service_day_dict :
                 day, month = data['day'].split('-')
                 if int(month) == selected_month :
-                    data["count"] = total_all_service - data["count"]
+                    continue
                 elif int(month) == selected_month + 2 :
                     break
         
@@ -451,8 +442,7 @@ def search_service_day_data(matching_data, selected_month, selected_year):
         if len(matching_data) == 0 :
             for data in service_day_dict :
                 day, month = data['day'].split('-')
-                if int(month) == selected_month :
-                    data["count"] = total_all_service - data["count"]
+                
     
     
     return service_day_dict
@@ -571,10 +561,15 @@ def get_day_data(selected_month, selected_year, option):
             host_day_dict = search_host_day_data(matching_data, selected_month, selected_year)
             quarter_month_dict = get_all_quarter_data(
                 selected_month, selected_year)
+            
+            query = models.Host.objects(
+                                month=selected_month, year=selected_year)
+            total_host = query.count()
+            print("LEN = " , total_host)
 
             data_dict = {item['day']: {"date": item['day'], 'sla': round(
-                (1440 - (item['time']/item['count']))/1440 * 100, 2)} for item in host_day_dict}
-
+                ((total_host * 1440 ) - (item['time']))/(1440 * total_host) * 100, 2)} for item in host_day_dict}
+            
     elif option == "service":
         if end_month > 12:
             query = search_month(start_month, end_month, selected_year, "service")
@@ -596,8 +591,14 @@ def get_day_data(selected_month, selected_year, option):
             quarter_month_dict = get_all_quarter_data(
                 selected_month, selected_year)
 
+            query = models.Service.objects(
+                                month=selected_month, year=selected_year)
+            total_service = query.count()
+            print("LEN = " , total_service)
+
             data_dict = {item['day']: {"date": item['day'], 'sla': round(
-                (1440 - (item['time']/item['count']))/1440 * 100, 2)} for item in service_day_dict}
+                ((total_service * 1440 ) - (item['time']))/(1440 * total_service) * 100, 2)} for item in service_day_dict}
+    
 
     for key in quarter_month_dict:
         if key in data_dict:
