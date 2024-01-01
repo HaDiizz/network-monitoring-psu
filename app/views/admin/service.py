@@ -16,7 +16,7 @@ def service():
 
 @admin_module.route("/services/<int:year>/<string:month>")
 @acl.roles_required("admin")
-# @caches.cache.cached(timeout=3600, key_prefix='service_quarterly')
+@caches.cache.cached(timeout=3600, key_prefix='service_quarterly')
 def service_quarterly(year, month):
     sla_requirement = models.SLAConfig.objects(year=year, category="Service").first()
     sla_status = sla_status_list()

@@ -16,7 +16,7 @@ def host():
 
 @admin_module.route("/hosts/<int:year>/<string:month>")
 @acl.roles_required("admin")
-# @caches.cache.cached(timeout=3600, key_prefix='host_quarterly')
+@caches.cache.cached(timeout=3600, key_prefix='host_quarterly')
 def host_quarterly(year, month):
     sla_requirement = models.SLAConfig.objects(year=year, category="Host").first()
     sla_status = sla_status_list()
