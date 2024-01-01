@@ -293,7 +293,7 @@ def search_host_day_data(matching_data, selected_month, selected_year):
             for data in host_day_dict :
                 day, month = data['day'].split('-')
     
-    print(host_day_dict)
+ 
     return host_day_dict
 
 def search_service_day_data(matching_data, selected_month, selected_year):
@@ -553,8 +553,7 @@ def get_day_data(selected_month, selected_year, option):
         if host:
             for hosts in host:
                 for value in hosts.host_list:
-                    if value.last_state != -1:
-                        host_list_id.append(value.id)
+                    host_list_id.append(value.id)
 
             query = models.HostList.objects(id__in=host_list_id)
             matching_data = query.all()
@@ -565,7 +564,7 @@ def get_day_data(selected_month, selected_year, option):
             query = models.Host.objects(
                                 month=selected_month, year=selected_year)
             total_host = query.count()
-            print("LEN = " , total_host)
+ 
 
             data_dict = {item['day']: {"date": item['day'], 'sla': round(
                 ((total_host * 1440 ) - (item['time']))/(1440 * total_host) * 100, 2)} for item in host_day_dict}
@@ -582,8 +581,7 @@ def get_day_data(selected_month, selected_year, option):
         if service:
             for services in service:
                 for value in services.service_list:
-                    if value.last_state != -1:
-                        service_list_id.append(value.id)
+                    service_list_id.append(value.id)
 
             query = models.ServiceList.objects(id__in=service_list_id)
             matching_data = query.all()
@@ -594,7 +592,7 @@ def get_day_data(selected_month, selected_year, option):
             query = models.Service.objects(
                                 month=selected_month, year=selected_year)
             total_service = query.count()
-            print("LEN = " , total_service)
+    
 
             data_dict = {item['day']: {"date": item['day'], 'sla': round(
                 ((total_service * 1440 ) - (item['time']))/(1440 * total_service) * 100, 2)} for item in service_day_dict}
@@ -894,6 +892,7 @@ def get_service_quarter_data(selected_month, selected_year):
     if avg_sla != 0:
         avg_sla = avg_sla / count
     card_title = get_name_month(selected_month, selected_year)
+
     return (
         avg_sla,
         service_all_count,
