@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 import httpx
 import datetime
 from .utils import cal_min_down, cal_sla, get_all_ap_list, get_host_daily_sla, get_service_daily_sla, get_accessPoint_daily_sla, get_host_group_monthly_sla, get_service_group_monthly_sla
-from bson import ObjectId
+from bson.objectid import ObjectId
 
 load_dotenv()
 
@@ -161,7 +161,10 @@ def get_accessPoint_all(response, month, year) :
                                     if len(accessPoint_list_ids) > 0:
                                         accessPoint_all_ids = []
                                         for item in accessPoint_list_ids:
-                                            accessPoint_all_ids.append(ObjectId(item.id))
+                                            if isinstance(item.id, ObjectId):
+                                                accessPoint_all_ids.append(item.id)
+                                            else:
+                                                accessPoint_all_ids.append(ObjectId(item.id))
                                         query = models.AccessPointList.objects(id__in=accessPoint_all_ids)
                                         matching_data = query.all()
                                         sum_min = 0
@@ -234,7 +237,10 @@ def get_accessPoint_all(response, month, year) :
                             if len(accessPoint_list_ids) > 0:
                                 accessPoint_all_ids = []
                                 for item in accessPoint_list_ids:
-                                    accessPoint_all_ids.append(ObjectId(item.id))
+                                    if isinstance(item.id, ObjectId):
+                                        accessPoint_all_ids.append(item.id)
+                                    else:
+                                        accessPoint_all_ids.append(ObjectId(item.id))
                                 query = models.AccessPointList.objects(id__in=accessPoint_all_ids)
                                 matching_data = query.all()
                                 sum_min = 0
@@ -361,7 +367,10 @@ def get_accessPoint_down(response, month, year, accessPoint_down_in_db, accessPo
                                     if len(accessPoint_list_ids) > 0:
                                         accessPoint_all_ids = []
                                         for item in accessPoint_list_ids:
-                                            accessPoint_all_ids.append(ObjectId(item.id))
+                                            if isinstance(item.id, ObjectId):
+                                                accessPoint_all_ids.append(item.id)
+                                            else:
+                                                accessPoint_all_ids.append(ObjectId(item.id))
                                         query = models.AccessPointList.objects(id__in=accessPoint_all_ids)
                                         matching_data = query.all()
                                         sum_min = 0
@@ -447,7 +456,10 @@ def get_accessPoint_down(response, month, year, accessPoint_down_in_db, accessPo
                 if len(accessPoint_list_ids) > 0:
                     accessPoint_all_ids = []
                     for item in accessPoint_list_ids:
-                        accessPoint_all_ids.append(ObjectId(item.id))
+                        if isinstance(item.id, ObjectId):
+                            accessPoint_all_ids.append(item.id)
+                        else:
+                            accessPoint_all_ids.append(ObjectId(item.id))
                     query = models.AccessPointList.objects(id__in=accessPoint_all_ids)
                     matching_data = query.all()
                     sum_min = 0
@@ -576,7 +588,10 @@ def get_service_all(response, month, year) :
                                     if len(service_list_ids) > 0:
                                         service_all_ids = []
                                         for item in service_list_ids:
-                                            service_all_ids.append(ObjectId(item.id))
+                                            if isinstance(item.id, ObjectId):
+                                                service_all_ids.append(item.id)
+                                            else:
+                                                service_all_ids.append(ObjectId(item.id))
                                         query = models.ServiceList.objects(id__in=service_all_ids)
                                         matching_data = query.all()
                                         sum_min = 0
@@ -644,7 +659,10 @@ def get_service_all(response, month, year) :
                             if len(service_list_ids) > 0:
                                 service_all_ids = []
                                 for item in service_list_ids:
-                                    service_all_ids.append(ObjectId(item.id))
+                                    if isinstance(item.id, ObjectId):
+                                        service_all_ids.append(item.id)
+                                    else:
+                                        service_all_ids.append(ObjectId(item.id))
                                 query = models.ServiceList.objects(id__in=service_all_ids)
                                 matching_data = query.all()
                                 sum_min = 0
@@ -767,7 +785,10 @@ def get_service_down(response, month, year, servicedown_in_db, servicedown_now) 
                                     if len(service_list_ids) > 0:
                                         service_all_ids = []
                                         for item in service_list_ids:
-                                            service_all_ids.append(ObjectId(item.id))
+                                            if isinstance(item.id, ObjectId):
+                                                service_all_ids.append(item.id)
+                                            else:
+                                                service_all_ids.append(ObjectId(item.id))
                                         query = models.ServiceList.objects(id__in=service_all_ids)
                                         matching_data = query.all()
                                         sum_min = 0
@@ -849,7 +870,10 @@ def get_service_down(response, month, year, servicedown_in_db, servicedown_now) 
                 if len(service_list_ids) > 0:
                     service_all_ids = []
                     for item in service_list_ids:
-                        service_all_ids.append(ObjectId(item.id))
+                        if isinstance(item.id, ObjectId):
+                            service_all_ids.append(item.id)
+                        else:
+                            service_all_ids.append(ObjectId(item.id))
                     query = models.ServiceList.objects(id__in=service_all_ids)
                     matching_data = query.all()
                     sum_min = 0
@@ -991,7 +1015,10 @@ def get_host_all(response, month, year) :
                                     if len(host_list_ids) > 0:
                                         host_all_ids = []
                                         for item in host_list_ids:
-                                            host_all_ids.append(ObjectId(item.id))
+                                            if isinstance(item.id, ObjectId):
+                                                host_all_ids.append(item.id)
+                                            else:
+                                                host_all_ids.append(ObjectId(item.id))
                                         query = models.HostList.objects(id__in=host_all_ids)
                                         matching_data = query.all()
                                         sum_min = 0
@@ -1063,7 +1090,10 @@ def get_host_all(response, month, year) :
                             if len(host_list_ids) > 0:
                                 host_all_ids = []
                                 for item in host_list_ids:
-                                    host_all_ids.append(ObjectId(item.id))
+                                    if isinstance(item.id, ObjectId):
+                                        host_all_ids.append(item.id)
+                                    else:
+                                        host_all_ids.append(ObjectId(item.id))
                                 query = models.HostList.objects(id__in=host_all_ids)
                                 matching_data = query.all()
                                 sum_min = 0
@@ -1191,7 +1221,10 @@ def get_host_down(response, month, year, hostdown_in_db, hostdown_now) :
                                     if len(host_list_ids) > 0:
                                         host_all_ids = []
                                         for item in host_list_ids:
-                                            host_all_ids.append(ObjectId(item.id))
+                                            if isinstance(item.id, ObjectId):
+                                                host_all_ids.append(item.id)
+                                            else:
+                                                host_all_ids.append(ObjectId(item.id))
                                         query = models.HostList.objects(id__in=host_all_ids)
                                         matching_data = query.all()
                                         sum_min = 0
@@ -1278,7 +1311,10 @@ def get_host_down(response, month, year, hostdown_in_db, hostdown_now) :
                 if len(host_list_ids) > 0:
                     host_all_ids = []
                     for item in host_list_ids:
-                        host_all_ids.append(ObjectId(item.id))
+                        if isinstance(item.id, ObjectId):
+                            host_all_ids.append(item.id)
+                        else:
+                            host_all_ids.append(ObjectId(item.id))
                     query = models.HostList.objects(id__in=host_all_ids)
                     matching_data = query.all()
                     sum_min = 0
