@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 import httpx
 import datetime
 from .utils import cal_min_down, cal_sla, get_all_ap_list, get_host_daily_sla, get_service_daily_sla, get_accessPoint_daily_sla, get_host_group_monthly_sla, get_service_group_monthly_sla
+from bson import ObjectId
 
 load_dotenv()
 
@@ -157,18 +158,19 @@ def get_accessPoint_all(response, month, year) :
                                     accessPoint_list.minutes = minute
                                     accessPoint_list.save()
 
-                                    query = models.AccessPointList.objects(
-                                        id__in=accessPoint_list_ids)
-                                    
-                                    matching_data = query.all()
-                                    sum_min = 0
-                                    
-                                    for data in matching_data:
-                                        sum_min += data.minutes
+                                    if len(accessPoint_list_ids) > 0:
+                                        accessPoint_all_ids = []
+                                        for item in accessPoint_list_ids:
+                                            accessPoint_all_ids.append(ObjectId(item.id))
+                                        query = models.AccessPointList.objects(id__in=accessPoint_all_ids)
+                                        matching_data = query.all()
+                                        sum_min = 0
 
-                                    sla = float(cal_sla(month, year, sum_min))
-                                    accessPoint.availability = sla
-                                    accessPoint.save()
+                                        for data in matching_data:
+                                            sum_min += data.minutes
+                                        sla = float(cal_sla(month, year, sum_min))
+                                        accessPoint.availability = sla
+                                        accessPoint.save()
                     else:
                         new_accessPoint_list = models.AccessPointList(
                             state=int(state),
@@ -229,15 +231,18 @@ def get_accessPoint_all(response, month, year) :
                             for value in accessPoint.accessPoint_list:
                                 accessPoint_list_ids.append(value.id)
 
-                            query = models.AccessPointList.objects(
-                                id__in=accessPoint_list_ids)
-                            matching_data = query.all()
-
-                            for data in matching_data:
-                                sum_min += data.minutes
-                            sla = float(cal_sla(month, year, sum_min))
-                            accessPoint.availability = sla
-                            accessPoint.save()
+                            if len(accessPoint_list_ids) > 0:
+                                accessPoint_all_ids = []
+                                for item in accessPoint_list_ids:
+                                    accessPoint_all_ids.append(ObjectId(item.id))
+                                query = models.AccessPointList.objects(id__in=accessPoint_all_ids)
+                                matching_data = query.all()
+                                sum_min = 0
+                                for data in matching_data:
+                                    sum_min += data.minutes
+                                sla = float(cal_sla(month, year, sum_min))
+                                accessPoint.availability = sla
+                                accessPoint.save()
                     else:
                         new_accessPoint = models.AccessPoint(
                             accessPoint_id=accessPoint_id,
@@ -353,18 +358,18 @@ def get_accessPoint_down(response, month, year, accessPoint_down_in_db, accessPo
                                     accessPoint_list.minutes = minute
                                     accessPoint_list.save()
 
-                                    query = models.AccessPointList.objects(
-                                        id__in=accessPoint_list_ids)
-                                    
-                                    matching_data = query.all()
-                                    sum_min = 0
-                                    
-                                    for data in matching_data:
-                                        sum_min += data.minutes
-
-                                    sla = float(cal_sla(month, year, sum_min))
-                                    accessPoint.availability = sla
-                                    accessPoint.save()
+                                    if len(accessPoint_list_ids) > 0:
+                                        accessPoint_all_ids = []
+                                        for item in accessPoint_list_ids:
+                                            accessPoint_all_ids.append(ObjectId(item.id))
+                                        query = models.AccessPointList.objects(id__in=accessPoint_all_ids)
+                                        matching_data = query.all()
+                                        sum_min = 0
+                                        for data in matching_data:
+                                            sum_min += data.minutes
+                                        sla = float(cal_sla(month, year, sum_min))
+                                        accessPoint.availability = sla
+                                        accessPoint.save()
                 else:
                     new_accessPoint_list = models.AccessPointList(
                         state=int(state),
@@ -439,15 +444,18 @@ def get_accessPoint_down(response, month, year, accessPoint_down_in_db, accessPo
                 for value in accessPoint.accessPoint_list:
                     accessPoint_list_ids.append(value.id)
 
-                query = models.AccessPointList.objects(
-                    id__in=accessPoint_list_ids)
-                matching_data = query.all()
-
-                for data in matching_data:
-                    sum_min += data.minutes
-                sla = float(cal_sla(month, year, sum_min))
-                accessPoint.availability = sla
-                accessPoint.save()
+                if len(accessPoint_list_ids) > 0:
+                    accessPoint_all_ids = []
+                    for item in accessPoint_list_ids:
+                        accessPoint_all_ids.append(ObjectId(item.id))
+                    query = models.AccessPointList.objects(id__in=accessPoint_all_ids)
+                    matching_data = query.all()
+                    sum_min = 0
+                    for data in matching_data:
+                        sum_min += data.minutes
+                    sla = float(cal_sla(month, year, sum_min))
+                    accessPoint.availability = sla
+                    accessPoint.save()
         else:
             new_accessPoint = models.AccessPoint(
                 accessPoint_id=accessPoint_id,
@@ -565,18 +573,18 @@ def get_service_all(response, month, year) :
                                     service_list.minutes = minute
                                     service_list.save()
 
-                                    query = models.ServiceList.objects(
-                                        id__in=service_list_ids)
-                                    
-                                    matching_data = query.all()
-                                    sum_min = 0
-                                    
-                                    for data in matching_data:
-                                        sum_min += data.minutes
-
-                                    sla = float(cal_sla(month, year, sum_min))
-                                    service.availability = sla
-                                    service.save()
+                                    if len(service_list_ids) > 0:
+                                        service_all_ids = []
+                                        for item in service_list_ids:
+                                            service_all_ids.append(ObjectId(item.id))
+                                        query = models.ServiceList.objects(id__in=service_all_ids)
+                                        matching_data = query.all()
+                                        sum_min = 0
+                                        for data in matching_data:
+                                            sum_min += data.minutes
+                                        sla = float(cal_sla(month, year, sum_min))
+                                        service.availability = sla
+                                        service.save()
                     else:
                         new_service_list = models.ServiceList(
                             state=int(state),
@@ -633,15 +641,18 @@ def get_service_all(response, month, year) :
                             for value in service.service_list:
                                 service_list_ids.append(value.id)
 
-                            query = models.ServiceList.objects(
-                                id__in=service_list_ids)
-                            matching_data = query.all()
-
-                            for data in matching_data:
-                                sum_min += data.minutes
-                            sla = float(cal_sla(month, year, sum_min))
-                            service.availability = sla
-                            service.save()
+                            if len(service_list_ids) > 0:
+                                service_all_ids = []
+                                for item in service_list_ids:
+                                    service_all_ids.append(ObjectId(item.id))
+                                query = models.ServiceList.objects(id__in=service_all_ids)
+                                matching_data = query.all()
+                                sum_min = 0
+                                for data in matching_data:
+                                    sum_min += data.minutes
+                                sla = float(cal_sla(month, year, sum_min))
+                                service.availability = sla
+                                service.save()
                     else:
                         new_service = models.Service(
                             service_id=service_id,
@@ -753,18 +764,18 @@ def get_service_down(response, month, year, servicedown_in_db, servicedown_now) 
                                     service_list.minutes = minute
                                     service_list.save()
 
-                                    query = models.ServiceList.objects(
-                                        id__in=service_list_ids)
-                                    
-                                    matching_data = query.all()
-                                    sum_min = 0
-                                    
-                                    for data in matching_data:
-                                        sum_min += data.minutes
-
-                                    sla = float(cal_sla(month, year, sum_min))
-                                    service.availability = sla
-                                    service.save()
+                                    if len(service_list_ids) > 0:
+                                        service_all_ids = []
+                                        for item in service_list_ids:
+                                            service_all_ids.append(ObjectId(item.id))
+                                        query = models.ServiceList.objects(id__in=service_all_ids)
+                                        matching_data = query.all()
+                                        sum_min = 0
+                                        for data in matching_data:
+                                            sum_min += data.minutes
+                                        sla = float(cal_sla(month, year, sum_min))
+                                        service.availability = sla
+                                        service.save()
                 else:
                     new_service_list = models.ServiceList(
                         state=int(state),
@@ -835,15 +846,18 @@ def get_service_down(response, month, year, servicedown_in_db, servicedown_now) 
                 for value in service.service_list:
                     service_list_ids.append(value.id)
 
-                query = models.ServiceList.objects(
-                    id__in=service_list_ids)
-                matching_data = query.all()
-
-                for data in matching_data:
-                    sum_min += data.minutes
-                sla = float(cal_sla(month, year, sum_min))
-                service.availability = sla
-                service.save()
+                if len(service_list_ids) > 0:
+                    service_all_ids = []
+                    for item in service_list_ids:
+                        service_all_ids.append(ObjectId(item.id))
+                    query = models.ServiceList.objects(id__in=service_all_ids)
+                    matching_data = query.all()
+                    sum_min = 0
+                    for data in matching_data:
+                        sum_min += data.minutes
+                    sla = float(cal_sla(month, year, sum_min))
+                    service.availability = sla
+                    service.save()
         else:
             new_service = models.Service(
                 service_id=service_id,
@@ -974,18 +988,18 @@ def get_host_all(response, month, year) :
                                     host_list.minutes = minute
                                     host_list.save()
 
-                                    query = models.HostList.objects(
-                                        id__in=host_list_ids)
-                                    
-                                    matching_data = query.all()
-                                    sum_min = 0
-
-                                    for data in matching_data:
-                                        sum_min += data.minutes
-
-                                    sla = float(cal_sla(month, year, sum_min))
-                                    host.availability = sla
-                                    host.save()
+                                    if len(host_list_ids) > 0:
+                                        host_all_ids = []
+                                        for item in host_list_ids:
+                                            host_all_ids.append(ObjectId(item.id))
+                                        query = models.HostList.objects(id__in=host_all_ids)
+                                        matching_data = query.all()
+                                        sum_min = 0
+                                        for data in matching_data:
+                                            sum_min += data.minutes
+                                        sla = float(cal_sla(month, year, sum_min))
+                                        host.availability = sla
+                                        host.save()
                     else:
                         new_host_list = models.HostList(
                             state=int(state),
@@ -1046,15 +1060,18 @@ def get_host_all(response, month, year) :
                             for value in host.host_list:
                                 host_list_ids.append(value.id)
 
-                            query = models.HostList.objects(
-                                id__in=host_list_ids)
-                            matching_data = query.all()
-
-                            for data in matching_data:
-                                sum_min += data.minutes
-                            sla = float(cal_sla(month, year, sum_min))
-                            host.availability = sla
-                            host.save()
+                            if len(host_list_ids) > 0:
+                                host_all_ids = []
+                                for item in host_list_ids:
+                                    host_all_ids.append(ObjectId(item.id))
+                                query = models.HostList.objects(id__in=host_all_ids)
+                                matching_data = query.all()
+                                sum_min = 0
+                                for data in matching_data:
+                                    sum_min += data.minutes
+                                sla = float(cal_sla(month, year, sum_min))
+                                host.availability = sla
+                                host.save()
                     else:
                         new_host = models.Host(
                             host_id=host_id,
@@ -1171,18 +1188,18 @@ def get_host_down(response, month, year, hostdown_in_db, hostdown_now) :
                                     host_list.minutes = minute
                                     host_list.save()
 
-                                    query = models.HostList.objects(
-                                        id__in=host_list_ids)
-                                    
-                                    matching_data = query.all()
-                                    sum_min = 0
-
-                                    for data in matching_data:
-                                        sum_min += data.minutes
-
-                                    sla = float(cal_sla(month, year, sum_min))
-                                    host.availability = sla
-                                    host.save()
+                                    if len(host_list_ids) > 0:
+                                        host_all_ids = []
+                                        for item in host_list_ids:
+                                            host_all_ids.append(ObjectId(item.id))
+                                        query = models.HostList.objects(id__in=host_all_ids)
+                                        matching_data = query.all()
+                                        sum_min = 0
+                                        for data in matching_data:
+                                            sum_min += data.minutes
+                                        sla = float(cal_sla(month, year, sum_min))
+                                        host.availability = sla
+                                        host.save()
                 else:
                     new_host_list = models.HostList(
                         state=int(state),
@@ -1258,15 +1275,18 @@ def get_host_down(response, month, year, hostdown_in_db, hostdown_now) :
                 for value in host.host_list:
                     host_list_ids.append(value.id)
 
-                query = models.HostList.objects(
-                    id__in=host_list_ids)
-                matching_data = query.all()
-
-                for data in matching_data:
-                    sum_min += data.minutes
-                sla = float(cal_sla(month, year, sum_min))
-                host.availability = sla
-                host.save()
+                if len(host_list_ids) > 0:
+                    host_all_ids = []
+                    for item in host_list_ids:
+                        host_all_ids.append(ObjectId(item.id))
+                    query = models.HostList.objects(id__in=host_all_ids)
+                    matching_data = query.all()
+                    sum_min = 0
+                    for data in matching_data:
+                        sum_min += data.minutes
+                    sla = float(cal_sla(month, year, sum_min))
+                    host.availability = sla
+                    host.save()
         else:
             new_host = models.Host(
                 host_id=host_id,
