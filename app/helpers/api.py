@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 import httpx
 import datetime
 from .utils import cal_min_down, cal_sla, get_all_ap_list, get_host_daily_sla, get_service_daily_sla, get_accessPoint_daily_sla, get_host_group_monthly_sla, get_service_group_monthly_sla
-from bson.objectid import ObjectId
+from bson import ObjectId
 
 load_dotenv()
 
