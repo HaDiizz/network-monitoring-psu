@@ -1672,3 +1672,25 @@ def access_point_is_down():
     except Exception as ex:
         print("access_point_is_down", ex)
         return None
+    
+def ap_in_downtime():
+    try:
+        with httpx.Client() as client:
+            params = { 
+                "query": '{"op":"and","expr":[{"op":"or", "expr": [{"op":"=","left":"services.host_name","right":"WLC"}, {"op":"=","left":"services.host_name","right":"Aruba-Controller"} ]},{"op":"or","expr":[{"op":">","left":"services.scheduled_downtime_depth","right":"0"},{"op":">","left":"services.host_scheduled_downtime_depth","right":"0"}]}]}',
+                "columns": [ 'host_name', 'state','description',],
+            }
+            response = client.get(
+                f"{API_URL}/domain-types/service/collections/all",
+                headers=HEADERS,
+                params=params
+            )
+            if response.status_code == 200:
+                response = response.json()
+                if response:
+                    return response['value']
+            else:
+                return []
+    except Exception as ex:
+        print("ap_in_downtime", ex)
+        return None
