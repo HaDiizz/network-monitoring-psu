@@ -243,7 +243,7 @@ def get_accessPoint_all(response, month, year) :
                                         accessPoint_all_ids.append(ObjectId(item_id))
                                 query = models.AccessPointList.objects(id__in=accessPoint_all_ids)
                                 matching_data = query.all()
-                                sum_min = 0
+
                                 for data in matching_data:
                                     sum_min += data.minutes
                                 sla = float(cal_sla(month, year, sum_min))
@@ -462,7 +462,7 @@ def get_accessPoint_down(response, month, year, accessPoint_down_in_db, accessPo
                             accessPoint_all_ids.append(ObjectId(item_id))
                     query = models.AccessPointList.objects(id__in=accessPoint_all_ids)
                     matching_data = query.all()
-                    sum_min = 0
+
                     for data in matching_data:
                         sum_min += data.minutes
                     sla = float(cal_sla(month, year, sum_min))
@@ -665,7 +665,7 @@ def get_service_all(response, month, year) :
                                         service_all_ids.append(ObjectId(item_id))
                                 query = models.ServiceList.objects(id__in=service_all_ids)
                                 matching_data = query.all()
-                                sum_min = 0
+
                                 for data in matching_data:
                                     sum_min += data.minutes
                                 sla = float(cal_sla(month, year, sum_min))
@@ -876,7 +876,7 @@ def get_service_down(response, month, year, servicedown_in_db, servicedown_now) 
                             service_all_ids.append(ObjectId(item_id))
                     query = models.ServiceList.objects(id__in=service_all_ids)
                     matching_data = query.all()
-                    sum_min = 0
+
                     for data in matching_data:
                         sum_min += data.minutes
                     sla = float(cal_sla(month, year, sum_min))
@@ -1096,7 +1096,7 @@ def get_host_all(response, month, year) :
                                         host_all_ids.append(ObjectId(item_id))
                                 query = models.HostList.objects(id__in=host_all_ids)
                                 matching_data = query.all()
-                                sum_min = 0
+
                                 for data in matching_data:
                                     sum_min += data.minutes
                                 sla = float(cal_sla(month, year, sum_min))
@@ -1317,7 +1317,7 @@ def get_host_down(response, month, year, hostdown_in_db, hostdown_now) :
                             host_all_ids.append(ObjectId(item_id))
                     query = models.HostList.objects(id__in=host_all_ids)
                     matching_data = query.all()
-                    sum_min = 0
+
                     for data in matching_data:
                         sum_min += data.minutes
                     sla = float(cal_sla(month, year, sum_min))
