@@ -885,7 +885,7 @@ def monthly_callbacks(dash_app, selection):
                     html.Div([
                         html.P(get_month(month)),
                         html.P(
-                            f"SLA: {cumulative_sla.get((year, month), 0) / record_count.get((year, month), 1):.2f}%",
+                            f"SLA: {'{:.5f}'.format(round(cumulative_sla.get((year, month), 0) / record_count.get((year, month), 1), 8))}%",
                             style={'font-size': '12px'}
                         ),
                     ],
@@ -939,12 +939,12 @@ def monthly_callbacks(dash_app, selection):
         for value in average_sla_per_year.values():
             total_sum += value
 
-        sla_avg = "{:.{}f}".format((total_sum/len(average_sla_per_year)), 2)
+        sla_avg = "{:.5f}".format(round(total_sum/len(average_sla_per_year), 8))
 
         graph_figure = {
             'data': [
                 {'x': [f"{get_month(month)} {year}" for year, month in cumulative_sla.keys()],
-                 'y': [cumulative_sla_value / record_count.get((year, month), 1) for (year, month), cumulative_sla_value in cumulative_sla.items()],
+                 'y': ['{:.5f}'.format(round(cumulative_sla_value / record_count.get((year, month), 1), 8)) for (year, month), cumulative_sla_value in cumulative_sla.items()],
                  'type': 'line',
                  'name': 'Average SLA'}
             ],
