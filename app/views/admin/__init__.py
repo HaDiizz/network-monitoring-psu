@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, jsonify
 from ... import acl
-from ...helpers.api import host_list, host_group_list, service_group_list, maintain_host_list, maintain_service_list, access_point_list, get_all_service_list, access_point_list, host_list_info
+from ...helpers.api import host_list, host_group_list, service_group_list, maintain_host_list, maintain_service_list, access_point_list, get_all_service_list, access_point_list, host_list_info, ap_in_downtime
 from ...helpers.utils import location_list, get_host_down_select_time, get_ap_list_with_sla, get_ap_name_list, get_host_name_list, get_all_host_list
 from app import caches
 import datetime
@@ -16,6 +16,7 @@ from app.views.admin.management import *
 @acl.roles_required("admin")
 def access_point_dashboard():
     accessPoints_resp = access_point_list()
+    maintain_access_points = ap_in_downtime()
     if accessPoints_resp is None:
         accessPoints_resp = []
     accessPoints = get_ap_list_with_sla(accessPoints_resp)
@@ -32,6 +33,10 @@ def access_point_dashboard():
                 accessPoint_state = "CRIT"
             elif accessPoint_last_state == 3:
                 accessPoint_state = "UNKNOWN" 
+            for maintain_access_point in maintain_access_points:
+                if accessPoint["accessPoint_id"] == maintain_access_point["id"]:
+                    accessPoint_state = "MAINTAIN"
+                    accessPoint["state"] = -1
             if accessPoint_state not in accessPoint_summary:
                 accessPoint_summary[accessPoint_state] = 0
             accessPoint_summary[accessPoint_state] += 1
