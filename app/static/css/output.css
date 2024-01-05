@@ -4579,3 +4579,7 @@ details.collapse summary::-webkit-details-marker {
 .ml-5 {
   margin-left: 1.25rem/* 20px */;
 }
+
+.p-1 {
+  padding: 0.25rem/* 4px */;
+}

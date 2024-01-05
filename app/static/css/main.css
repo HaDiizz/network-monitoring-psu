@@ -355,3 +355,9 @@ div.dataTables_wrapper div.dataTables_filter {
 #host-plotly-graph {
   place-self: center;
 }
+
+#btn_filter_groups {
+  width: 100%;
+  display: flex;
+  justify-content: start;
+}

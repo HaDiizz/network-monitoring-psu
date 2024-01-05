@@ -60,11 +60,12 @@ $(document).ready(function () {
   });
 
   $("#accessPoint-table_wrapper div.dataTables_filter").append(
-    '<div class="join uppercase p-3 w-100" role="group">' +
+    '<div id="btn_filter_groups" class="join uppercase p-1 w-100" role="group">' +
       '<button id="btn-filter-ok-ap" type="button" class="btn join-item filter-btn" data-status="OK"><i class="bx bxs-caret-up-circle text-green-500" style="font-size: 18px"></i><span class="pl-2">OK</span></button>' +
       '<button id="btn-filter-warn-ap" type="button" class="btn join-item filter-btn" data-status="WARN"><i class="bx bxs-info-circle text-yellow-500" style="font-size: 18px"></i><span class="pl-2">WARN</span></button>' +
       '<button id="btn-filter-crit-ap" type="button" class="btn join-item filter-btn" data-status="CRIT"><i class="bx bxs-caret-down-circle text-red-500" style="font-size: 18px"></i><span class="pl-2">CRIT</span></button>' +
       '<button id="btn-filter-unknown-ap" type="button" class="btn join-item filter-btn" data-status="UNKNOWN"><i class="bx bxs-minus-circle text-indigo-500" style="font-size: 18px"></i><span class="pl-2">UNKNOWN</span></button>' +
+      '<button id="btn-filter-maintain" type="button" class="btn join-item filter-btn" data-status="MAINTAIN"><i class="bx bxs-traffic-cone text-neutral-500" style="font-size: 18px"></i><span class="pl-2">MAINTAIN</span></button>' +
       '<button id="btn-filter-clear-ap" type="button" class="btn join-item clear-btn">CLR</button>' +
       "</div>"
   );
@@ -88,6 +89,8 @@ $(document).ready(function () {
       table.columns(statusColIndex).search("^CRIT$", true, false).draw();
     } else if (status === "UNKNOWN") {
       table.columns(statusColIndex).search("^UNKNOWN$", true, false).draw();
+    } else if (status === "MAINTAIN") {
+      table.columns(statusColIndex).search("^MAINTAIN$", true, false).draw();
     }
   });
 });
