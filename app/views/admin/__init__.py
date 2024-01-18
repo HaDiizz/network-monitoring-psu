@@ -82,7 +82,7 @@ def host_dashboard():
 
 @admin_module.route("/overview/service")
 @acl.roles_required("admin")
-@caches.cache.cached(timeout=10800, key_prefix='service_dashboard')
+@caches.cache.cached(timeout=3600, key_prefix='service_dashboard')
 def service_dashboard():
     services = get_all_service_list()
     service_groups = service_group_list(True)

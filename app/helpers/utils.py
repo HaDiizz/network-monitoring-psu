@@ -1047,7 +1047,7 @@ DEFAULT_LAT = 7.0088136
 DEFAULT_LNG = 100.498062
 
 
-@caches.cache.cached(timeout=10800, key_prefix='get_ap_list_with_sla')
+@caches.cache.cached(timeout=3600, key_prefix='get_ap_list_with_sla')
 def get_ap_list_with_sla(ap_prop):
     get_ap_list = ap_prop
     if get_ap_list is None:
@@ -1224,7 +1224,7 @@ def get_host_name_list(host_prop):
     return host_list
 
 
-@caches.cache.cached(timeout=10800, key_prefix='get_all_host_list')
+@caches.cache.cached(timeout=3600, key_prefix='get_all_host_list')
 def get_all_host_list(host_prop):
     get_host_list = host_prop
     result = []
