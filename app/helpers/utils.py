@@ -106,6 +106,27 @@ def search_month(start_month, end_month, selected_year, option):
             )
             return query
 
+    elif option == "access_point":
+        if end_month <= 12:
+            query = models.AccessPoint.objects(
+                month__gte=start_month,
+                month__lte=end_month,
+                year__in=[selected_year]
+            )
+            return query
+        elif end_month == 13:
+            query = models.AccessPoint.objects(
+                (Q(month=11) & Q(year=selected_year)) | (Q(month=12) & Q(
+                    year=selected_year)) | (Q(month=1) & Q(year=selected_year + 1))
+            )
+            return query
+        elif end_month == 14:
+            query = models.AccessPoint.objects(
+                (Q(month=12) & Q(year=selected_year)) | (Q(month=1) & Q(
+                    year=selected_year + 1)) | (Q(month=2) & Q(year=selected_year + 1))
+            )
+            return query
+
 def search_service(start_month, end_month, selected_year, service_name):
     if end_month <= 12:
         query = models.Service.objects(
@@ -296,6 +317,7 @@ def search_host_day_data(matching_data, selected_month, selected_year):
     
     return host_day_dict
 
+
 def search_service_day_data(matching_data, selected_month, selected_year):
     service_day_dict = []
     
@@ -442,10 +464,155 @@ def search_service_day_data(matching_data, selected_month, selected_year):
         if len(matching_data) == 0 :
             for data in service_day_dict :
                 day, month = data['day'].split('-')
-                
-    
-    
     return service_day_dict
+
+
+def search_accessPoint_day_data(matching_data, selected_month, selected_year):
+    accessPoint_day_dict = []
+    
+    for data in matching_data:
+        day = data.created_date.day
+        month = data.created_date.month
+        day = str(day) + "-" + str(month)
+        
+        if accessPoint_day_dict:
+            for check_day in accessPoint_day_dict:
+                day_exists = any(check_day["day"] ==
+                                 day for check_day in accessPoint_day_dict)
+                if day_exists:
+                    if check_day["day"] == day:
+                        
+                        if data.minutes >= 1440 :
+                            check_day["time"] = check_day["time"] + 1440
+                        else :
+                            check_day["time"] = check_day["time"] + data.minutes
+                        
+                        break
+
+                else:
+                    date = day
+                    if data.minutes >= 1440 :
+                        time = 1440
+                    else :
+                        time = data.minutes
+                    count = 1
+                    start_day = {"day": day, "time": time}
+                    accessPoint_day_dict.append(start_day)
+                    break
+
+        else:
+            date = day
+            if data.minutes >= 1440 :
+                time = 1440
+            else :
+                time = data.minutes
+            count = 1
+            start_day = {"day": day, "time": time}
+            accessPoint_day_dict.append(start_day)
+
+    if selected_month + 2 == 13 :
+        
+        query = models.AccessPoint.objects(
+                                month=selected_month, year=selected_year)
+        matching_data = query.all()
+        total_all_accessPoint = len(matching_data)
+
+        for data in accessPoint_day_dict :
+            day, month = data['day'].split('-')
+            if int(month) == selected_month :
+                continue
+            else :
+                break
+
+        query = models.AccessPoint.objects(
+                                month=selected_month + 1, year=selected_year)
+        matching_data = query.all()
+        total_all_accessPoint = len(matching_data)
+        if len(matching_data) == 0 :
+            for data in accessPoint_day_dict :
+                day, month = data['day'].split('-')
+                if int(month) == selected_month :
+                    continue
+                elif int(month) == 1:
+                    break
+
+        query = models.AccessPoint.objects(
+                                month=1, year=selected_year + 1)
+        matching_data = query.all()
+        total_all_accessPoint = len(matching_data)
+        if len(matching_data) == 0 :
+            for data in accessPoint_day_dict :
+                day, month = data['day'].split('-')
+                
+    if selected_month + 2 == 14 :
+
+        query = models.AccessPoint.objects(
+                                month=selected_month, year=selected_year)
+        matching_data = query.all()
+        total_all_accessPoint = len(matching_data)
+        
+        for data in accessPoint_day_dict :
+            day, month = data['day'].split('-')
+            if int(month) == selected_month :
+                continue
+            else :
+                break
+
+        query = models.AccessPoint.objects(
+                                month=1, year=selected_year + 1)
+        matching_data = query.all()
+        total_all_accessPoint = len(matching_data)
+        if len(matching_data) == 0 :
+            for data in accessPoint_day_dict :
+                day, month = data['day'].split('-')
+                if int(month) == selected_month :
+                    continue
+                elif int(month) == 2 :
+                    break
+
+        query = models.AccessPoint.objects(
+                                month=2, year=selected_year + 1)
+        matching_data = query.all()
+        total_all_accessPoint = len(matching_data)
+        if len(matching_data) == 0 :
+            for data in accessPoint_day_dict :
+                day, month = data['day'].split('-')
+    
+    else :
+
+        query = models.AccessPoint.objects(
+                                month=selected_month, year=selected_year)
+        matching_data = query.all()
+        total_all_accessPoint = len(matching_data)
+
+        for data in accessPoint_day_dict :
+            day, month = data['day'].split('-')
+            if int(month) == selected_month :
+                continue
+            else :
+                break
+        
+        query = models.AccessPoint.objects(
+                                month=selected_month + 1, year=selected_year)
+        matching_data = query.all()
+        total_all_accessPoint = len(matching_data)
+        if len(matching_data) == 0 :
+            for data in accessPoint_day_dict :
+                day, month = data['day'].split('-')
+                if int(month) == selected_month :
+                    continue
+                elif int(month) == selected_month + 2 :
+                    break
+        
+        query = models.AccessPoint.objects(
+                                month=selected_month + 2, year=selected_year)
+        matching_data = query.all()
+        total_all_accessPoint = len(matching_data)
+        if len(matching_data) == 0 :
+            for data in accessPoint_day_dict :
+                day, month = data['day'].split('-')
+    return accessPoint_day_dict
+
 
 def get_day_in_month(month, year):
     days_in_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
@@ -596,7 +763,34 @@ def get_day_data(selected_month, selected_year, option):
 
             data_dict = {item['day']: {"date": item['day'], 'sla': round(
                 ((total_service * 1440 ) - (item['time']))/(1440 * total_service) * 100, 2)} for item in service_day_dict}
-    
+
+    elif option == "access_point":
+        if end_month > 12:
+            query = search_month(start_month, end_month, selected_year, "access_point")
+        else:
+            query = search_month(start_month, end_month, selected_year, "access_point")
+
+        accessPoint = query.all()
+        
+        accessPoint_list_id = []
+        if accessPoint:
+            for accessPoints in accessPoint:
+                for value in accessPoints.accessPoint_list:
+                    accessPoint_list_id.append(value.id)
+
+            query = models.AccessPointList.objects(id__in=accessPoint_list_id)
+            matching_data = query.all()
+            accessPoint_day_dict = search_accessPoint_day_data(matching_data, selected_month, selected_year)
+            quarter_month_dict = get_all_quarter_data(
+                selected_month, selected_year)
+
+            query = models.AccessPoint.objects(
+                                month=selected_month, year=selected_year)
+            total_accessPoint = query.count()
+            
+
+            data_dict = {item['day']: {"date": item['day'], 'sla': round(
+                ((total_accessPoint * 1440 ) - (item['time']))/(1440 * total_accessPoint) * 100, 2)} for item in accessPoint_day_dict}
 
     for key in quarter_month_dict:
         if key in data_dict:

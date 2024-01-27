@@ -118,14 +118,30 @@
             <i class="bx bx-home nav_icon"></i>
             <span class="nav_name">Home</span>
           </a>
-          <a
-            id="down-hosts-link"
-            href="{{ url_for('admin.downHosts') }}"
-            class="nav_link active"
-          >
-            <i class="bx bx-calendar-check nav_icon"></i>
-            <span class="nav_name">Down Hosts</span>
-          </a>
+          <div id="ddl-downtime-interval" class="nav_dropdown">
+            <a class="nav_link">
+              <i class="bx bx-line-chart nav_icon"></i>
+              <span class="nav_name">Downtime Interval</span>
+              <i class="bx bx-chevron-down nav_icon nav_dropdown-icon"></i>
+            </a>
+
+            <div class="nav_dropdown-collapse dark:bg-base-200">
+              <div class="nav_dropdown-content">
+                <a
+                  id="downHosts-link"
+                  href="{{ url_for('admin.downHosts') }}"
+                  class="nav_dropdown-item pb-4"
+                  >Host</a
+                >
+                <a
+                  id="downAccessPoints-link"
+                  href="{{ url_for('admin.downAccessPoints') }}"
+                  class="nav_dropdown-item"
+                  >Access Point</a
+                >
+              </div>
+            </div>
+          </div>
           <div id="ddl-host-service" class="nav_dropdown">
             <a class="nav_link">
               <i class="bx bx-line-chart nav_icon"></i>
@@ -139,13 +155,19 @@
                   id="host-link"
                   href="{{ url_for('admin.host') }}"
                   class="nav_dropdown-item pb-4"
-                  >Hosts</a
+                  >Host</a
                 >
                 <a
                   id="service-link"
                   href="{{ url_for('admin.service') }}"
                   class="nav_dropdown-item"
-                  >Services</a
+                  >Service</a
+                >
+                <a
+                  id="accessPoint-link"
+                  href="{{ url_for('admin.service') }}"
+                  class="nav_dropdown-item"
+                  >Access Point</a
                 >
               </div>
             </div>

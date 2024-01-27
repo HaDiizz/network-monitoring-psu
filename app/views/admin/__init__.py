@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, jsonify
 from ... import acl
 from ...helpers.api import host_list, host_group_list, service_group_list, maintain_host_list, maintain_service_list, access_point_list, get_all_service_list, access_point_list, host_list_info, ap_in_downtime
-from ...helpers.utils import location_list, get_host_down_select_time, get_ap_list_with_sla, get_ap_name_list, get_host_name_list, get_all_host_list
+from ...helpers.utils import location_list, get_host_down_select_time, get_ap_list_with_sla, get_ap_name_list, get_host_name_list, get_all_host_list, get_accessPoint_down_select_time
 from app import caches
 import datetime
 
@@ -304,3 +304,28 @@ def downHosts():
     host_data_down_over24, count_host_data_name, all_count_down = get_host_down_select_time(start_month, start_year, end_month, end_year, selectTimeOver)
 
     return render_template("/admin/downHosts.html", title="Down hosts", monthPickerStart=monthPickerStart, monthPickerEnd=monthPickerEnd, host_down_list=host_data_down_over24, all_count_down=all_count_down, selectTimeOver=selectTimeOver)
+
+
+@admin_module.route("/down-access-points", methods=["GET", "POST"])
+@acl.roles_required("admin")
+def downAccessPoints():
+    monthPickerStart = ""
+    monthPickerEnd = ""
+    selectTimeOver = 1440
+    current_date = datetime.datetime.now()
+    current_month = current_date.month
+    current_year = current_date.year
+    formatted_date = f"{current_year}-{current_month:02d}"
+    monthPickerStart = formatted_date
+    monthPickerEnd = formatted_date
+
+    if request.method == 'POST':
+        monthPickerStart = request.form.get('monthPickerStart')
+        monthPickerEnd = request.form.get('monthPickerEnd')
+        selectTimeOver = int(request.form.get('selectTimeOver'))
+
+    start_year, start_month = map(int, monthPickerStart.split('-'))
+    end_year, end_month = map(int, monthPickerEnd.split('-'))
+    accessPoint_data_down_over24, count_accessPoint_data_name, all_count_down = get_accessPoint_down_select_time(start_month, start_year, end_month, end_year, selectTimeOver)
+
+    return render_template("/admin/downAccessPoint.html", title="Down Access Points", monthPickerStart=monthPickerStart, monthPickerEnd=monthPickerEnd, accessPoint_down_list=accessPoint_data_down_over24, all_count_down=all_count_down, selectTimeOver=selectTimeOver)

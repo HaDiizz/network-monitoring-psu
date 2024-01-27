@@ -1,8 +1,8 @@
 {% extends "/layouts/base.html" %} {% block content %}
 <div class="admin-container">
-  <h1 class="text-4xl font-bold pb-8">Host Downtime Interval</h1>
+  <h1 class="text-4xl font-bold pb-8">Access Point Downtime Interval</h1>
 
-  <form id="searchForm" action="{{ url_for('admin.downHosts') }}" method="POST">
+  <form id="searchForm" action="{{ url_for('admin.downAccessPoints') }}" method="POST">
     <div class="flex flex-col w-full lg:flex-row gap-5">
       <div class="grid w-full flex-grow pb-5">
         <label class="label">
@@ -72,7 +72,7 @@
         </div>
         <div class="stat-value">{{ all_count_down }}</div>
         <div class="stat-desc">
-          Host downtime interval {% if monthPickerStart == monthPickerEnd %} in<span
+          Access Point downtime interval {% if monthPickerStart == monthPickerEnd %} in<span
             class="text-indigo-500 font-bold"
           >
             {{ monthPickerEnd }}</span
@@ -90,31 +90,31 @@
       class="w-full md:w-12/12 sm:w-12/12 bg-light-primary rounded-md dark:bg-dark-primary shadow-xl overflow-x-scroll"
     >
       <div class="table-responsive p-3 pt-5">
-        <table id="host-down-table" class="display" style="width: 100%">
+        <table id="accessPoint-down-table" class="display" style="width: 100%">
           <thead>
             <tr>
               <th></th>
-              <th>Host Name</th>
+              <th>Access Point Name</th>
               <th>Last Time Up</th>
               <th>Last Time Down</th>
               <th>Duration</th>
             </tr>
           </thead>
           <tbody>
-            {% for key, host in host_down_list.items() %}
+            {% for key, accessPoint in accessPoint_down_list.items() %}
             <tr>
               <td>{{ loop.index }}</td>
-              <td>{{ host["host_name"] }}</td>
+              <td>{{ accessPoint["accessPoint_name"] }}</td>
               <td>
-                {{ host["host_last_time_up"].strftime('%A, %B %d, %Y %I:%M %p')
+                {{ accessPoint["accessPoint_last_time_up"].strftime('%A, %B %d, %Y %I:%M %p')
                 }}
               </td>
               <td>
-                {{ host["host_last_time_down"].strftime('%A, %B %d, %Y %I:%M
+                {{ accessPoint["accessPoint_last_time_down"].strftime('%A, %B %d, %Y %I:%M
                 %p') }}
               </td>
-              {% set hours = host['host_minutes'] // 60 %} {% set minutes =
-              host['host_minutes'] % 60 %}
+              {% set hours = accessPoint['accessPoint_minutes'] // 60 %} {% set minutes =
+              accessPoint['accessPoint_minutes'] % 60 %}
               <td>{{ '{:02} hours {:02} minutes'.format(hours, minutes) }}</td>
             </tr>
             {% endfor %}
@@ -127,7 +127,7 @@
 
 <script>
   $(document).ready(function () {
-    $("#host-down-table").DataTable({
+    $("#accessPoint-down-table").DataTable({
       order: [[0, "asc"]],
       dom: "Bfrtip",
       buttons: ["copy", "csv", "excel", "print", "colvis"],

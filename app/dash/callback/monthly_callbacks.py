@@ -73,6 +73,8 @@ def monthly_callbacks(dash_app, selection):
         sla_requirement = None
         if selection == "host":
             sla_requirement = models.SLAConfig.objects(year=selected_year, category="Host").first()
+        elif selection == "access_point":
+            sla_requirement = models.SLAConfig.objects(year=selected_year, category="Access Point").first()            
         else:
             sla_requirement = models.SLAConfig.objects(year=selected_year, category="Service").first()            
 
@@ -82,6 +84,10 @@ def monthly_callbacks(dash_app, selection):
             host_monthly_data = models.Host.objects(year=selected_year)
             filtered_data = [
                 item for item in host_monthly_data if item['year'] == selected_year]
+        elif selection == "access_point":
+            accessPoint_monthly_data = models.AccessPoint.objects(year=selected_year)
+            filtered_data = [
+                item for item in accessPoint_monthly_data if item['year'] == selected_year]
         else:
             service_monthly_data = models.Service.objects(year=selected_year)
             filtered_data = [
