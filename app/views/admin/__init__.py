@@ -9,6 +9,7 @@ admin_module = Blueprint("admin", __name__, url_prefix="/admin")
 
 from app.views.admin.service import *
 from app.views.admin.host import *
+from app.views.admin.access_point import *
 from app.views.admin.management import *
 
 

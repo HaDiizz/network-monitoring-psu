@@ -106,7 +106,7 @@ def search_month(start_month, end_month, selected_year, option):
             )
             return query
 
-    elif option == "accessPoint":
+    elif option == "access_point":
         if end_month <= 12:
             query = models.AccessPoint.objects(
                 month__gte=start_month,
@@ -784,7 +784,7 @@ def get_day_data(selected_month, selected_year, option):
             data_dict = {item['day']: {"date": item['day'], 'sla': round(
                 ((total_service * 1440 ) - (item['time']))/(1440 * total_service) * 100, 2)} for item in service_day_dict}
 
-    else:
+    elif option == "access_point":
         if end_month > 12:
             query = search_month(start_month, end_month, selected_year, "access_point")
         else:
@@ -1043,16 +1043,12 @@ def get_accessPoint_quarter_data(selected_month, selected_year):
                     accessPoint_count_third_month.append(accessPoint.count)
                     accessPoint_sla_third_month.append(accessPoint.availability)
 
-                if accessPoint.ip_address in accessPoint_ip:
-                    accessPoint_ip.append(accessPoint.ip_address)
-                else:
-                    accessPoint_ip.append(accessPoint.ip_address)
             sla = sla / len(matching_accessPoints)
             accessPoint_sla.append(sla)
             accessPoint_count.append(count_down)
 
     else:
-        query = search_month(start_month, end_month, selected_year, "accessPoint")
+        query = search_month(start_month, end_month, selected_year, "access_point")
         matching_accessPoints = query.all()
         for accessPoint in matching_accessPoints:
             avg_sla += accessPoint.availability
@@ -1086,11 +1082,6 @@ def get_accessPoint_quarter_data(selected_month, selected_year):
                     accessPoint_name_third_month.append(accessPoint.accessPoint_id)
                     accessPoint_count_third_month.append(accessPoint.count)
                     accessPoint_sla_third_month.append(accessPoint.availability)
-        
-                if accessPoint.ip_address in accessPoint_ip:
-                    accessPoint_ip.append(accessPoint.ip_address)
-                else:
-                    accessPoint_ip.append(accessPoint.ip_address)
             
             sla = sla / len(matching_accessPoints)
             accessPoint_sla.append(sla)
@@ -1125,8 +1116,7 @@ def get_accessPoint_quarter_data(selected_month, selected_year):
         avg_sla,
         accessPoint_all_count,
         accessPoint_name, accessPoint_sla,
-        accessPoint_ip, accessPoint_count,
-        card_title,
+        accessPoint_count, card_title,
         accessPoint_sla_first_month,
         accessPoint_sla_second_month,
         accessPoint_sla_third_month,

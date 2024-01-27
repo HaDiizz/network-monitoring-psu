@@ -10,7 +10,7 @@ from app import caches
 
 @admin_module.route("/access-points")
 @acl.roles_required("admin")
-def access_point():
+def access_point_history():
     return render_template("/admin/access-point/index.html", title="Access Point", dash_access_point=dash_access_point.index())
 
 

@@ -10,7 +10,7 @@ from app import caches
 
 @admin_module.route("/services")
 @acl.roles_required("admin")
-def service():
+def service_history():
     return render_template("/admin/service/index.html", title="Service", dash_service=dash_service.index())
 
 

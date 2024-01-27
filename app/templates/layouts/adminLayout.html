@@ -120,8 +120,8 @@
           </a>
           <div id="ddl-downtime-interval" class="nav_dropdown">
             <a class="nav_link">
-              <i class="bx bx-line-chart nav_icon"></i>
-              <span class="nav_name">Downtime Interval</span>
+              <i class="bx bx-timer nav_icon"></i>
+              <span class="nav_name">Duration</span>
               <i class="bx bx-chevron-down nav_icon nav_dropdown-icon"></i>
             </a>
 
@@ -145,7 +145,7 @@
           <div id="ddl-host-service" class="nav_dropdown">
             <a class="nav_link">
               <i class="bx bx-line-chart nav_icon"></i>
-              <span class="nav_name">Hosts & Services</span>
+              <span class="nav_name">SLA Analytics</span>
               <i class="bx bx-chevron-down nav_icon nav_dropdown-icon"></i>
             </a>
 
@@ -153,19 +153,19 @@
               <div class="nav_dropdown-content">
                 <a
                   id="host-link"
-                  href="{{ url_for('admin.host') }}"
+                  href="{{ url_for('admin.host_history') }}"
                   class="nav_dropdown-item pb-4"
                   >Host</a
                 >
                 <a
                   id="service-link"
-                  href="{{ url_for('admin.service') }}"
-                  class="nav_dropdown-item"
+                  href="{{ url_for('admin.service_history') }}"
+                  class="nav_dropdown-item pb-4"
                   >Service</a
                 >
                 <a
                   id="accessPoint-link"
-                  href="{{ url_for('admin.service') }}"
+                  href="{{ url_for('admin.access_point_history') }}"
                   class="nav_dropdown-item"
                   >Access Point</a
                 >

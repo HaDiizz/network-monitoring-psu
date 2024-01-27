@@ -110,7 +110,7 @@ def monthly_callbacks(dash_app, selection):
                 style={'width': '90px', 'height': '90px', 'background': get_color(
                     cumulative_sla.get((year, month), 0) / record_count.get((year, month), 1), sla_requirement["ok_status"], sla_requirement["critical_status"])},
                 className='p-5 text-center flex justify-center card place-self-center',
-                href = f"hosts/{year}/{month}" if selection == "host" else f"services/{year}/{month}"
+                href = f"hosts/{year}/{month}" if selection == "host" else (f"access-points/{year}/{month}" if selection == "access_point" else f"services/{year}/{month}")
             )
             for (year, month), cumulative_sla_value in cumulative_sla.items()
         ]
