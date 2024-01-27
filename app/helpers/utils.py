@@ -1154,30 +1154,40 @@ def get_host_down_select_time(start_month, start_year, end_month, end_year, sele
 
                         if select_time >= 15 and  select_time < 60 :
                             if value.minutes >= select_time and value.minutes < select_time * 2 :
-                                host_list_id.append(value.id)
-                                host_data_name.append(hosts.host_id)    
+                                host_data_name.append(hosts.name)   
+                                host_data_minutes.append(value.minutes)
+                                host_data_last_time_down.append(value.last_time_down)
+                                host_data_last_time_up.append(value.last_time_up)
+    
 
                         elif select_time == 60 :
                             if value.minutes >= select_time and value.minutes < 180 :
-                                host_list_id.append(value.id)
-                                host_data_name.append(hosts.host_id)
+                                host_data_name.append(hosts.name)   
+                                host_data_minutes.append(value.minutes)
+                                host_data_last_time_down.append(value.last_time_down)
+                                host_data_last_time_up.append(value.last_time_up)
+
 
                         elif select_time >= 180 :
                             if value.minutes >= select_time and value.minutes < select_time * 2 :
-                                host_list_id.append(value.id)
-                                host_data_name.append(hosts.host_id)      
+                                host_data_name.append(hosts.name)   
+                                host_data_minutes.append(value.minutes)
+                                host_data_last_time_down.append(value.last_time_down)
+                                host_data_last_time_up.append(value.last_time_up)
 
-                    
+                                
 
-            query = models.HostList.objects(id__in=host_list_id)
-            for host_data in query :
-                host_data_minutes.append(host_data.minutes)
-                host_data_last_time_down.append(host_data.last_time_down)
-                host_data_last_time_up.append(host_data.last_time_up)
-            
-            
+                    elif value.last_state == -2:
+                        if value.minutes >= select_time and value.minutes < select_time * 2 :
+                                host_data_name.append(hosts.name)   
+                                host_data_minutes.append(value.minutes)
+                                host_data_last_time_down.append(value.last_time_down)
+                                host_data_last_time_up.append(value.last_time_up)
+
+                                
             host_data_down_select = {i: {"host_name": host_data_name[i], "host_minutes": host_data_minutes[i],
                                 "host_last_time_down": host_data_last_time_down[i], "host_last_time_up": host_data_last_time_up[i]} for i in range(len(host_data_name))}
+            
             
             unique_host_data_name = set(host_data_name)
             unique_count_host_data_name = len(unique_host_data_name)
@@ -1194,26 +1204,35 @@ def get_host_down_select_time(start_month, start_year, end_month, end_year, sele
 
                         if select_time >= 15 and  select_time < 60 :
                             if value.minutes >= select_time and value.minutes < select_time * 2 :
-                                host_list_id.append(value.id)
-                                host_data_name.append(hosts.host_id)    
+                                host_data_name.append(hosts.name)   
+                                host_data_minutes.append(value.minutes)
+                                host_data_last_time_down.append(value.last_time_down)
+                                host_data_last_time_up.append(value.last_time_up)
+    
 
                         elif select_time == 60 :
                             if value.minutes >= select_time and value.minutes < 180 :
-                                host_list_id.append(value.id)
-                                host_data_name.append(hosts.host_id)
+                                host_data_name.append(hosts.name)   
+                                host_data_minutes.append(value.minutes)
+                                host_data_last_time_down.append(value.last_time_down)
+                                host_data_last_time_up.append(value.last_time_up)
+
 
                         elif select_time >= 180 :
                             if value.minutes >= select_time and value.minutes < select_time * 2 :
-                                host_list_id.append(value.id)
-                                host_data_name.append(hosts.host_id)    
-                    
+                                host_data_name.append(hosts.name)   
+                                host_data_minutes.append(value.minutes)
+                                host_data_last_time_down.append(value.last_time_down)
+                                host_data_last_time_up.append(value.last_time_up)
 
-            query = models.HostList.objects(id__in=host_list_id)
-            for host_data in query :
-                host_data_minutes.append(host_data.minutes)
-                host_data_last_time_down.append(host_data.last_time_down)
-                host_data_last_time_up.append(host_data.last_time_up)
-            
+
+                    elif value.last_state == -2:
+                        if value.minutes >= select_time and value.minutes < select_time * 2 :
+                                host_data_name.append(hosts.name)   
+                                host_data_minutes.append(value.minutes)
+                                host_data_last_time_down.append(value.last_time_down)
+                                host_data_last_time_up.append(value.last_time_up)
+
             
             host_data_down_select = {i: {"host_name": host_data_name[i], "host_minutes": host_data_minutes[i],
                                 "host_last_time_down": host_data_last_time_down[i], "host_last_time_up": host_data_last_time_up[i]} for i in range(len(host_data_name))}
