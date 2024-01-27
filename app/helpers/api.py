@@ -454,9 +454,9 @@ def get_accessPoint_down(response, month, year, accessPoint_down_in_db, accessPo
                     accessPoint_all_ids = []
                     for item_id in accessPoint_list_ids:
                         if isinstance(item_id, ObjectId):
-                            accessPoint_all_ids.append(item_id.id)
+                            accessPoint_all_ids.append(item_id)
                         else:
-                            accessPoint_all_ids.append(ObjectId(item_id.id))
+                            accessPoint_all_ids.append(ObjectId(item_id))
                     query = models.AccessPointList.objects(id__in=accessPoint_all_ids)
                     matching_data = query.all()
 
@@ -867,9 +867,9 @@ def get_service_down(response, month, year, servicedown_in_db, servicedown_now) 
                     service_all_ids = []
                     for item_id in service_list_ids:
                         if isinstance(item_id, ObjectId):
-                            service_all_ids.append(item_id.id)
+                            service_all_ids.append(item_id)
                         else:
-                            service_all_ids.append(ObjectId(item_id.id))
+                            service_all_ids.append(ObjectId(item_id))
                     query = models.ServiceList.objects(id__in=service_all_ids)
                     matching_data = query.all()
 
@@ -1305,9 +1305,9 @@ def get_host_down(response, month, year, hostdown_in_db, hostdown_now) :
                     host_all_ids = []
                     for item_id in host_list_ids:
                         if isinstance(item_id, ObjectId):
-                            host_all_ids.append(item_id.id)
+                            host_all_ids.append(item_id)
                         else:
-                            host_all_ids.append(ObjectId(item_id.id))
+                            host_all_ids.append(ObjectId(item_id))
                     query = models.HostList.objects(id__in=host_all_ids)
                     matching_data = query.all()
 
