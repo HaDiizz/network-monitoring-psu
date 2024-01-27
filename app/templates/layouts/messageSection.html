@@ -1,6 +1,6 @@
 {% with messages = get_flashed_messages(with_categories=true) %} {% if messages
 %} {% for category, message in messages %}
-<div id="alert-message" class="alert alert-{{ category }} mb-4">
+<div id="alert-message" class="alert-message alert alert-{{ category }} mb-4">
   <svg
     xmlns="http://www.w3.org/2000/svg"
     class="stroke-current shrink-0 h-6 w-6"

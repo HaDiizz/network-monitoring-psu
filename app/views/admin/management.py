@@ -218,33 +218,48 @@ def sla_configuration():
             return render_template("/admin/slaConfiguration.html", title="SLA Requirements", sla_configs=sla_configs)
         duplicate_year = models.SLAConfig.objects(year=year, category=category)
         if duplicate_year:
-            flash(f"พบข้อมูลซ้ำซ้อน {category} - {year}", "error")
+            flash(f"เพิ่มข้อมูลไม่สำเร็จ เนื่องจากมีข้อมูล ({category} - {year}) แล้ว ", "error")
             return render_template("/admin/slaConfiguration.html", title="SLA Requirements", sla_configs=sla_configs)
         if ok_status <= critical_status:
             flash("State conflict", "error")
             return render_template("/admin/slaConfiguration.html", title="SLA Requirements", sla_configs=sla_configs)
         if category == "All":
-            sla_config_host = models.SLAConfig(
-                category="Host",
-                year=year,
-                ok_status=ok_status,
-                critical_status=critical_status,
-            )
-            sla_config_host.save()
-            sla_config_service = models.SLAConfig(
-                category="Service",
-                year=year,
-                ok_status=ok_status,
-                critical_status=critical_status,
-            )
-            sla_config_service.save()
-            sla_config_accessPoint = models.SLAConfig(
-                category="Access Point",
-                year=year,
-                ok_status=ok_status,
-                critical_status=critical_status,
-            )
-            sla_config_accessPoint.save()
+            find_sla_config_host = models.SLAConfig.objects(year=year, category="Host").first()
+            find_sla_config_service = models.SLAConfig.objects(year=year, category="Service").first()
+            find_sla_config_accessPoint = models.SLAConfig.objects(year=year, category="Access Point").first()
+            if not find_sla_config_host:
+                sla_config_host = models.SLAConfig(
+                    category="Host",
+                    year=year,
+                    ok_status=ok_status,
+                    critical_status=critical_status,
+                )
+                sla_config_host.save()
+                flash(f"เพิ่มข้อมูล (Host - {year}) สำเร็จ", "success")
+            if not find_sla_config_service:
+                sla_config_service = models.SLAConfig(
+                    category="Service",
+                    year=year,
+                    ok_status=ok_status,
+                    critical_status=critical_status,
+                )
+                sla_config_service.save()
+                flash(f"เพิ่มข้อมูล (Service - {year}) สำเร็จ", "success")
+            if not find_sla_config_accessPoint:
+                sla_config_accessPoint = models.SLAConfig(
+                    category="Access Point",
+                    year=year,
+                    ok_status=ok_status,
+                    critical_status=critical_status,
+                )
+                sla_config_accessPoint.save()
+                flash(f"เพิ่มข้อมูล (Access Point - {year}) สำเร็จ", "success")
+            if find_sla_config_host:
+                flash(f"เพิ่มข้อมูลไม่สำเร็จ เนื่องจากมีข้อมูล (Host - {year}) แล้ว", "error")
+            if find_sla_config_service:
+                flash(f"เพิ่มข้อมูลไม่สำเร็จ เนื่องจากมีข้อมูล (Service - {year}) แล้ว", "error")
+            if find_sla_config_accessPoint:
+                flash(f"เพิ่มข้อมูลไม่สำเร็จ เนื่องจากมีข้อมูล (Access Point - {year}) แล้ว", "error")
         else:
             sla_config = models.SLAConfig(
                 category=category,
@@ -253,7 +268,7 @@ def sla_configuration():
                 critical_status=critical_status,
             )
             sla_config.save()  
-        flash("เพิ่มข้อมูลสำเร็จ", "success")
+            flash(f"เพิ่มข้อมูลสำเร็จ ({category} - {year})", "success")
     return render_template("/admin/slaConfiguration.html", title="SLA Requirements", sla_configs=sla_configs)
 
 
@@ -280,7 +295,7 @@ def edit_sla_configuration():
         duplicate_year = models.SLAConfig.objects(year=int(year), category=category).first()
         if duplicate_year:
             if duplicate_year.id != ObjectId(sla_config_id):
-                flash(f"พบข้อมูลซ้ำซ้อน {category} - {year}", "error")
+                flash(f"เพิ่มข้อมูลไม่สำเร็จ เนื่องจากมีข้อมูล ({category} - {year}) แล้ว", "error")
                 return render_template("/admin/slaConfiguration.html", title="SLA Requirements", sla_configs=sla_configs)
         if ok_status <= critical_status:
             flash("State conflict", "error")
