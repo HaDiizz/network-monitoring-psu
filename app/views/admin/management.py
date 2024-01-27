@@ -238,6 +238,13 @@ def sla_configuration():
                 critical_status=critical_status,
             )
             sla_config_service.save()
+            sla_config_accessPoint = models.SLAConfig(
+                category="Access Point",
+                year=year,
+                ok_status=ok_status,
+                critical_status=critical_status,
+            )
+            sla_config_accessPoint.save()
         else:
             sla_config = models.SLAConfig(
                 category=category,
