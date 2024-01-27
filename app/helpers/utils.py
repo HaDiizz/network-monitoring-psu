@@ -106,7 +106,7 @@ def search_month(start_month, end_month, selected_year, option):
             )
             return query
 
-    elif option == "access_point":
+    elif option == "accessPoint":
         if end_month <= 12:
             query = models.AccessPoint.objects(
                 month__gte=start_month,
@@ -169,6 +169,26 @@ def search_host(start_month, end_month, selected_year, host_name):
         )
         return query
 
+def search_accessPoint(start_month, end_month, selected_year, accessPoint_name):
+    if end_month <= 12:
+        query = models.AccessPoint.objects(
+            name=accessPoint_name,
+            month__gte=start_month,
+            month__lte=end_month,
+            year__in=[selected_year])
+        return query
+    if end_month == 13:
+        query = models.AccessPoint.objects(
+            (Q(name=accessPoint_name) & Q(month=11) & Q(year=selected_year)) | Q(name=accessPoint_name) & (
+                Q(month=12) & Q(year=selected_year)) | Q(name=accessPoint_name) & (Q(month=1) & Q(year=selected_year + 1))
+        )
+        return query
+    elif end_month == 14:
+        query = models.Host.objects(
+            (Q(name=accessPoint_name) & Q(month=12) & Q(year=selected_year)) | Q(name=accessPoint_name) & (Q(month=1) & Q(
+                year=selected_year + 1)) | Q(name=accessPoint_name) & (Q(month=2) & Q(year=selected_year + 1))
+        )
+        return query
 
 def search_host_day_data(matching_data, selected_month, selected_year):
     host_day_dict = []
@@ -764,7 +784,7 @@ def get_day_data(selected_month, selected_year, option):
             data_dict = {item['day']: {"date": item['day'], 'sla': round(
                 ((total_service * 1440 ) - (item['time']))/(1440 * total_service) * 100, 2)} for item in service_day_dict}
 
-    elif option == "access_point":
+    else:
         if end_month > 12:
             query = search_month(start_month, end_month, selected_year, "access_point")
         else:
@@ -959,6 +979,168 @@ def get_host_quarter_data(selected_month, selected_year):
         host_sla_sum_third_month,
         host_name_second_month,
         host_name_third_month
+    )
+
+def get_accessPoint_quarter_data(selected_month, selected_year):
+
+    start_month = selected_month
+    end_month = selected_month + 2
+    avg_sla = 0
+    count = 0
+    accessPoint_all_count = 0
+    accessPoint_name = []
+    accessPoint_sla = []
+    accessPoint_sla_first_month = []
+    accessPoint_sla_second_month = []
+    accessPoint_sla_third_month = []
+    accessPoint_sla_sum_first_month = 0
+    accessPoint_sla_sum_second_month = 0
+    accessPoint_sla_sum_third_month = 0
+    accessPoint_ip = []
+    accessPoint_count = []
+    accessPoint_count_first_month = []
+    accessPoint_count_second_month = []
+    accessPoint_count_third_month = []
+    accessPoint_count_sum_first_month = 0
+    accessPoint_count_sum_second_month = 0
+    accessPoint_count_sum_third_month = 0
+    accessPoint_name_second_month = []
+    accessPoint_name_third_month = []
+    
+
+    if end_month > 12:
+        query = search_month(start_month, end_month, selected_year, "accessPoint")
+        matching_accessPoints = query.all()
+        for accessPoint in matching_accessPoints:
+            avg_sla += accessPoint.availability
+            accessPoint_all_count += accessPoint.count
+            count += 1
+            if accessPoint.name in accessPoint_name:
+                continue
+            else:
+                accessPoint_name.append(accessPoint.name)
+        for accessPoint in accessPoint_name:
+            query = search_accessPoint(start_month, end_month, selected_year, accessPoint)
+            matching_accessPoints = query.all()
+            sla = 0
+            count_down = 0
+            month_count = 1
+
+            for accessPoint in matching_accessPoints:
+                sla += accessPoint.availability
+                count_down += accessPoint.count
+                if month_count == 1 :
+                    accessPoint_count_first_month.append(accessPoint.count)
+                    accessPoint_sla_first_month.append(accessPoint.availability)
+                    month_count += 1
+                elif month_count == 2 :
+                    accessPoint_name_second_month.append(accessPoint.accessPoint_id)
+                    accessPoint_count_second_month.append(accessPoint.count)
+                    accessPoint_sla_second_month.append(accessPoint.availability)
+                    month_count += 1
+                else :
+                    accessPoint_name_third_month.append(accessPoint.accessPoint_id)
+                    accessPoint_count_third_month.append(accessPoint.count)
+                    accessPoint_sla_third_month.append(accessPoint.availability)
+
+                if accessPoint.ip_address in accessPoint_ip:
+                    accessPoint_ip.append(accessPoint.ip_address)
+                else:
+                    accessPoint_ip.append(accessPoint.ip_address)
+            sla = sla / len(matching_accessPoints)
+            accessPoint_sla.append(sla)
+            accessPoint_count.append(count_down)
+
+    else:
+        query = search_month(start_month, end_month, selected_year, "accessPoint")
+        matching_accessPoints = query.all()
+        for accessPoint in matching_accessPoints:
+            avg_sla += accessPoint.availability
+            accessPoint_all_count += accessPoint.count
+            count += 1
+            if accessPoint.name in accessPoint_name:
+                continue
+            else:
+                accessPoint_name.append(accessPoint.name)
+
+        for accessPoint in accessPoint_name:
+            
+            query = search_accessPoint(start_month, end_month, selected_year, accessPoint)
+            matching_accessPoints = query.all()
+            sla = 0
+            count_down = 0
+            month_count = 1
+            for accessPoint in matching_accessPoints:
+                sla += accessPoint.availability
+                count_down += accessPoint.count
+                if month_count == 1 :
+                    accessPoint_count_first_month.append(accessPoint.count)
+                    accessPoint_sla_first_month.append(accessPoint.availability)
+                    month_count += 1
+                elif month_count == 2 :
+                        accessPoint_name_second_month.append(accessPoint.accessPoint_id)
+                        accessPoint_count_second_month.append(accessPoint.count)
+                        accessPoint_sla_second_month.append(accessPoint.availability)
+                        month_count += 1
+                else :
+                    accessPoint_name_third_month.append(accessPoint.accessPoint_id)
+                    accessPoint_count_third_month.append(accessPoint.count)
+                    accessPoint_sla_third_month.append(accessPoint.availability)
+        
+                if accessPoint.ip_address in accessPoint_ip:
+                    accessPoint_ip.append(accessPoint.ip_address)
+                else:
+                    accessPoint_ip.append(accessPoint.ip_address)
+            
+            sla = sla / len(matching_accessPoints)
+            accessPoint_sla.append(sla)
+            accessPoint_count.append(count_down)
+
+    accessPoint_count_sum_first_month = sum(accessPoint_count_first_month)
+    accessPoint_count_sum_second_month = sum(accessPoint_count_second_month)
+    accessPoint_count_sum_third_month = sum(accessPoint_count_third_month)
+    
+    if len(accessPoint_sla_first_month) > 0:
+        accessPoint_sla_sum_first_month = sum(accessPoint_sla_first_month) / len(accessPoint_sla_first_month)
+    else :
+        accessPoint_sla_sum_first_month = 100
+
+    if len(accessPoint_sla_second_month) > 0:
+        accessPoint_sla_sum_second_month = sum(accessPoint_sla_second_month) / len(accessPoint_sla_second_month)
+    else :
+        accessPoint_sla_sum_second_month = 100
+        
+    if len(accessPoint_sla_third_month) > 0:
+        accessPoint_sla_sum_third_month = sum(accessPoint_sla_third_month) / len(accessPoint_sla_third_month)
+    else :
+        accessPoint_sla_sum_third_month = 100
+
+
+
+    if avg_sla != 0:
+        avg_sla = avg_sla / count
+    card_title = get_name_month(selected_month, selected_year)
+
+    return (
+        avg_sla,
+        accessPoint_all_count,
+        accessPoint_name, accessPoint_sla,
+        accessPoint_ip, accessPoint_count,
+        card_title,
+        accessPoint_sla_first_month,
+        accessPoint_sla_second_month,
+        accessPoint_sla_third_month,
+        accessPoint_count_first_month,
+        accessPoint_count_second_month,
+        accessPoint_count_third_month,
+        accessPoint_count_sum_first_month,
+        accessPoint_count_sum_second_month,
+        accessPoint_count_sum_third_month,
+        accessPoint_sla_sum_first_month,
+        accessPoint_sla_sum_second_month,
+        accessPoint_sla_sum_third_month,
+        accessPoint_name_second_month,
+        accessPoint_name_third_month
     )
 
 def get_service_quarter_data(selected_month, selected_year):
