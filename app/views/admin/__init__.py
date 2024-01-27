@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, jsonify
 from ... import acl
 from ...helpers.api import host_list, host_group_list, service_group_list, maintain_host_list, maintain_service_list, access_point_list, get_all_service_list, access_point_list, host_list_info, ap_in_downtime
-from ...helpers.utils import location_list, get_host_down_select_time, get_ap_list_with_sla, get_ap_name_list, get_host_name_list, get_all_host_list #, get_accessPoint_down_select_time
+from ...helpers.utils import location_list, get_host_down_select_time, get_ap_list_with_sla, get_ap_name_list, get_host_name_list, get_all_host_list, get_accessPoint_down_select_time
 from app import caches
 import datetime
 
@@ -326,6 +326,6 @@ def downAccessPoints():
 
     start_year, start_month = map(int, monthPickerStart.split('-'))
     end_year, end_month = map(int, monthPickerEnd.split('-'))
-    #accessPoint_data_down_over24, count_accessPoint_data_name, all_count_down = get_accessPoint_down_select_time(start_month, start_year, end_month, end_year, selectTimeOver)
+    accessPoint_data_down_over24, count_accessPoint_data_name, all_count_down = get_accessPoint_down_select_time(start_month, start_year, end_month, end_year, selectTimeOver)
 
     return render_template("/admin/downAccessPoint.html", title="Down Access Points", monthPickerStart=monthPickerStart, monthPickerEnd=monthPickerEnd, accessPoint_down_list=accessPoint_data_down_over24, all_count_down=all_count_down, selectTimeOver=selectTimeOver)

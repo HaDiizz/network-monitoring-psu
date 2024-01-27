@@ -1109,27 +1109,45 @@ def get_service_quarter_data(selected_month, selected_year):
         service_name_third_month
     )
 
-def search_month_same_year (start_month, start_year, end_month):
+def search_month_same_year (type,start_month, start_year, end_month):
         
-        query = models.Host.objects(
-            month__gte=start_month,
-            month__lte=end_month,
-            year__in=[start_year]
-        )
+        if type == "host" :
+            query = models.Host.objects(
+                month__gte=start_month,
+                month__lte=end_month,
+                year__in=[start_year]
+            )
 
-        return query
+            return query
+        
+        else :
+            query = models.AccessPoint.objects(
+                month__gte=start_month,
+                month__lte=end_month,
+                year__in=[start_year]
+            )
+
+            return query
     
-def search_month_another_year (start_month, start_year, end_month, end_year):
+def search_month_another_year (type,start_month, start_year, end_month, end_year):
         
         january = 1
         december = 12
-
-        query = models.Host.objects(
-            (Q(month__gte=start_month) & Q(month__lte=december) & Q(year__in=[start_year])) | 
-            (Q(month__gte=january) & Q(month__lte=end_month) & Q(year__in=[end_year]))
-        )
         
-        return query
+        if type == "host" :
+            query = models.Host.objects(
+                (Q(month__gte=start_month) & Q(month__lte=december) & Q(year__in=[start_year])) | 
+                (Q(month__gte=january) & Q(month__lte=end_month) & Q(year__in=[end_year]))
+            )
+            
+            return query
+        else :
+            query = models.AccessPoint.objects(
+                (Q(month__gte=start_month) & Q(month__lte=december) & Q(year__in=[start_year])) | 
+                (Q(month__gte=january) & Q(month__lte=end_month) & Q(year__in=[end_year]))
+            )
+            
+            return query
 
 def get_host_down_select_time(start_month, start_year, end_month, end_year, select_time) :
 
@@ -1144,7 +1162,7 @@ def get_host_down_select_time(start_month, start_year, end_month, end_year, sele
     all_count_down = 0
 
     if start_year == end_year :
-        query = search_month_same_year (start_month, start_year, end_month)
+        query = search_month_same_year ("host",start_month, start_year, end_month)
         host = query.all()
 
         if host :
@@ -1194,7 +1212,7 @@ def get_host_down_select_time(start_month, start_year, end_month, end_year, sele
             all_count_down = len(host_data_name)
 
     else :
-        query = search_month_another_year (start_month, start_year, end_month, end_year)
+        query = search_month_another_year ("host",start_month, start_year, end_month, end_year)
         host = query.all()
 
         if host :
@@ -1247,6 +1265,123 @@ def get_host_down_select_time(start_month, start_year, end_month, end_year, sele
             unique_count_host_data_name,
             all_count_down
     )   
+
+def get_accessPoint_down_select_time(start_month, start_year, end_month, end_year, select_time) :
+
+    accessPoint_data_down_select = {}
+    accessPoint_down_over = []
+    accessPoint_list_id = []
+    accessPoint_data_name = []
+    accessPoint_data_minutes = []
+    accessPoint_data_last_time_down = []
+    accessPoint_data_last_time_up = []
+    unique_count_accessPoint_data_name = 0 
+    all_count_down = 0
+
+    if start_year == end_year :
+        query = search_month_same_year ("accesspoint",start_month, start_year, end_month)
+        accessPoint = query.all()
+
+        if accessPoint :
+            for accessPoints in accessPoint:
+                for value in accessPoints.accessPoint_list:
+                    if value.last_state == 0:
+
+                        if select_time >= 15 and  select_time < 60 :
+                            if value.minutes >= select_time and value.minutes < select_time * 2 :
+                                accessPoint_data_name.append(accessPoints.name)   
+                                accessPoint_data_minutes.append(value.minutes)
+                                accessPoint_data_last_time_down.append(value.last_time_down)
+                                accessPoint_data_last_time_up.append(value.last_time_up)
+    
+
+                        elif select_time == 60 :
+                            if value.minutes >= select_time and value.minutes < 180 :
+                                accessPoint_data_name.append(accessPoints.name)   
+                                accessPoint_data_minutes.append(value.minutes)
+                                accessPoint_data_last_time_down.append(value.last_time_down)
+                                accessPoint_data_last_time_up.append(value.last_time_up)
+
+
+                        elif select_time >= 180 :
+                            if value.minutes >= select_time and value.minutes < select_time * 2 :
+                                accessPoint_data_name.append(accessPoints.name)   
+                                accessPoint_data_minutes.append(value.minutes)
+                                accessPoint_data_last_time_down.append(value.last_time_down)
+                                accessPoint_data_last_time_up.append(value.last_time_up)
+
+                                
+
+                    elif value.last_state == -2:
+                        if value.minutes >= select_time and value.minutes < select_time * 2 :
+                                accessPoint_data_name.append(accessPoints.name)   
+                                accessPoint_data_minutes.append(value.minutes)
+                                accessPoint_data_last_time_down.append(value.last_time_down)
+                                accessPoint_data_last_time_up.append(value.last_time_up)
+
+                                
+            accessPoint_data_down_select = {i: {"accessPoint_name": accessPoint_data_name[i], "accessPoint_minutes": accessPoint_data_minutes[i],
+                                "accessPoint_last_time_down": accessPoint_data_last_time_down[i], "accessPoint_last_time_up": accessPoint_data_last_time_up[i]} for i in range(len(accessPoint_data_name))}
+            
+            
+            unique_accessPoint_data_name = set(accessPoint_data_name)
+            unique_count_accessPoint_data_name = len(unique_accessPoint_data_name)
+            all_count_down = len(accessPoint_data_name)
+
+    else :
+        query = search_month_another_year ("accesspoint",start_month, start_year, end_month, end_year)
+        accessPoint = query.all()
+
+        if accessPoint :
+            for accessPoints in accessPoint:
+                for value in accessPoints.accessPoint_list:
+                    if value.last_state == 0:
+
+                        if select_time >= 15 and  select_time < 60 :
+                            if value.minutes >= select_time and value.minutes < select_time * 2 :
+                                accessPoint_data_name.append(accessPoints.name)   
+                                accessPoint_data_minutes.append(value.minutes)
+                                accessPoint_data_last_time_down.append(value.last_time_down)
+                                accessPoint_data_last_time_up.append(value.last_time_up)
+    
+
+                        elif select_time == 60 :
+                            if value.minutes >= select_time and value.minutes < 180 :
+                                accessPoint_data_name.append(accessPoints.name)   
+                                accessPoint_data_minutes.append(value.minutes)
+                                accessPoint_data_last_time_down.append(value.last_time_down)
+                                accessPoint_data_last_time_up.append(value.last_time_up)
+
+
+                        elif select_time >= 180 :
+                            if value.minutes >= select_time and value.minutes < select_time * 2 :
+                                accessPoint_data_name.append(accessPoints.name)   
+                                accessPoint_data_minutes.append(value.minutes)
+                                accessPoint_data_last_time_down.append(value.last_time_down)
+                                accessPoint_data_last_time_up.append(value.last_time_up)
+
+
+                    elif value.last_state == -2:
+                        if value.minutes >= select_time and value.minutes < select_time * 2 :
+                                accessPoint_data_name.append(accessPoints.name)   
+                                accessPoint_data_minutes.append(value.minutes)
+                                accessPoint_data_last_time_down.append(value.last_time_down)
+                                accessPoint_data_last_time_up.append(value.last_time_up)
+
+            
+            accessPoint_data_down_select = {i: {"accessPoint_name": accessPoint_data_name[i], "accessPoint_minutes": accessPoint_data_minutes[i],
+                                "accessPoint_last_time_down": accessPoint_data_last_time_down[i], "accessPoint_last_time_up": accessPoint_data_last_time_up[i]} for i in range(len(accessPoint_data_name))}
+            
+            unique_accessPoint_data_name = set(accessPoint_data_name)
+            unique_count_accessPoint_data_name = len(unique_accessPoint_data_name)
+            all_count_down = len(accessPoint_data_name)
+
+
+    return (
+            accessPoint_data_down_select,
+            unique_count_accessPoint_data_name,
+            all_count_down
+    )
 
 DORM_LIST = [
     "Dorm10", 
