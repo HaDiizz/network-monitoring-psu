@@ -213,7 +213,7 @@ def sla_configuration():
         if year is None or year == '' or ok_status is None or ok_status == '' or critical_status is None or critical_status == '' or category is None or category == '':
             flash("กรุณากรอกข้อมูลให้ครบถ้วน", "error")
             return render_template("/admin/slaConfiguration.html", title="SLA Requirements", sla_configs=sla_configs)
-        if category not in ("Host", "Service", "All"):
+        if category not in ("Host", "Service", "All", "Access Point"):
             flash("ข้อมูลไม่ถูกต้อง", "error")
             return render_template("/admin/slaConfiguration.html", title="SLA Requirements", sla_configs=sla_configs)
         duplicate_year = models.SLAConfig.objects(year=year, category=category)
