@@ -39,7 +39,27 @@ services:
             options:
                 max-size: "10m"
                 max-file: "3"
-    
+
+    scheduler:
+        build: ../nwms-scheduler/  # ระบุ path ที่ตั้ง Dockerfile ของโปรเจคที่ 2
+        image: nwms-scheduler-image
+        container_name: nwms-scheduler
+        volumes:
+            - ../deployment:/deployment
+            - /etc/localtime:/etc/localtime:ro
+        ports:
+            - 9000:9000
+        networks:
+            - default  # ระบุชื่อ network ที่ใช้เชื่อมต่อ
+        restart: always
+        environment:
+            NWMS_SETTINGS: /app/.env
+        command:
+            /venv/bin/gunicorn app:app -w 2 --bind 0.0.0.0:9000 -R --log-level debug
+        logging:
+            options:
+                max-size: "10m"
+                max-file: "3"
 
 networks:
     default:
