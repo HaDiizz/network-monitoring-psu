@@ -48,14 +48,14 @@ services:
             - ../deployment:/deployment
             - /etc/localtime:/etc/localtime:ro
         ports:
-            - 9000:9000
+            - 5500:5500
         networks:
             - default  # ระบุชื่อ network ที่ใช้เชื่อมต่อ
         restart: always
         environment:
             NWMS_SETTINGS: /app/.env
         command:
-            /venv/bin/gunicorn app:app -w 2 --bind 0.0.0.0:9000 -R --log-level debug
+            /venv/bin/gunicorn app:app -w 2 --bind 0.0.0.0:5500 -R --log-level debug
         logging:
             options:
                 max-size: "10m"
