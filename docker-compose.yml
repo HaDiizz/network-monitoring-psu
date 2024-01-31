@@ -41,7 +41,7 @@ services:
                 max-file: "3"
 
     scheduler:
-        build: ../nwms-scheduler/  # ระบุ path ที่ตั้ง Dockerfile ของโปรเจคที่ 2
+        build: ../scheduler-nwms/  # ระบุ path ที่ตั้ง Dockerfile ของโปรเจคที่ 2
         image: nwms-scheduler-image
         container_name: nwms-scheduler
         volumes:
