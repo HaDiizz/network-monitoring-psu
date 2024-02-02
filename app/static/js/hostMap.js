@@ -107,9 +107,12 @@ fetch("/admin/get-hosts")
     data.forEach((host) => {
       var marker =
         host.state === 1 ? redIcon : host.state == 0 ? greenIcon : yellowIcon;
-      var randomizedLat = host.lat + (Math.random() - 0.5) * 0.00055;
-      var randomizedLng = host.lng + (Math.random() - 0.5) * 0.00055;
-      var markerData = L.marker([randomizedLat, randomizedLng], {
+      // var randomizedLat = host.lat + (Math.random() - 0.5) * 0.00055;
+      // var randomizedLng = host.lng + (Math.random() - 0.5) * 0.00055;
+      // var markerData = L.marker([randomizedLat, randomizedLng], {
+      //   icon: marker,
+      // });
+      var markerData = L.marker([host.lat, host.lng], {
         icon: marker,
       });
 

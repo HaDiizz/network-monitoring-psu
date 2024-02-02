@@ -72,7 +72,9 @@
       <div tabindex="0" class="collapse collapse-arrow border border-base-300">
         <div class="collapse">
           <input type="checkbox" />
-          <div class="collapse-title text-xl font-medium flex gap-x-5"><span>Host Group</span> - <span>{{ month }} {{ year }}</span></div>
+          <div class="collapse-title text-xl font-medium flex gap-x-5">
+            <span>Host Group</span> - <span>{{ month }} {{ year }}</span>
+          </div>
           <div class="collapse-content">
             <div class="overflow-x-auto pb-4">
               <table class="table">
@@ -84,16 +86,14 @@
                 </thead>
                 <tbody>
                   {% for host_group in host_group_list %}
-                    {% if host_group['extensions']["availability"] != "" %}
-                      <tr>
-                        <td>{{ host_group["title"] }}</td>
-                        {% if host_group["extensions"]["availability"] %}
-                        <td>{{ host_group["extensions"]["availability"] }} %</td>
-                        {% else %}
-                        <td>-</td>
-                        {% endif %}
-                      </tr>
+                  <tr>
+                    <td>{{ host_group["title"] }}</td>
+                    {% if host_group["extensions"]["availability"] %}
+                    <td>{{ host_group["extensions"]["availability"] }} %</td>
+                    {% else %}
+                    <td>-</td>
                     {% endif %}
+                  </tr>
                   {% endfor %}
                 </tbody>
               </table>

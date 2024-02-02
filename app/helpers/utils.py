@@ -1939,6 +1939,8 @@ def get_host_daily_sla(host_id) :
                 return '{:.4f}'.format(round(sla, 8))
         
         else :
+                return '{:.2f}'.format(round(100, 2))
+    else :
             return '{:.2f}'.format(round(100, 2))
         
 
@@ -1984,6 +1986,8 @@ def get_service_daily_sla(service_id) :
                 return '{:.4f}'.format(round(sla, 8))
         
         else :
+                return '{:.2f}'.format(round(100, 2))
+    else :
             return '{:.2f}'.format(round(100, 2))
     
 
@@ -2029,6 +2033,8 @@ def get_accessPoint_daily_sla(accessPoint_id) :
                 return '{:.4f}'.format(round(sla, 8))
         
         else :
+                return '{:.2f}'.format(round(100, 2))
+    else :
             return '{:.2f}'.format(round(100, 2))
     
     
@@ -2055,7 +2061,7 @@ def get_host_group_monthly_sla(group_id) :
     if count > 0:
         return '{:.4f}'.format(round(sla / count, 8))
     else:
-        return ""
+        return '{:.2f}'.format(round(100, 2))
     
     
 def get_service_group_monthly_sla(group_id) :
@@ -2081,4 +2087,4 @@ def get_service_group_monthly_sla(group_id) :
     if count > 0:
         return '{:.4f}'.format(round(sla / count, 8))
     else:
-        return "" 
+        return '{:.2f}'.format(round(100, 2))

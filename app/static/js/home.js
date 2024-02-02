@@ -195,9 +195,12 @@ fetch("/get-aps")
           : ap.state == 1
           ? yellowIcon
           : indigoIcon;
-      var randomizedLat = ap.lat + (Math.random() - 0.5) * 0.00055;
-      var randomizedLng = ap.lng + (Math.random() - 0.5) * 0.00055;
-      var markerData = L.marker([randomizedLat, randomizedLng], {
+      // var randomizedLat = ap.lat + (Math.random() - 0.5) * 0.00055;
+      // var randomizedLng = ap.lng + (Math.random() - 0.5) * 0.00055;
+      // var markerData = L.marker([randomizedLat, randomizedLng], {
+      //   icon: marker,
+      // });
+      var markerData = L.marker([ap.lat, ap.lng], {
         icon: marker,
       });
 
