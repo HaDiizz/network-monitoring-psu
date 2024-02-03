@@ -5,6 +5,7 @@ services:
         container_name: nwms-mongodb
         environment:
             MONGO_INITDB_DATABASE: nwms_psu
+            TZ: Asia/Bangkok
         volumes:
             - ../deployment/nwms/mongodb/data/db:/data/db
             - /etc/localtime:/etc/localtime:ro
@@ -31,6 +32,7 @@ services:
         restart: always
         environment:
             NWMS_SETTINGS: /app/.env
+            TZ: Asia/Bangkok
         command:
             /venv/bin/gunicorn app:server -w 2 --bind 0.0.0.0:8000 -R --log-level debug
         logging:
@@ -49,7 +51,8 @@ services:
             - default  # ระบุชื่อ network ที่ใช้เชื่อมต่อ
         restart: always
         environment:
-            NWMS_SETTINGS: /app/.env
+            SCHEDULER_SETTINGS: /app/.env
+            TZ: Asia/Bangkok
         command:
             /venv/bin/python3 ./app.py
         logging:
