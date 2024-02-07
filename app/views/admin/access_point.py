@@ -25,7 +25,7 @@ def access_point_quarterly(year, month):
         "ok_status": float(sla_requirement["ok_status"]),
         "critical_status": float(sla_requirement["critical_status"])
         }
-    avg_sla, accessPoint_all_count, accessPoint_name, accessPoint_sla, accessPoint_count, month_name, accessPoint_sla_first_month, accessPoint_sla_second_month, accessPoint_sla_third_month, accessPoint_count_first_month, accessPoint_count_second_month, accessPoint_count_third_month, accessPoint_count_sum_first_month, accessPoint_count_sum_second_month, accessPoint_count_sum_third_month, accessPoint_sla_sum_first_month, accessPoint_sla_sum_second_month, accessPoint_sla_sum_third_month, accessPoint_name_second_month , accessPoint_name_third_month = get_accessPoint_quarter_data(
+    avg_sla, accessPoint_all_count, accessPoint_name, accessPoint_sla, accessPoint_count, month_name, accessPoint_sla_first_month, accessPoint_sla_second_month, accessPoint_sla_third_month, accessPoint_count_first_month, accessPoint_count_second_month, accessPoint_count_third_month, accessPoint_count_sum_first_month, accessPoint_count_sum_second_month, accessPoint_count_sum_third_month, accessPoint_sla_sum_first_month, accessPoint_sla_sum_second_month, accessPoint_sla_sum_third_month, accessPoint_name_first_month, accessPoint_name_second_month , accessPoint_name_third_month = get_accessPoint_quarter_data(
         int(month), int(year))
     day_data = get_day_data(int(month), int(year), "access_point")
     months = {}
@@ -37,7 +37,7 @@ def access_point_quarterly(year, month):
     accessPoint_data = {accessPoint_name[i]: {"accessPoint_name": accessPoint_name[i], "accessPoint_sla": '{:.4f}'.format(round( accessPoint_sla[i], 4)),
                                 "accessPoint_count": accessPoint_count[i]} for i in range(len(accessPoint_name))}
     accessPoint_data_first_month = {accessPoint_name[i]: {"accessPoint_name": accessPoint_name[i], "accessPoint_sla": '{:.4f}'.format(round( accessPoint_sla_first_month[i], 4)),
-                                "accessPoint_count": accessPoint_count_first_month[i]} for i in range(len(accessPoint_name))} 
+                                "accessPoint_count": accessPoint_count_first_month[i]} for i in range(len(accessPoint_name_first_month))} 
     
     if len(accessPoint_sla_second_month) == 0 :
         accessPoint_data_second_month = {}

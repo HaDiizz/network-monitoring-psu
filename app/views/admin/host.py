@@ -25,7 +25,7 @@ def host_quarterly(year, month):
         "ok_status": float(sla_requirement["ok_status"]),
         "critical_status": float(sla_requirement["critical_status"])
         }
-    avg_sla, host_all_count, host_name, host_sla, host_ip, host_count, month_name, host_sla_first_month, host_sla_second_month, host_sla_third_month, host_count_first_month, host_count_second_month, host_count_third_month, host_count_sum_first_month, host_count_sum_second_month, host_count_sum_third_month, host_sla_sum_first_month, host_sla_sum_second_month, host_sla_sum_third_month, host_name_second_month, host_name_third_month = get_host_quarter_data(
+    avg_sla, host_all_count, host_name, host_sla, host_ip, host_count, month_name, host_sla_first_month, host_sla_second_month, host_sla_third_month, host_count_first_month, host_count_second_month, host_count_third_month, host_count_sum_first_month, host_count_sum_second_month, host_count_sum_third_month, host_sla_sum_first_month, host_sla_sum_second_month, host_sla_sum_third_month, host_name_first_month, host_name_second_month, host_name_third_month = get_host_quarter_data(
         int(month), int(year))
     day_data = get_day_data(int(month), int(year), "host")
     months = {}
@@ -36,9 +36,14 @@ def host_quarterly(year, month):
             months[month_name_str] = str(month_number)
     host_data = {host_name[i]: {"host_name": host_name[i], "host_sla": '{:.4f}'.format(round( host_sla[i], 4)),
                                 "host_ip": host_ip[i], "host_count": host_count[i]} for i in range(len(host_name))}
-
+    print("TEST")
+    print(len(host_name))
+    print(len(host_sla_first_month))
+    print(len(host_ip))
+    print(len(host_count_first_month))
+    
     host_data_first_month = {host_name[i]: {"host_name": host_name[i], "host_sla": '{:.4f}'.format(round( host_sla_first_month[i], 4)),
-                                "host_ip": host_ip[i], "host_count": host_count_first_month[i]} for i in range(len(host_name))} 
+                                "host_ip": host_ip[i], "host_count": host_count_first_month[i]} for i in range(len(host_name_first_month))} 
     
     if len(host_sla_second_month) == 0 :
         host_data_second_month = {}

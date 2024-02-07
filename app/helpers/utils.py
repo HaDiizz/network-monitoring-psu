@@ -184,7 +184,7 @@ def search_accessPoint(start_month, end_month, selected_year, accessPoint_name):
         )
         return query
     elif end_month == 14:
-        query = models.Host.objects(
+        query = models.AccessPoint.objects(
             (Q(name=accessPoint_name) & Q(month=12) & Q(year=selected_year)) | Q(name=accessPoint_name) & (Q(month=1) & Q(
                 year=selected_year + 1)) | Q(name=accessPoint_name) & (Q(month=2) & Q(year=selected_year + 1))
         )
@@ -842,6 +842,7 @@ def get_host_quarter_data(selected_month, selected_year):
     host_count_sum_first_month = 0
     host_count_sum_second_month = 0
     host_count_sum_third_month = 0
+    host_name_first_month = []
     host_name_second_month = []
     host_name_third_month = []
     
@@ -862,20 +863,33 @@ def get_host_quarter_data(selected_month, selected_year):
             matching_hosts = query.all()
             sla = 0
             count_down = 0
-            month_count = 1
+            january = 1
+            december = 12
+
+            first_month = start_month
+            if first_month + 1 == 13 :
+                second_month = january
+            else :
+                second_month = december
+
+            
 
             for host in matching_hosts:
                 sla += host.availability
                 count_down += host.count
-                if month_count == 1 :
+
+                if host.month ==  first_month :
+                    host_name_first_month.append(host.host_id)
                     host_count_first_month.append(host.count)
                     host_sla_first_month.append(host.availability)
-                    month_count += 1
-                elif month_count == 2 :
-                    host_name_second_month.append(host.host_id)
-                    host_count_second_month.append(host.count)
-                    host_sla_second_month.append(host.availability)
-                    month_count += 1
+                    
+
+                elif host.month == second_month :
+                        host_name_second_month.append(host.host_id)
+                        host_count_second_month.append(host.count)
+                        host_sla_second_month.append(host.availability)
+                        
+
                 else :
                     host_name_third_month.append(host.host_id)
                     host_count_third_month.append(host.count)
@@ -907,19 +921,26 @@ def get_host_quarter_data(selected_month, selected_year):
             matching_hosts = query.all()
             sla = 0
             count_down = 0
-            month_count = 1
+            first_month = start_month
+            second_month = first_month  +  1
+            third_month = second_month + 1
+
             for host in matching_hosts:
                 sla += host.availability
                 count_down += host.count
-                if month_count == 1 :
+
+                if host.month ==  first_month :
+                    host_name_first_month.append(host.host_id)
                     host_count_first_month.append(host.count)
                     host_sla_first_month.append(host.availability)
-                    month_count += 1
-                elif month_count == 2 :
+                    
+
+                elif host.month == second_month :
                         host_name_second_month.append(host.host_id)
                         host_count_second_month.append(host.count)
                         host_sla_second_month.append(host.availability)
-                        month_count += 1
+                        
+
                 else :
                     host_name_third_month.append(host.host_id)
                     host_count_third_month.append(host.count)
@@ -940,11 +961,13 @@ def get_host_quarter_data(selected_month, selected_year):
     
     if len(host_sla_first_month) > 0:
         host_sla_sum_first_month = sum(host_sla_first_month) / len(host_sla_first_month)
+        print("sum : " , sum(host_sla_first_month) , " count" , len(host_sla_first_month))
     else :
         host_sla_sum_first_month = 100
 
     if len(host_sla_second_month) > 0:
         host_sla_sum_second_month = sum(host_sla_second_month) / len(host_sla_second_month)
+        print("sum : " , sum(host_sla_second_month) , " count" , len(host_sla_second_month))
     else :
         host_sla_sum_second_month = 100
         
@@ -977,6 +1000,7 @@ def get_host_quarter_data(selected_month, selected_year):
         host_sla_sum_first_month,
         host_sla_sum_second_month,
         host_sla_sum_third_month,
+        host_name_first_month,
         host_name_second_month,
         host_name_third_month
     )
@@ -1004,12 +1028,13 @@ def get_accessPoint_quarter_data(selected_month, selected_year):
     accessPoint_count_sum_first_month = 0
     accessPoint_count_sum_second_month = 0
     accessPoint_count_sum_third_month = 0
+    accessPoint_name_first_month = []
     accessPoint_name_second_month = []
     accessPoint_name_third_month = []
     
 
     if end_month > 12:
-        query = search_month(start_month, end_month, selected_year, "accessPoint")
+        query = search_month(start_month, end_month, selected_year, "access_point")
         matching_accessPoints = query.all()
         for accessPoint in matching_accessPoints:
             avg_sla += accessPoint.availability
@@ -1024,20 +1049,27 @@ def get_accessPoint_quarter_data(selected_month, selected_year):
             matching_accessPoints = query.all()
             sla = 0
             count_down = 0
-            month_count = 1
+            january = 1
+            december = 12
 
+            first_month = start_month
+            if first_month + 1 == 13 :
+                second_month = january
+            else :
+                second_month = december
             for accessPoint in matching_accessPoints:
                 sla += accessPoint.availability
                 count_down += accessPoint.count
-                if month_count == 1 :
+                if accessPoint.month == first_month:
+                    accessPoint_name_first_month.append(accessPoint.accessPoint_id)
                     accessPoint_count_first_month.append(accessPoint.count)
                     accessPoint_sla_first_month.append(accessPoint.availability)
-                    month_count += 1
-                elif month_count == 2 :
+                    
+                elif accessPoint.month == second_month:
                     accessPoint_name_second_month.append(accessPoint.accessPoint_id)
                     accessPoint_count_second_month.append(accessPoint.count)
                     accessPoint_sla_second_month.append(accessPoint.availability)
-                    month_count += 1
+                    
                 else :
                     accessPoint_name_third_month.append(accessPoint.accessPoint_id)
                     accessPoint_count_third_month.append(accessPoint.count)
@@ -1065,19 +1097,22 @@ def get_accessPoint_quarter_data(selected_month, selected_year):
             matching_accessPoints = query.all()
             sla = 0
             count_down = 0
-            month_count = 1
+            first_month = start_month
+            second_month = first_month  +  1
+
             for accessPoint in matching_accessPoints:
                 sla += accessPoint.availability
                 count_down += accessPoint.count
-                if month_count == 1 :
+                if accessPoint.month == first_month :
+                    accessPoint_name_first_month.append(accessPoint.accessPoint_id)
                     accessPoint_count_first_month.append(accessPoint.count)
                     accessPoint_sla_first_month.append(accessPoint.availability)
-                    month_count += 1
-                elif month_count == 2 :
+                    
+                elif accessPoint.month == second_month :
                         accessPoint_name_second_month.append(accessPoint.accessPoint_id)
                         accessPoint_count_second_month.append(accessPoint.count)
                         accessPoint_sla_second_month.append(accessPoint.availability)
-                        month_count += 1
+                        
                 else :
                     accessPoint_name_third_month.append(accessPoint.accessPoint_id)
                     accessPoint_count_third_month.append(accessPoint.count)
@@ -1129,6 +1164,7 @@ def get_accessPoint_quarter_data(selected_month, selected_year):
         accessPoint_sla_sum_first_month,
         accessPoint_sla_sum_second_month,
         accessPoint_sla_sum_third_month,
+        accessPoint_name_first_month,
         accessPoint_name_second_month,
         accessPoint_name_third_month
     )
@@ -1155,6 +1191,7 @@ def get_service_quarter_data(selected_month, selected_year):
     service_count_sum_first_month = 0
     service_count_sum_second_month = 0
     service_count_sum_third_month = 0
+    service_name_first_month = []
     service_name_second_month = []
     service_name_third_month = []
     
@@ -1175,20 +1212,29 @@ def get_service_quarter_data(selected_month, selected_year):
             matching_services = query.all()
             sla = 0
             count_down = 0
-            month_count = 1
+            january = 1
+            december = 12
+
+            first_month = start_month
+            if first_month + 1 == 13 :
+                second_month = january
+            else :
+                second_month = december
 
             for service in matching_services:
                 sla += service.availability
                 count_down += service.count
-                if month_count == 1 :
+
+                if service.month == first_month :
+                    service_name_first_month.append(service.service_id)
                     service_count_first_month.append(service.count)
                     service_sla_first_month.append(service.availability)
-                    month_count += 1
-                elif month_count == 2 :
+                    
+                elif service.month == second_month:
                     service_name_second_month.append(service.service_id)
                     service_count_second_month.append(service.count)
                     service_sla_second_month.append(service.availability)
-                    month_count += 1
+                    
                 else :
                     service_name_third_month.append(service.service_id)
                     service_count_third_month.append(service.count)
@@ -1214,19 +1260,23 @@ def get_service_quarter_data(selected_month, selected_year):
             matching_services = query.all()
             sla = 0
             count_down = 0
-            month_count = 1
+            first_month = start_month
+            second_month = first_month  +  1
+
             for service in matching_services:
                 sla += service.availability
                 count_down += service.count
-                if month_count == 1 :
+
+                if  service.month == first_month :
+                    service_name_first_month.append(service.service_id)
                     service_count_first_month.append(service.count)
                     service_sla_first_month.append(service.availability)
-                    month_count += 1
-                elif month_count == 2 :
+            
+                elif service.month == second_month :
                     service_name_second_month.append(service.service_id)
                     service_count_second_month.append(service.count)
                     service_sla_second_month.append(service.availability)
-                    month_count += 1
+                    
                 else :
                     service_name_third_month.append(service.service_id)
                     service_count_third_month.append(service.count)
@@ -1277,6 +1327,7 @@ def get_service_quarter_data(selected_month, selected_year):
         service_sla_sum_first_month,
         service_sla_sum_second_month,
         service_sla_sum_third_month,
+        service_name_first_month,
         service_name_second_month,
         service_name_third_month
     )
