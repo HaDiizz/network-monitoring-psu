@@ -753,8 +753,8 @@ def get_day_data(selected_month, selected_year, option):
             total_host = query.count()
             
 
-            data_dict = {item['day']: {"date": item['day'], 'sla': round(
-                ((total_host * 1440 ) - (item['time']))/(1440 * total_host) * 100, 2)} for item in host_day_dict}
+            data_dict = {item['day']: {"date": item['day'], 'sla': '{:.4f}'.format(round(
+                ((total_host * 1440 ) - (item['time']))/(1440 * total_host) * 100, 4))} for item in host_day_dict}
             
     elif option == "service":
         if end_month > 12:
@@ -781,8 +781,8 @@ def get_day_data(selected_month, selected_year, option):
             total_service = query.count()
             
 
-            data_dict = {item['day']: {"date": item['day'], 'sla': round(
-                ((total_service * 1440 ) - (item['time']))/(1440 * total_service) * 100, 2)} for item in service_day_dict}
+            data_dict = {item['day']: {"date": item['day'], 'sla': '{:.4f}'.format(round(
+                ((total_service * 1440 ) - (item['time']))/(1440 * total_service) * 100, 4))} for item in service_day_dict}
 
     elif option == "access_point":
         if end_month > 12:
@@ -809,12 +809,12 @@ def get_day_data(selected_month, selected_year, option):
             total_accessPoint = query.count()
             
 
-            data_dict = {item['day']: {"date": item['day'], 'sla': round(
-                ((total_accessPoint * 1440 ) - (item['time']))/(1440 * total_accessPoint) * 100, 2)} for item in accessPoint_day_dict}
+            data_dict = {item['day']: {"date": item['day'], 'sla': '{:.4f}'.format(round(
+                ((total_accessPoint * 1440 ) - (item['time']))/(1440 * total_accessPoint) * 100, 4))} for item in accessPoint_day_dict}
 
     for key in quarter_month_dict:
         if key in data_dict:
-            quarter_month_dict[key]['sla'] = data_dict[key]['sla']
+            quarter_month_dict[key]['sla'] = float(data_dict[key]['sla'])
 
     return quarter_month_dict
 
@@ -1936,7 +1936,7 @@ def get_host_daily_sla(host_id) :
             
             else :
                 sla = ((1440 - minutes) / 1440) * 100
-                return '{:.4f}'.format(round(sla, 8))
+                return '{:.4f}'.format(round(sla, 4))
         
         else :
                 return '{:.2f}'.format(round(100, 2))
@@ -1983,7 +1983,7 @@ def get_service_daily_sla(service_id) :
             
             else :
                 sla = ((1440 - minutes) / 1440) * 100
-                return '{:.4f}'.format(round(sla, 8))
+                return '{:.4f}'.format(round(sla, 4))
         
         else :
                 return '{:.2f}'.format(round(100, 2))
@@ -2030,7 +2030,7 @@ def get_accessPoint_daily_sla(accessPoint_id) :
             
             else :
                 sla = ((1440 - minutes) / 1440) * 100
-                return '{:.4f}'.format(round(sla, 8))
+                return '{:.4f}'.format(round(sla, 4))
         
         else :
                 return '{:.2f}'.format(round(100, 2))
@@ -2059,7 +2059,7 @@ def get_host_group_monthly_sla(group_id) :
                 break
     
     if count > 0:
-        return '{:.4f}'.format(round(sla / count, 8))
+        return '{:.4f}'.format(round(sla / count, 4))
     else:
         return '{:.2f}'.format(round(100, 2))
     
@@ -2085,6 +2085,6 @@ def get_service_group_monthly_sla(group_id) :
                 break
             
     if count > 0:
-        return '{:.4f}'.format(round(sla / count, 8))
+        return '{:.4f}'.format(round(sla / count, 4))
     else:
         return '{:.2f}'.format(round(100, 2))
