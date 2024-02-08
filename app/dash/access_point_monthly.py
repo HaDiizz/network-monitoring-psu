@@ -5,6 +5,7 @@ import dash_html_components as html
 from flask_login import login_required
 import datetime
 from .callback import monthly_callbacks
+from .. import models
 
 
 dash_access_point = dash.Dash(__name__, server=server,
@@ -19,17 +20,22 @@ for view_func in server.view_functions:
 
 
 def generate_year_options():
-    current_year = datetime.datetime.now().year
-    year_options = [{'label': str(year), 'value': year} for year in range(2023 - 2, current_year + 1)]
+
+    try:
+        current_year = datetime.datetime.now().year
+        accessPoint_start_year = models.AccessPoint.objects.order_by('year').first().year
+        year_options = [{'label': str(year), 'value': year} for year in range(accessPoint_start_year, current_year + 1)]
+    except (AttributeError, ValueError):
+        print("WARNING: Generating year options based on current year, as no valid data found in the database.")
+        year_options = [{'label': str(year), 'value': year} for year in range(2023, current_year + 1)]
+
     return year_options
 
 dash_access_point.layout = html.Div([
     html.H1("Access Point Monthly", className='text-4xl font-bold', style={'padding-bottom': '3rem'}),
     dcc.Dropdown(
         id='year-dropdown',
-        options=[
-            {'label': str(year), 'value': year} for year in range(2023, datetime.datetime.now().year + 1)
-        ],
+        options=generate_year_options(),
         value=datetime.datetime.now().year,
         style={'margin-bottom': '20px'},
     ),

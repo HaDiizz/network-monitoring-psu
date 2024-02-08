@@ -3,7 +3,6 @@ import dash_core_components as dcc
 import dash_html_components as html
 from ... import models
 from ...helpers.utils import sla_status_list
-import math
 
 
 def get_color(sla, ok, critical):
